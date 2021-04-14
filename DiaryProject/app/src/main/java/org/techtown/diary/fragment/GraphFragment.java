@@ -16,20 +16,35 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import org.techtown.diary.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class GraphFragment extends Fragment {
-    private PieChart chart1;
-    private BarChart chart2;
-    private LineChart chart3;
+    private PieChart chart1;        // 원형 그래프
+    private BarChart chart2;        // 막대 그래프
+    private LineChart chart3;       // 선 그래프
 
+    private ArrayList<Integer> colors = new ArrayList<>();
     private Context context;
 
     @Override
@@ -48,25 +63,84 @@ public class GraphFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_graph, container, false);
 
+        setColors();        // 그래프를 칠할 색 배열 세팅
+
         // 원형 그래프(기분별)
         chart1 = (PieChart)rootView.findViewById(R.id.chart1);
         chart1.setUsePercentValues(true);
-        chart1.getDescription().setEnabled(false);
-        //chart1.setCenterText("기분별 비율")
-        chart1.setTransparentCircleColor(Color.WHITE);
-        chart1.setTransparentCircleAlpha(110);
-        chart1.setTransparentCircleRadius(65f);
-        chart1.setHoleRadius(60f);
+        chart1.getDescription().setEnabled(false);       // 추가 설명란 false
+        //chart1.setCenterText("기분별 비율");            // 원형 그래프 가운데 text 표기 false
+        chart1.setTransparentCircleColor(getResources().getColor(R.color.azure));   // 중간원과 바깥원 사이의 얇은 투명원의 색상 결정
+        chart1.setTransparentCircleAlpha(110);           // 중간원과 바깥원 사이의 얇은 투명원의 알파 값 결정
+        chart1.setTransparentCircleRadius(66f);          // 중간원과 바깥원 사이의 얇은 투명원의 반지름
+        chart1.setHoleRadius(63f);                       // 중간원의 반지름
         //chart1.setDrawCenterText(true);
-        chart1.setHighlightPerTapEnabled(true);
-        Legend legend1 = chart1.getLegend();
-        legend1.setEnabled(false);
-        chart1.setEntryLabelColor(Color.WHITE);
-        chart1.setEntryLabelTextSize(17f);
+        chart1.setHighlightPerTapEnabled(true);          // 특정부분 선택시 확대효과 여부
+        Legend legend1 = chart1.getLegend();             // 그래프의 구성요소들을 추가로 명시하는지 여부
+        legend1.setEnabled(false);                       // 추가 구성요소 명시 false
+        chart1.setEntryLabelColor(Color.WHITE);          // entry label 색상
+        chart1.setEntryLabelTextSize(12f);               // entry 구성요소 label 크기
         setData1();
 
+        // 막대 그래프(요일별)
         chart2 = (BarChart)rootView.findViewById(R.id.chart2);
+        chart2.setDrawValueAboveBar(true);              // 그래프에 특정 값 표기시에 막대그래프 위에 표기 true
+        chart2.getDescription().setEnabled(false);      // 추가 설명란 false
+        chart2.setDrawGridBackground(false);            // 그래프 격자 배경 그릴지 여부 false
+
+        XAxis xAxis = chart2.getXAxis();                // x축 설정
+        xAxis.setEnabled(false);                        // x축 요소들 선 표시(세로줄) false
+        YAxis leftAxis = chart2.getAxisLeft();          // 왼쪽 y축
+        leftAxis.setLabelCount(6, false);   // 왼쪽 y축에 표시할 label 개수
+        leftAxis.setAxisMinimum(0f);                    // y축 최소값 0으로
+        leftAxis.setGranularityEnabled(true);
+        leftAxis.setGranularity(1f);
+        YAxis rightAxis = chart2.getAxisRight();        // 오른쪽 y축
+        rightAxis.setEnabled(false);                    // 오른쪽 y축 사용 x
+        Legend legend2 = chart2.getLegend();            // 그래프의 구성요소들을 추가로 명시하는지 여부
+        legend2.setEnabled(false);                      // 추가 구성요소 명시 false
+        chart2.animateXY(1500, 1500);   // 애니메이션 설정
+        setData2();
+
+        // 선 그래프(기분 변화)
         chart3 = (LineChart)rootView.findViewById(R.id.chart3);
+        chart3.getDescription().setEnabled(false);                  // 추가 설명란 false
+        chart3.setDrawGridBackground(false);                        // 그래프 격자 배경 그릴지 여부 false
+        //chart3.setBackgroundColor(Color.WHITE);                   // 배경색 지정(흰색)
+        chart3.setExtraOffsets(22, 22,22,22); // 그래프 추가 offset
+        Legend legend3 = chart3.getLegend();                        // 그래프의 구성요소들을 추가로 명시하는지 여부
+        legend3.setEnabled(false);                                  // 추가 구성요소 명시 false
+
+        XAxis xAxis3 = chart3.getXAxis();                           // x축 설정
+        xAxis3.setPosition(XAxis.XAxisPosition.BOTTOM);             // x축 label 위치 설정
+        xAxis3.setTextSize(10f);                                    // x축 label 크기
+        xAxis3.setTextColor(Color.BLACK);                           // x축 label 색상
+        xAxis3.setDrawGridLines(false);                             // x축 격자선 표시 여부 false
+        xAxis3.setCenterAxisLabels(true);                           // x축 각 label 들을 각 칸 중간에 표기 할지 여부 true
+        xAxis3.setGranularityEnabled(true);
+        xAxis3.setGranularity(1f);
+        xAxis3.setValueFormatter(new ValueFormatter() {             // x축을 구성할 요소의 포멧을 정의
+            private final SimpleDateFormat mFormat = new SimpleDateFormat("MM-DD", Locale.KOREA);       // 월일 포멧 ex) 04-12
+
+            @Override
+            public String getFormattedValue(float value) {
+                long millis = TimeUnit.HOURS.toMillis((long) value);
+                return mFormat.format(new Date(millis));
+            }
+        });
+
+        YAxis leftAxis3 = chart3.getAxisLeft();                         // y축 설정
+        leftAxis3.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);  // y축 label 위치 설정(그래프 밖)
+        leftAxis3.setTextSize(10f);                                     // y축 label 크기
+        leftAxis3.setTextColor(Color.BLACK);                            // y축 label 색상
+        leftAxis3.setDrawGridLines(true);                               // y축 격자선 표시 여부 true
+        leftAxis3.setGranularityEnabled(true);
+        leftAxis3.setAxisMinimum(0f);                                   // y축 최소값 0
+        leftAxis3.setAxisMaximum(170f);                                 // y축 최대값 170
+        leftAxis3.setYOffset(-9f);                                      // y축 label offset
+        YAxis rightAxis3 = chart3.getAxisRight();
+        rightAxis3.setEnabled(false);
+        setData3();
 
         return rootView;
     }
@@ -85,18 +159,16 @@ public class GraphFragment extends Fragment {
         entries.add(new PieEntry(20f, "", getResources().getDrawable(R.drawable.mood_yawn_color_small)));
 
         PieDataSet dataSet = new PieDataSet(entries, "기분별 비율");
-        dataSet.setDrawIcons(true);
-        dataSet.setSliceSpace(3f);
-        dataSet.setIconsOffset(new MPPointF(0, -38));
-        dataSet.setSelectionShift(5f);
-
-        ArrayList<Integer> colors = getColors();
+        dataSet.setDrawIcons(true);                         // 아이콘 표시 여부
+        dataSet.setSliceSpace(3f);                          // 그래프 간격
+        dataSet.setIconsOffset(new MPPointF(0, -38)); // 아이콘 offset
+        dataSet.setSelectionShift(5f);                      // 특정부분 선택시 확대효과 크기
         dataSet.setColors(colors);
 
         PieData data = new PieData(dataSet);
-        data.setValueTextSize(15f);
-        data.setValueTextColor(Color.WHITE);
-        if(context != null) {
+        data.setValueTextSize(14f);                         // 그래프 내 text 크기
+        data.setValueTextColor(Color.WHITE);                // 그래프 내 text 색상
+        if(context != null) {                               // 그래프 내 text 폰트
             data.setValueTypeface(Typeface.createFromAsset(context.getAssets(), "ridibatang.otf"));
         }
 
@@ -104,8 +176,65 @@ public class GraphFragment extends Fragment {
         chart1.invalidate();
     }
 
-    private ArrayList<Integer> getColors() {
-        ArrayList<Integer> colors = new ArrayList<>();
+    private void setData2() {
+        ArrayList<BarEntry> entries = new ArrayList<>();
+
+        entries.add(new BarEntry(1f, 20f, getResources().getDrawable(R.drawable.mood_angry_color_small)));
+        entries.add(new BarEntry(2f, 40f, getResources().getDrawable(R.drawable.mood_cool_color_small)));
+        entries.add(new BarEntry(3f, 60f, getResources().getDrawable(R.drawable.mood_crying_color_small)));
+        entries.add(new BarEntry(4f, 30f, getResources().getDrawable(R.drawable.mood_ill_color_small)));
+        entries.add(new BarEntry(5f, 90f, getResources().getDrawable(R.drawable.mood_laugh_color_small)));
+        entries.add(new BarEntry(6f, 10f, getResources().getDrawable(R.drawable.mood_meh_color_small)));
+        entries.add(new BarEntry(7f, 20f, getResources().getDrawable(R.drawable.mood_sad_small)));
+        entries.add(new BarEntry(8f, 70f, getResources().getDrawable(R.drawable.mood_smile_color_small)));
+        entries.add(new BarEntry(9f, 50f, getResources().getDrawable(R.drawable.mood_yawn_color_small)));
+
+        BarDataSet dataSet2 = new BarDataSet(entries, "요일별 기분");
+        dataSet2.setIconsOffset(new MPPointF(0, -10));
+        dataSet2.setColors(colors);
+
+        BarData data = new BarData(dataSet2);
+        data.setValueTextSize(12f);             // 표기 할 구성요소 별 y축 값 text 크기
+        data.setDrawValues(false);              // 구성요소 별 y축 값 표기 여부 false
+        data.setBarWidth(0.8f);                 // 막대의 너비
+
+        chart2.setData(data);
+        chart2.invalidate();
+    }
+
+    private void setData3() {
+        ArrayList<Entry> values = new ArrayList<>();
+
+        values.add(new Entry(24f, 20.0f, getResources().getDrawable(R.drawable.mood_angry_color_small)));
+        values.add(new Entry(48f, 50.0f, getResources().getDrawable(R.drawable.mood_cool_color_small)));
+        values.add(new Entry(72f, 30.0f, getResources().getDrawable(R.drawable.mood_crying_color_small)));
+        values.add(new Entry(96f, 70.0f, getResources().getDrawable(R.drawable.mood_ill_color_small)));
+        values.add(new Entry(120f, 90.0f, getResources().getDrawable(R.drawable.mood_laugh_color_small)));
+
+        LineDataSet dataSet = new LineDataSet(values, "기분 변화");
+        dataSet.setIconsOffset(new MPPointF(0, -17));
+        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        dataSet.setColor(ColorTemplate.getHoloBlue());             // 선 색상
+        dataSet.setValueTextColor(ColorTemplate.getHoloBlue());    // 선에 표기 할 text 색상
+        dataSet.setLineWidth(1.5f);                                // 선 두께
+        dataSet.setDrawCircles(true);                              // 선 그래프에서 원 모양 사용여부 true
+        dataSet.setDrawValues(false);                              // 구성요소 별 y축 값 표기 여부 false
+        dataSet.setFillAlpha(65);
+        dataSet.setFillColor(ColorTemplate.getHoloBlue());
+        dataSet.setHighLightColor(Color.rgb(244, 117, 117));       // 구성 요소 선택시 생기는 효과 색상
+        dataSet.setDrawCircleHole(false);                          // 선 그래프에서 그릴 원 모양 안에 흰색 원 추가 여부
+
+        // create a data object with the data sets
+        LineData data = new LineData(dataSet);
+        data.setValueTextColor(Color.BLUE);
+        data.setValueTextSize(9f);
+
+        // set data
+        chart3.setData(data);
+        chart3.invalidate();
+    }
+
+    private void setColors() {
         colors.add(getResources().getColor(R.color.red));
         colors.add(getResources().getColor(R.color.blue));
         colors.add(getResources().getColor(R.color.skyblue));
@@ -115,7 +244,5 @@ public class GraphFragment extends Fragment {
         colors.add(getResources().getColor(R.color.black));
         colors.add(getResources().getColor(R.color.orange));
         colors.add(getResources().getColor(R.color.pink));
-
-        return colors;
     }
 }

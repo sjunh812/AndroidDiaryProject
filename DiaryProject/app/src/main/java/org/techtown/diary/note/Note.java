@@ -1,4 +1,4 @@
-package org.techtown.diary.item;
+package org.techtown.diary.note;
 
 public class Note {
     private int _id;                // DB 에서 사용될 id

@@ -1,35 +1,23 @@
-package org.techtown.diary.helper;
+package org.techtown.diary.note;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.BlendMode;
-import android.graphics.BlendModeColorFilter;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.techtown.diary.R;
-import org.techtown.diary.item.Note;
+import org.techtown.diary.helper.OnNoteItemClickListener;
 
 public class NoteViewHolder extends RecyclerView.ViewHolder {
     // 내용버튼 선택시 보일 뷰 UI
     private LinearLayout contentsLayout;
     private ImageView moodImageView;
     private ImageView weatherImageView;
-    private ImageView existPictureImageView;
+    private ImageView existPictureImageView;        // 일기에 이미지가 있는 경우 띄워줄 작은 이미지
     private TextView contentsTextView;
     private TextView locationTextView;
     private TextView dateTextView;
@@ -89,7 +77,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
             pictureImageView.setImageURI(Uri.parse("file://" + picturePath));
         } else {
             existPictureImageView.setVisibility(View.INVISIBLE);
-            pictureImageView.setImageResource(R.drawable.noimagefound);
+            pictureImageView.setImageResource(R.drawable.icons8_no_image_64_color);
         }
 
         // 날씨 설정

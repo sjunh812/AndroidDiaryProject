@@ -18,13 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.techtown.diary.R;
-import org.techtown.diary.helper.NoteAdapter;
-import org.techtown.diary.helper.NoteViewHolder;
+import org.techtown.diary.note.NoteAdapter;
+import org.techtown.diary.note.NoteViewHolder;
 import org.techtown.diary.helper.OnNoteItemClickListener;
 import org.techtown.diary.helper.OnTabItemSelectedListener;
-import org.techtown.diary.item.Note;
-
-import lib.kingja.switchbutton.SwitchMultiButton;
+import org.techtown.diary.note.Note;
 
 public class ListFragment extends Fragment {
     private RadioGroup radioGroup;
@@ -32,7 +30,7 @@ public class ListFragment extends Fragment {
     private AppCompatRadioButton radioButtonR;
 
     private NoteAdapter adapter;
-    private OnTabItemSelectedListener listener;     // 메인액티비티 하단 탭의 탭선택 콜백함수를 호출 해주는 리스너
+    private OnTabItemSelectedListener tabListener;     // 메인 액티비티 하단 탭의 탭선택 콜백함수를 호출 해주는 리스너
 
     private int layoutType = 0;     // 0:내용레이아웃, 1:사진레이아웃
 
@@ -40,15 +38,15 @@ public class ListFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if(context instanceof OnTabItemSelectedListener) {
-            listener = (OnTabItemSelectedListener)context;
+            tabListener = (OnTabItemSelectedListener)context;
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        if(listener != null) {
-            listener = null;
+        if(tabListener != null) {
+            tabListener = null;
         }
     }
 
@@ -92,8 +90,8 @@ public class ListFragment extends Fragment {
         writeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener != null) {
-                    listener.onTabSelected(1);
+                if(tabListener != null) {
+                    tabListener.onTabSelected(1);
                 }
             }
         });

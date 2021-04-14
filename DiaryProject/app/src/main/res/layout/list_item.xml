@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@color/azure"
     app:cardCornerRadius="10dp"
     app:cardElevation="5dp"
     app:cardUseCompatPadding="true">
@@ -14,8 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="visible"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/moodImageView"
@@ -29,18 +29,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="5dp">
+            android:layout_margin="5dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/contentsTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:fontFamily="@font/font"
                 android:text="내용"
-                android:textSize="17dp"
                 android:textColor="@color/black"
-                android:fontFamily="@font/font" />
+                android:textSize="15dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -68,21 +68,21 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
+                    android:fontFamily="@font/font"
                     android:text="고양시 일산서구"
-                    android:textSize="13dp"
                     android:textColor="@color/skyblue"
-                    android:fontFamily="@font/font" />
+                    android:textSize="13dp" />
 
                 <TextView
                     android:id="@+id/dateTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:fontFamily="@font/font"
                     android:layout_centerVertical="true"
+                    android:fontFamily="@font/font"
                     android:text="2021-04-10"
-                    android:textSize="13dp"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    android:textSize="13dp" />
 
             </RelativeLayout>
         </LinearLayout>
@@ -93,34 +93,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/pictureImageView"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_margin="10dp"
             android:layout_gravity="center_vertical"
+            android:layout_margin="10dp"
             android:padding="5dp"
-            android:src="@drawable/noimagefound" />
+            android:scaleType="center"
+            android:src="@drawable/icons8_no_image_64_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="5dp">
+            android:layout_margin="5dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/contentsTextView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:fontFamily="@font/font"
                 android:text="내용"
-                android:textSize="17dp"
 
                 android:textColor="@color/black"
-                android:fontFamily="@font/font" />
+                android:textSize="17dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -148,21 +149,21 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
+                    android:fontFamily="@font/font"
                     android:text="고양시 일산서구"
-                    android:textSize="13dp"
                     android:textColor="@color/skyblue"
-                    android:fontFamily="@font/font" />
+                    android:textSize="13dp" />
 
                 <TextView
                     android:id="@+id/dateTextView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:fontFamily="@font/font"
                     android:layout_centerVertical="true"
+                    android:fontFamily="@font/font"
                     android:text="2021-04-10"
-                    android:textSize="13dp"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    android:textSize="13dp" />
 
             </RelativeLayout>
         </LinearLayout>

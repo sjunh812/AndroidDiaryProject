@@ -41,7 +41,7 @@
             android:layout_centerVertical="true"
             android:textColor="@color/black"
             android:textSize="20dp"
-            android:text="2021-04-11"
+            android:text="2021년 04월 11일"
             android:fontFamily="@font/font" />
 
         <TextView
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="고양시 일산서구"
+            android:text="위치정보 갱신중"
             android:textSize="13dp"
             android:fontFamily="@font/font"
             android:textColor="@color/skyblue" />
@@ -59,8 +59,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="60dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,10 +69,10 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@color/azure"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="5dp"
-                app:cardUseCompatPadding="true" >
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -84,20 +83,32 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="20dp"
+                        android:fontFamily="@font/font"
                         android:text="사진 선택"
-                        android:textSize="17dp"
-                        android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:fontFamily="@font/font" />
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="@font/font"
+                        android:text="탭하여 사진을 추가해주세요"
+                        android:textColor="@color/skyblue"
+                        android:textSize="15dp" />
 
                     <ImageView
                         android:id="@+id/pictureImageView"
                         android:layout_width="match_parent"
                         android:layout_height="250dp"
-                        android:src="@drawable/imagetoset"/>
+                        android:layout_marginBottom="10dp"
+                        android:scaleType="center"
+                        android:src="@drawable/add_image_64_color" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -105,10 +116,10 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@color/azure"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="5dp"
-                app:cardUseCompatPadding="true" >
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -119,14 +130,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="20dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:fontFamily="@font/font"
                         android:text="일기 입력"
-                        android:textSize="17dp"
-                        android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:fontFamily="@font/font" />
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
 
                     <androidx.core.widget.NestedScrollView
                         android:layout_width="match_parent"
@@ -137,13 +148,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:hint="이곳을 터치해주세요"
-                            android:gravity="top"
-                            android:padding="10dp"
-                            android:lineSpacingExtra="5dp"
-                            android:textSize="17dp"
+                            android:background="@color/azure"
                             android:fontFamily="@font/font"
-                            android:background="@color/white" />
+                            android:gravity="top"
+                            android:hint="이곳을 터치해주세요"
+                            android:lineSpacingExtra="5dp"
+                            android:padding="10dp"
+                            android:textColorHint="@color/skyblue"
+                            android:textSize="15dp" />
 
                     </androidx.core.widget.NestedScrollView>
 
@@ -154,10 +166,10 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="380dp"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@color/azure"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="5dp"
-                app:cardUseCompatPadding="true" >
+                app:cardUseCompatPadding="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -171,11 +183,11 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="30dp"
+                        android:fontFamily="@font/font"
                         android:text="오늘 기분을 골라주세요"
-                        android:textSize="17dp"
-                        android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:fontFamily="@font/font" />
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -207,10 +219,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
+                                    android:fontFamily="@font/font"
                                     android:text="화남"
-                                    android:textSize="13dp"
                                     android:textColor="@color/black"
-                                    android:fontFamily="@font/font"/>
+                                    android:textSize="13dp" />
 
                             </LinearLayout>
 
@@ -232,11 +244,11 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="쿨"
                                     android:layout_marginTop="5dp"
-                                    android:textSize="13dp"
+                                    android:fontFamily="@font/font"
+                                    android:text="쿨"
                                     android:textColor="@color/black"
-                                    android:fontFamily="@font/font"/>
+                                    android:textSize="13dp" />
 
                             </LinearLayout>
 
@@ -258,10 +270,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
+                                    android:fontFamily="@font/font"
                                     android:text="슬픔"
-                                    android:textSize="13dp"
                                     android:textColor="@color/black"
-                                    android:fontFamily="@font/font"/>
+                                    android:textSize="13dp" />
 
                             </LinearLayout>
 
@@ -292,10 +304,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
+                                    android:fontFamily="@font/font"
                                     android:text="아픔"
-                                    android:textSize="13dp"
                                     android:textColor="@color/black"
-                                    android:fontFamily="@font/font"/>
+                                    android:textSize="13dp" />
 
                             </LinearLayout>
 
@@ -318,10 +330,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
+                                    android:fontFamily="@font/font"
                                     android:text="웃음"
-                                    android:textSize="13dp"
                                     android:textColor="@color/black"
-                                    android:fontFamily="@font/font"/>
+                                    android:textSize="13dp" />
 
                             </LinearLayout>
 
@@ -343,10 +355,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
+                                    android:fontFamily="@font/font"
                                     android:text="보통"
-                                    android:textSize="13dp"
                                     android:textColor="@color/black"
-                                    android:fontFamily="@font/font"/>
+                                    android:textSize="13dp" />
 
                             </LinearLayout>
 
@@ -378,10 +390,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
+                                    android:fontFamily="@font/font"
                                     android:text="나쁨"
-                                    android:textSize="13dp"
                                     android:textColor="@color/black"
-                                    android:fontFamily="@font/font"/>
+                                    android:textSize="13dp" />
 
                             </LinearLayout>
 
@@ -404,10 +416,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
+                                    android:fontFamily="@font/font"
                                     android:text="행복"
-                                    android:textSize="13dp"
                                     android:textColor="@color/black"
-                                    android:fontFamily="@font/font"/>
+                                    android:textSize="13dp" />
 
                             </LinearLayout>
 
@@ -429,10 +441,10 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
+                                    android:fontFamily="@font/font"
                                     android:text="피곤"
-                                    android:textSize="13dp"
                                     android:textColor="@color/black"
-                                    android:fontFamily="@font/font"/>
+                                    android:textSize="13dp" />
 
                             </LinearLayout>
                         </LinearLayout>

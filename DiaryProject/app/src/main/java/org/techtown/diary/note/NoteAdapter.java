@@ -1,7 +1,6 @@
-package org.techtown.diary.helper;
+package org.techtown.diary.note;
 
 import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.techtown.diary.R;
-import org.techtown.diary.item.Note;
+import org.techtown.diary.helper.OnNoteItemClickListener;
 
 import java.util.ArrayList;
 
-public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> implements OnNoteItemClickListener{
+public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> implements OnNoteItemClickListener {
     private ArrayList<Note> items = new ArrayList<>();
     private Context context;
     private OnNoteItemClickListener listener;

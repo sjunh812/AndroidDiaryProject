@@ -1,21 +1,28 @@
 package org.techtown.diary.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import org.techtown.diary.R;
+import org.techtown.diary.helper.OnRequestListener;
 import org.techtown.diary.helper.OnTabItemSelectedListener;
 
 public class WriteFragment extends Fragment {
     // UI
+    private TextView locationTextView;
+    private ImageView pictureImageView;
     private Button button1;
     private Button button2;
     private Button button3;
@@ -27,7 +34,8 @@ public class WriteFragment extends Fragment {
     private Button button9;
 
     private OnTabItemSelectedListener tabListener;
-    private MoodButtonClickListener listener;
+    private OnRequestListener requestListener;         // 메인 액티비티에서 현재 위치 정보를 가져오게 해주는 리스너
+    private MoodButtonClickListener moodButtonListener;
     private Button curButton = null;
     private int moodIndex = -1;     // 0~8 총 9개의 기분을 index 로 표현(-1은 사용자가 아무런 기분도 선택하지 않은 경우)
 
@@ -38,6 +46,9 @@ public class WriteFragment extends Fragment {
         if(context instanceof OnTabItemSelectedListener) {
             tabListener = (OnTabItemSelectedListener)context;
         }
+        if(context instanceof OnRequestListener) {
+            requestListener = (OnRequestListener)context;
+        }
     }
 
     @Override
@@ -47,6 +58,9 @@ public class WriteFragment extends Fragment {
         if(tabListener != null) {
             tabListener = null;
         }
+        if(requestListener != null) {
+            requestListener = null;
+        }
     }
 
     @Nullable
@@ -54,7 +68,10 @@ public class WriteFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_write, container, false);
 
-        listener = new MoodButtonClickListener();
+        moodButtonListener = new MoodButtonClickListener();
+
+        locationTextView = (TextView)rootView.findViewById(R.id.locationTextView);
+        pictureImageView = (ImageView)rootView.findViewById(R.id.pictureImageView);
 
         button1 = (Button)rootView.findViewById(R.id.button1);
         button2 = (Button)rootView.findViewById(R.id.button2);
@@ -66,15 +83,15 @@ public class WriteFragment extends Fragment {
         button8 = (Button)rootView.findViewById(R.id.button8);
         button9 = (Button)rootView.findViewById(R.id.button9);
 
-        button1.setOnClickListener(listener);
-        button2.setOnClickListener(listener);
-        button3.setOnClickListener(listener);
-        button4.setOnClickListener(listener);
-        button5.setOnClickListener(listener);
-        button6.setOnClickListener(listener);
-        button7.setOnClickListener(listener);
-        button8.setOnClickListener(listener);
-        button9.setOnClickListener(listener);
+        button1.setOnClickListener(moodButtonListener);
+        button2.setOnClickListener(moodButtonListener);
+        button3.setOnClickListener(moodButtonListener);
+        button4.setOnClickListener(moodButtonListener);
+        button5.setOnClickListener(moodButtonListener);
+        button6.setOnClickListener(moodButtonListener);
+        button7.setOnClickListener(moodButtonListener);
+        button8.setOnClickListener(moodButtonListener);
+        button9.setOnClickListener(moodButtonListener);
 
         Button saveButton = (Button)rootView.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -106,7 +123,15 @@ public class WriteFragment extends Fragment {
             }
         });
 
+        if(requestListener != null) {
+            requestListener.onRequest("getCurrentLocation");
+        }
+
         return rootView;
+    }
+
+    public void setLocationTextView(String location) {
+        locationTextView.setText(location);
     }
 
     private void buttonToMoodIndex() {
@@ -155,6 +180,15 @@ public class WriteFragment extends Fragment {
                 selectButton.setScaleY(1.4f);
                 curButton = selectButton;
             }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(requestListener != null) {
+            requestListener.onRequest("checkGPS");
         }
     }
 }
