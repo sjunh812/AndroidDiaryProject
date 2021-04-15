@@ -21,6 +21,7 @@ import org.techtown.diary.helper.OnTabItemSelectedListener;
 
 public class WriteFragment extends Fragment {
     // UI
+    private ImageView weatherImageView;
     private TextView locationTextView;
     private ImageView pictureImageView;
     private Button button1;
@@ -32,12 +33,13 @@ public class WriteFragment extends Fragment {
     private Button button7;
     private Button button8;
     private Button button9;
+    private Button curButton = null;
 
     private OnTabItemSelectedListener tabListener;
-    private OnRequestListener requestListener;         // 메인 액티비티에서 현재 위치 정보를 가져오게 해주는 리스너
+    private OnRequestListener requestListener;          // 메인 액티비티에서 현재 위치 정보를 가져오게 해주는 리스너
     private MoodButtonClickListener moodButtonListener;
-    private Button curButton = null;
-    private int moodIndex = -1;     // 0~8 총 9개의 기분을 index 로 표현(-1은 사용자가 아무런 기분도 선택하지 않은 경우)
+
+    private int moodIndex = -1;                         // 0~8 총 9개의 기분을 index 로 표현(-1은 사용자가 아무런 기분도 선택하지 않은 경우)
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -70,6 +72,7 @@ public class WriteFragment extends Fragment {
 
         moodButtonListener = new MoodButtonClickListener();
 
+        weatherImageView = (ImageView)rootView.findViewById(R.id.weatherImageView);
         locationTextView = (TextView)rootView.findViewById(R.id.locationTextView);
         pictureImageView = (ImageView)rootView.findViewById(R.id.pictureImageView);
 
@@ -132,6 +135,24 @@ public class WriteFragment extends Fragment {
 
     public void setLocationTextView(String location) {
         locationTextView.setText(location);
+    }
+
+    public void setWeatherImageView(String weatherStr) {
+        if(weatherStr.equals("맑음")) {
+            weatherImageView.setImageResource(R.drawable.weather_icon_1);
+        } else if(weatherStr.equals("구름 조금")) {
+            weatherImageView.setImageResource(R.drawable.weather_icon_2);
+        } else if(weatherStr.equals("구름 많음")) {
+            weatherImageView.setImageResource(R.drawable.weather_icon_3);
+        } else if(weatherStr.equals("구름 흐림")) {
+            weatherImageView.setImageResource(R.drawable.weather_icon_4);
+        } else if(weatherStr.equals("비")) {
+            weatherImageView.setImageResource(R.drawable.weather_icon_5);
+        } else if(weatherStr.equals("눈/비")) {
+            weatherImageView.setImageResource(R.drawable.weather_icon_6);
+        } else {
+            weatherImageView.setImageResource(R.drawable.weather_icon_7);
+        }
     }
 
     private void buttonToMoodIndex() {

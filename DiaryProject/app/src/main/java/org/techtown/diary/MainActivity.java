@@ -25,9 +25,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
 import com.pedro.library.AutoPermissions;
 import com.pedro.library.AutoPermissionsListener;
+import com.stanfy.gsonxml.GsonXml;
+import com.stanfy.gsonxml.GsonXmlBuilder;
+import com.stanfy.gsonxml.XmlParserCreator;
 
 import org.techtown.diary.fragment.GraphFragment;
 import org.techtown.diary.fragment.ListFragment;
@@ -36,7 +41,12 @@ import org.techtown.diary.helper.KMAGrid;
 import org.techtown.diary.helper.MyApplication;
 import org.techtown.diary.helper.OnRequestListener;
 import org.techtown.diary.helper.OnTabItemSelectedListener;
+import org.techtown.diary.weather.WeatherItem;
+import org.techtown.diary.weather.WeatherResult;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -46,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     // 상수
     private static final String LOG = "MainActivity";
     private static final int CHECK_ALL_PERMISSIONS = 101;
+    private static final int REQUEST_WEATHER_BY_GRID = 1;
 
     // 프래그먼트
     private ListFragment listFragment;
@@ -61,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
     // 데이터
     private Location curLocation;                       // 현재 위치 정보
+    private String curWeatherStr;                       // 현재 날씨
     private int locationCount = 0;                      // 현재 위치 정보를 찾은 경우 locationCount++ -> 위치 요청 종료
 
     @Override
@@ -125,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, gpsListener);
                 getCurrentAddress();                                           // 위치정보를 주소로 반환(작성 프래그먼트의 locationTextView 갱신)
+                getCurrentWeather();                                           // 위치정보를 이용해 날씨 반환(작성 프래그먼트의 weatherImageView 갱신)
             }
         } catch(Exception e) {
             e.printStackTrace();
@@ -172,6 +185,13 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         double gridX = map.get("X");
         double gridY = map.get("Y");
         Log.d(LOG, "LOG : gridX = " + gridX + ", gridY = " + gridY);
+
+        String url = "https://www.kma.go.kr/wid/queryDFS.jsp";
+        url += "?gridx=" + Math.round(gridX);
+        url += "&gridy=" + Math.round(gridY);
+
+        Map<String, String> params = new HashMap<>();
+        MyApplication.request(REQUEST_WEATHER_BY_GRID, Request.Method.GET, url, params, this);
     }
 
     // 위치 권한 확인
@@ -249,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         }
     }
 
-    // from Fragment (ReqeustListener)
+    // from Fragment(ReqeustListener)
     @Override
     public void onRequest(String command) {
         if(command.equals("getCurrentLocation")) {
@@ -265,11 +285,63 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     @Override
     public void onResponse(int reqeustCode, int responseCode, String response) {
         if(responseCode == MyApplication.RESPONSE_OK) {
-            if(reqeustCode == 101) {
+            if(reqeustCode == REQUEST_WEATHER_BY_GRID) {
+                XmlParserCreator creator = new XmlParserCreator() {
+                    @Override
+                    public XmlPullParser createParser() {
+                        try {
+                            return XmlPullParserFactory.newInstance().newPullParser();
+                        } catch(Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                };
 
+                GsonXml gsonXml = new GsonXmlBuilder()
+                        .setXmlParserCreator(creator)
+                        .setSameNameLists(true)
+                        .create();
+
+                try {
+                    WeatherResult result = gsonXml.fromXml(response, WeatherResult.class);
+
+                    for(int i = 0; i < result.body.data.size(); i++) {
+                        WeatherItem item = result.body.data.get(i);
+
+                        switch(item.getDay()) {
+                            case 0:
+                                Log.d(LOG, "<오늘> " + item.getHour() + "시\n");
+                                break;
+                            case 1:
+                                Log.d(LOG, "<내일>\n" + item.getHour() + "시\n");
+                                break;
+                            default:
+                                Log.d(LOG, "<모레>\n" + item.getHour() + "시\n");
+                                break;
+                        }
+
+                        Log.d(LOG, "날씨 : " + item.getWfKor() + "\n");
+                        Log.d(LOG, "기온 : " + item.getTemp() + "\n");
+                    }
+
+                    WeatherItem item = result.body.data.get(0);
+                    curWeatherStr = item.getWfKor();
+
+                    if(writeFragment != null) {
+                        writeFragment.setWeatherImageView(curWeatherStr);
+                    }
+
+                    if(locationCount > 0) {
+                        stopLocationService();
+                    }
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Log.e(LOG, "ERROR : Unknown request code = " + responseCode);
             }
         } else {
-
+            Log.e(LOG, "ERROR : Failure response cole = " + responseCode);
         }
     }
 
@@ -310,6 +382,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
             double longitude = location.getLongitude();             // 경도
 
             getCurrentAddress();                                    // 갱신된 위치정보를 주소로 반환(작성 프래그먼트의 locationTextView 갱신)
+            getCurrentWeather();                                    // 갱신된 위치정보를 날씨로 반환(작성 프래그먼트의 weatherImageView 갱신)
         }
     }
 }

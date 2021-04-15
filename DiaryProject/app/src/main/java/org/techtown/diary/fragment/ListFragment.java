@@ -25,14 +25,16 @@ import org.techtown.diary.helper.OnTabItemSelectedListener;
 import org.techtown.diary.note.Note;
 
 public class ListFragment extends Fragment {
-    private RadioGroup radioGroup;
-    private AppCompatRadioButton radioButtonL;
-    private AppCompatRadioButton radioButtonR;
+    // UI
+    private RadioGroup radioGroup;                     // 커스텀 라디오버튼을 담은 라디오그룹
+    private AppCompatRadioButton radioButtonL;         // 커스텀 라디오버튼중 왼쪽(내용)
+    private AppCompatRadioButton radioButtonR;         // 커스텀 라디오버튼중 오른쪽(사진)
 
-    private NoteAdapter adapter;
+    // Helper
+    private NoteAdapter adapter;                       // 일기 목록을 담은 리사이클러 뷰의 어뎁터
     private OnTabItemSelectedListener tabListener;     // 메인 액티비티 하단 탭의 탭선택 콜백함수를 호출 해주는 리스너
 
-    private int layoutType = 0;     // 0:내용레이아웃, 1:사진레이아웃
+    private int layoutType = 0;                        // 0:내용레이아웃, 1:사진레이아웃
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -100,15 +102,11 @@ public class ListFragment extends Fragment {
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         listRecyclerView.setLayoutManager(manager);
         adapter = new NoteAdapter(getContext());
-        adapter.addItem(new Note(0, "0", "고양시 일산서구", "0", "0", "화남", "0", null, "2021-04-10"));
-        adapter.addItem(new Note(0, "1", "고양시 일산서구", "0", "0", "쿨", "1", null, "2021-04-11"));
-        adapter.addItem(new Note(0, "3", "고양시 일산서구", "0", "0", "울음", "2", null, "2021-04-11"));
-        adapter.addItem(new Note(0, "4", "고양시 일산서구", "0", "0", "아픔", "3", null, "2021-04-11"));
+        adapter.addItem(new Note(0, "0", "고양시 일산서구", "0", "0", "일기장 테스트 중입니다. \n테스트테스트~", "0", null, "2021-04-10"));
         adapter.addItem(new Note(0, "5", "고양시 일산서구", "0", "0", "웃음", "4", null, "2021-04-11"));
         adapter.addItem(new Note(0, "6", "고양시 일산서구", "0", "0", "so so", "5", null, "2021-04-11"));
         adapter.addItem(new Note(0, "0", "고양시 일산서구", "0", "0", "슬픔", "6", null, "2021-04-11"));
-        adapter.addItem(new Note(0, "0", "고양시 일산서구", "0", "0", "미소", "7", null, "2021-04-11"));
-        adapter.addItem(new Note(0, "0", "고양시 일산서구", "0", "0", "졸림", "8", null, "2021-04-11"));
+        adapter.addItem(new Note(0, "0", "고양시 일산서구", "0", "0", "취직하고싶다..\n좋은 곳으로 가고싶다아아\n네카쿠라배..", "8", null, "2021-04-11"));
         listRecyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(new OnNoteItemClickListener() {

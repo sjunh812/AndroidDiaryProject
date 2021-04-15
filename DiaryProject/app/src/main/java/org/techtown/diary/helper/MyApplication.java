@@ -76,6 +76,6 @@ public class MyApplication extends Application {
 
         request.setShouldCache(false);     // 캐시가 남아있어도 사용x
         request.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(request);
+        MyApplication.requestQueue.add(request);
     }
 }

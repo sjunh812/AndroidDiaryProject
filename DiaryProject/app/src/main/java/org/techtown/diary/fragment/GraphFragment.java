@@ -70,10 +70,11 @@ public class GraphFragment extends Fragment {
         chart1.setUsePercentValues(true);
         chart1.getDescription().setEnabled(false);       // 추가 설명란 false
         //chart1.setCenterText("기분별 비율");            // 원형 그래프 가운데 text 표기 false
-        chart1.setTransparentCircleColor(getResources().getColor(R.color.azure));   // 중간원과 바깥원 사이의 얇은 투명원의 색상 결정
+        chart1.setTransparentCircleColor(getResources().getColor(R.color.white));   // 중간원과 바깥원 사이의 얇은 투명원의 색상 결정
         chart1.setTransparentCircleAlpha(110);           // 중간원과 바깥원 사이의 얇은 투명원의 알파 값 결정
         chart1.setTransparentCircleRadius(66f);          // 중간원과 바깥원 사이의 얇은 투명원의 반지름
         chart1.setHoleRadius(63f);                       // 중간원의 반지름
+        chart1.setHoleColor(getResources().getColor(R.color.azure));
         //chart1.setDrawCenterText(true);
         chart1.setHighlightPerTapEnabled(true);          // 특정부분 선택시 확대효과 여부
         Legend legend1 = chart1.getLegend();             // 그래프의 구성요소들을 추가로 명시하는지 여부

@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/moodImageView"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="10dp"
             android:padding="10dp"
@@ -37,6 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:lineSpacingExtra="5dp"
                 android:fontFamily="@font/font"
                 android:text="내용"
                 android:textColor="@color/black"
@@ -119,7 +120,7 @@
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/font"
                 android:text="내용"
-
+                android:lineSpacingExtra="5dp"
                 android:textColor="@color/black"
                 android:textSize="17dp" />
 
