@@ -2,6 +2,7 @@ package org.techtown.diary;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -13,13 +14,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
@@ -46,6 +53,10 @@ import org.techtown.diary.weather.WeatherResult;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import java.io.File;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -69,10 +80,12 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
     // Helper
     private GPSListener gpsListener;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
 
     // 데이터
     private Location curLocation;                       // 현재 위치 정보
     private String curWeatherStr;                       // 현재 날씨
+    private Date curDate;                               // 현재 날짜
     private int locationCount = 0;                      // 현재 위치 정보를 찾은 경우 locationCount++ -> 위치 요청 종료
 
     @Override
@@ -119,6 +132,13 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
     // 현재 위치 정보 가져오기
     public void getCurrentLocation() {
+        // 현재 날짜 가져오기
+        curDate = new Date();
+        String date = dateFormat.format(curDate);
+        if(writeFragment != null) {
+            writeFragment.setDateTextView(date);
+        }
+
         LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
         try {

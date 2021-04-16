@@ -1,13 +1,20 @@
 package org.techtown.diary.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,15 +22,27 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.techtown.diary.CustomDialog;
 import org.techtown.diary.R;
 import org.techtown.diary.helper.OnRequestListener;
 import org.techtown.diary.helper.OnTabItemSelectedListener;
 
+import java.io.File;
+
 public class WriteFragment extends Fragment {
+    // 상수
+    private static final String LOG = "WriteFragment";
+    public static final int REQUEST_CAMER = 10;
+    public static final int REQUEST_ALBUM = 11;
+    public static int PICTURE_WIDTH = 100;
+    public static int PICTURE_HEIGHT = 100;
+
     // UI
     private ImageView weatherImageView;
+    private TextView dateTextView;
     private TextView locationTextView;
     private ImageView pictureImageView;
+    private EditText contentsEditText;
     private Button button1;
     private Button button2;
     private Button button3;
@@ -34,6 +53,7 @@ public class WriteFragment extends Fragment {
     private Button button8;
     private Button button9;
     private Button curButton = null;
+    private CustomDialog dialog;
 
     private OnTabItemSelectedListener tabListener;
     private OnRequestListener requestListener;          // 메인 액티비티에서 현재 위치 정보를 가져오게 해주는 리스너
@@ -72,9 +92,20 @@ public class WriteFragment extends Fragment {
 
         moodButtonListener = new MoodButtonClickListener();
 
+        dateTextView = (TextView)rootView.findViewById(R.id.dateTextView);
         weatherImageView = (ImageView)rootView.findViewById(R.id.weatherImageView);
         locationTextView = (TextView)rootView.findViewById(R.id.locationTextView);
         pictureImageView = (ImageView)rootView.findViewById(R.id.pictureImageView);
+        PICTURE_WIDTH = pictureImageView.getWidth();
+        PICTURE_HEIGHT = pictureImageView.getHeight();
+        pictureImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDialog();
+            }
+        });
+
+        contentsEditText = (EditText)rootView.findViewById(R.id.contentsEditText);
 
         button1 = (Button)rootView.findViewById(R.id.button1);
         button2 = (Button)rootView.findViewById(R.id.button2);
@@ -155,6 +186,49 @@ public class WriteFragment extends Fragment {
         }
     }
 
+    public void setDateTextView(String date) {
+        dateTextView.setText(date);
+    }
+
+    public void setPictureImageView(Bitmap bitmap) {
+        pictureImageView.setImageBitmap(bitmap);
+    }
+
+    public void setDialog() {
+        dialog = new CustomDialog(getContext());
+        dialog.show();
+        dialog.setCancelable(true);
+
+        dialog.setCancelButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCameraButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setAlbumButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAlbumAcitivity();
+                dialog.dismiss();
+            }
+        });
+    }
+
+    public void showCameraActivity() {
+
+    }
+
+    public void showAlbumAcitivity() {
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, REQUEST_ALBUM);
+    }
+
     private void buttonToMoodIndex() {
         if(curButton == null) {
             // 사용자가 아무런 기분도 선택하지 않는 상황
@@ -211,5 +285,63 @@ public class WriteFragment extends Fragment {
         if(requestListener != null) {
             requestListener.onRequest("checkGPS");
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(data != null) {
+            if(requestCode == WriteFragment.REQUEST_CAMER) {
+
+            } else if(requestCode == WriteFragment.REQUEST_ALBUM) {
+                Log.d(LOG, "onActivityResult() 호출됨(REQUEST_ALBUM)");
+
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+                try {
+                    Cursor cursor = getContext().getContentResolver().query(selectedImage, filePathColumn, null, null);
+                    cursor.moveToFirst();
+
+                    int index = cursor.getColumnIndex(filePathColumn[0]);
+                    String filePath = cursor.getString(index);
+                    cursor.close();
+
+                    Bitmap resultBitmap = decodeFile(filePath, pictureImageView.getWidth(), pictureImageView.getHeight());
+                    setPictureImageView(resultBitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public Bitmap decodeFile(String filePath, int width, int height) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;      // 비트맵을 메모리 할당 전에 먼저 비트맵 크기를 알 수 있음
+        BitmapFactory.decodeFile(filePath, options);
+
+        options.inSampleSize = calculateInSampleSize(options, width, height);
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(filePath, options);
+    }
+
+    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        int width = options.outWidth;
+        int height = options.outHeight;
+        int inSampleSize = 1;
+
+        if(width > reqWidth || height > reqHeight) {
+            final int halfWidth = width;
+            final int halfHeight = height;
+
+            while((halfWidth / inSampleSize) > reqWidth || (halfHeight / inSampleSize) > reqHeight) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }
