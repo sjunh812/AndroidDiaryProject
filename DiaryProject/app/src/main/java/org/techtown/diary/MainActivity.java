@@ -40,6 +40,8 @@ import com.pedro.library.AutoPermissionsListener;
 import com.stanfy.gsonxml.GsonXml;
 import com.stanfy.gsonxml.GsonXmlBuilder;
 import com.stanfy.gsonxml.XmlParserCreator;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.techtown.diary.fragment.GraphFragment;
 import org.techtown.diary.fragment.ListFragment;
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         AutoPermissionsListener, OnRequestListener, MyApplication.OnResponseListener {
     // 상수
     private static final String LOG = "MainActivity";
-    private static final int CHECK_ALL_PERMISSIONS = 101;
+    private static final int REQUEST_ALL_PERMISSIONS = 11;
     private static final int REQUEST_WEATHER_BY_GRID = 1;
 
     // 프래그먼트
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AutoPermissions.Companion.loadAllPermissions(this, CHECK_ALL_PERMISSIONS);      // 위험권한 체크
+        AutoPermissions.Companion.loadAllPermissions(this, REQUEST_ALL_PERMISSIONS);      // 위험권한 체크
 
         listFragment = new ListFragment();
         writeFragment = new WriteFragment();
@@ -372,6 +374,62 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
             super.onBackPressed();
         } else {
             bottomNavigationView.setSelectedItemId(R.id.tab1);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode) {
+            case WriteFragment.REQUEST_CAMERA:
+                if(resultCode == RESULT_OK) {
+                    if(writeFragment != null) {
+                        Log.d(LOG, "onActivityResult : REQUEST_CAMERA (RESULT_OK) " + writeFragment.getFileUri());
+                        CropImage.activity(writeFragment.getFileUri()).setGuidelines(CropImageView.Guidelines.ON).start(this);
+                    }
+                } else {
+                    Log.d(LOG, "onActivityResult : REQUEST_CAMERA (NOT RESULT_OK)");
+                    if(writeFragment != null) {
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.add_image_64_color);
+                        writeFragment.setPictureImageView(bitmap);
+                    }
+                }
+                break;
+
+            case WriteFragment.REQUEST_ALBUM:
+                if(resultCode == RESULT_OK) {
+                    Log.d(LOG, "onActivityResult : REQUEST_ALBUM (RESULT_OK)");
+
+                    Uri uri = data.getData();
+                    CropImage.activity(uri).setGuidelines(CropImageView.Guidelines.ON).start(this);
+                } else {
+                    Log.d(LOG, "onActivityResult : REQUEST_ALBUM (NOT RESULT_OK)");
+                    if(writeFragment != null) {
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.add_image_64_color);
+                        writeFragment.setPictureImageView(bitmap);
+                    }
+                }
+                break;
+
+            case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                if(resultCode == RESULT_OK) {
+                    Log.d(LOG, "onActivityResult : CROP_IMAGE_ACTIVITY_REQUEST_CODE (RESULT_OK)");
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    String filePath = result.getUri().getPath();
+
+                    if (writeFragment != null) {
+                        Bitmap bitmap = writeFragment.decodeFile(new File(filePath), writeFragment.getPictureWidth(), writeFragment.getPictureHeight());
+                        writeFragment.setPictureImageView(bitmap);
+                    }
+                } else {
+                    Log.d(LOG, "onActivityResult : CROP_IMAGE_ACTIVITY_REQUEST_CODE (NOT RESULT_OK)");
+                    if(writeFragment != null) {
+                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.add_image_64_color);
+                        writeFragment.setPictureImageView(bitmap);
+                    }
+                }
+                break;
         }
     }
 

@@ -1,13 +1,17 @@
 package org.techtown.diary.fragment;
 
-import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,22 +24,29 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
 import org.techtown.diary.CustomDialog;
+import org.techtown.diary.MainActivity;
 import org.techtown.diary.R;
 import org.techtown.diary.helper.OnRequestListener;
 import org.techtown.diary.helper.OnTabItemSelectedListener;
 
 import java.io.File;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class WriteFragment extends Fragment {
     // 상수
     private static final String LOG = "WriteFragment";
-    public static final int REQUEST_CAMER = 10;
-    public static final int REQUEST_ALBUM = 11;
-    public static int PICTURE_WIDTH = 100;
-    public static int PICTURE_HEIGHT = 100;
+    public static final int REQUEST_CAMERA = 21;
+    public static final int REQUEST_ALBUM = 22;
 
     // UI
     private ImageView weatherImageView;
@@ -55,11 +66,15 @@ public class WriteFragment extends Fragment {
     private Button curButton = null;
     private CustomDialog dialog;
 
+    // Helper
     private OnTabItemSelectedListener tabListener;
     private OnRequestListener requestListener;          // 메인 액티비티에서 현재 위치 정보를 가져오게 해주는 리스너
     private MoodButtonClickListener moodButtonListener;
+    private SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 
+    // Data
     private int moodIndex = -1;                         // 0~8 총 9개의 기분을 index 로 표현(-1은 사용자가 아무런 기분도 선택하지 않은 경우)
+    private Uri fileUri;                                // 카메라로 찍고 난 후 저장되는 파일의 Uri
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -96,16 +111,13 @@ public class WriteFragment extends Fragment {
         weatherImageView = (ImageView)rootView.findViewById(R.id.weatherImageView);
         locationTextView = (TextView)rootView.findViewById(R.id.locationTextView);
         pictureImageView = (ImageView)rootView.findViewById(R.id.pictureImageView);
-        PICTURE_WIDTH = pictureImageView.getWidth();
-        PICTURE_HEIGHT = pictureImageView.getHeight();
+        contentsEditText = (EditText)rootView.findViewById(R.id.contentsEditText);
         pictureImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setDialog();
             }
         });
-
-        contentsEditText = (EditText)rootView.findViewById(R.id.contentsEditText);
 
         button1 = (Button)rootView.findViewById(R.id.button1);
         button2 = (Button)rootView.findViewById(R.id.button2);
@@ -208,6 +220,7 @@ public class WriteFragment extends Fragment {
         dialog.setCameraButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showCameraActivity();
                 dialog.dismiss();
             }
         });
@@ -221,12 +234,49 @@ public class WriteFragment extends Fragment {
     }
 
     public void showCameraActivity() {
+        File file = createFile();
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri uri = FileProvider.getUriForFile(getContext(), "org.techtown.diary.fileprovider", file);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
+        if(intent.resolveActivity(getContext().getPackageManager()) != null) {
+            getActivity().startActivityForResult(intent, REQUEST_CAMERA);
+        }
     }
 
     public void showAlbumAcitivity() {
         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_ALBUM);
+        getActivity().startActivityForResult(intent, REQUEST_ALBUM);
+    }
+
+    private File createFile() {
+        // 파일 이름 생성
+        Date date = new Date();
+        String fileName = format.format(date) + "_" + System.currentTimeMillis();
+
+        // 파일 경로 생성
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContentValues values = new ContentValues();
+
+            values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+            values.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+            values.put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/Diary");
+
+            fileUri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            String[] filePathColums = { MediaStore.MediaColumns.DATA };
+            Cursor cursor = getContext().getContentResolver().query(fileUri, filePathColums, null, null);
+            cursor.moveToFirst();
+            int index = cursor.getColumnIndex(filePathColums[0]);
+            String filePath = cursor.getString(index);
+
+            return new File(filePath);
+        } else {
+            File storageFile = Environment.getExternalStorageDirectory();
+            File file = new File(storageFile, fileName);
+
+            return file;
+        }
     }
 
     private void buttonToMoodIndex() {
@@ -255,6 +305,80 @@ public class WriteFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if(requestListener != null) {
+            requestListener.onRequest("checkGPS");
+        }
+    }
+
+    public Bitmap decodeFile(File file, int width, int height) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;      // 비트맵을 메모리 할당 전에 먼저 비트맵 크기를 알 수 있음
+        BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+
+        options.inSampleSize = calculateInSampleSize(options, width, height);
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+    }
+
+    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        int width = options.outWidth;
+        int height = options.outHeight;
+        int inSampleSize = 1;
+
+        if(width > reqWidth || height > reqHeight) {
+            final int halfWidth = width;
+            final int halfHeight = height;
+
+            while((halfWidth / inSampleSize) > reqWidth || (halfHeight / inSampleSize) > reqHeight) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public Bitmap rotateBitmap(Uri uri, Bitmap bitmap) {
+        try {
+            InputStream inStream = getContext().getContentResolver().openInputStream(uri);
+            ExifInterface exif = new ExifInterface(inStream);
+            inStream.close();
+
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            Matrix matrix = new Matrix();
+
+            if(orientation == ExifInterface.ORIENTATION_ROTATE_90) {
+                matrix.postRotate(90);
+            } else if(orientation == ExifInterface.ORIENTATION_ROTATE_180) {
+                matrix.postRotate(180);
+            } else if(orientation == ExifInterface.ORIENTATION_ROTATE_270) {
+                matrix.postRotate(270);
+            }
+
+            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getPictureWidth() {
+        return pictureImageView.getWidth();
+    }
+
+    public int getPictureHeight() {
+        return pictureImageView.getHeight();
+    }
+
+    public Uri getFileUri() {
+        return fileUri;
+    }
+
     class MoodButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -276,72 +400,5 @@ public class WriteFragment extends Fragment {
                 curButton = selectButton;
             }
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        if(requestListener != null) {
-            requestListener.onRequest("checkGPS");
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(data != null) {
-            if(requestCode == WriteFragment.REQUEST_CAMER) {
-
-            } else if(requestCode == WriteFragment.REQUEST_ALBUM) {
-                Log.d(LOG, "onActivityResult() 호출됨(REQUEST_ALBUM)");
-
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-
-                try {
-                    Cursor cursor = getContext().getContentResolver().query(selectedImage, filePathColumn, null, null);
-                    cursor.moveToFirst();
-
-                    int index = cursor.getColumnIndex(filePathColumn[0]);
-                    String filePath = cursor.getString(index);
-                    cursor.close();
-
-                    Bitmap resultBitmap = decodeFile(filePath, pictureImageView.getWidth(), pictureImageView.getHeight());
-                    setPictureImageView(resultBitmap);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public Bitmap decodeFile(String filePath, int width, int height) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;      // 비트맵을 메모리 할당 전에 먼저 비트맵 크기를 알 수 있음
-        BitmapFactory.decodeFile(filePath, options);
-
-        options.inSampleSize = calculateInSampleSize(options, width, height);
-        options.inJustDecodeBounds = false;
-
-        return BitmapFactory.decodeFile(filePath, options);
-    }
-
-    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        int width = options.outWidth;
-        int height = options.outHeight;
-        int inSampleSize = 1;
-
-        if(width > reqWidth || height > reqHeight) {
-            final int halfWidth = width;
-            final int halfHeight = height;
-
-            while((halfWidth / inSampleSize) > reqWidth || (halfHeight / inSampleSize) > reqHeight) {
-                inSampleSize *= 2;
-            }
-        }
-
-        return inSampleSize;
     }
 }

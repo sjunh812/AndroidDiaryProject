@@ -416,7 +416,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:fontFamily="@font/font"
-                                    android:text="행복"
+                                    android:text="좋음"
                                     android:textColor="@color/black"
                                     android:textSize="13dp" />
 
