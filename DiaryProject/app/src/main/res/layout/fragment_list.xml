@@ -6,18 +6,37 @@
     android:layout_height="match_parent"
     android:padding="10dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="일기 목록"
-        android:textSize="24dp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:fontFamily="@font/font"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="일기 목록"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:fontFamily="@font/font"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+
+        <Button
+            android:id="@+id/alignButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/list2"
+            app:backgroundTint="@color/cardview_shadow_start_color"
+            app:backgroundTintMode="src_atop" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,16 +46,19 @@
             android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
             android:orientation="horizontal"
             android:padding="10dp">
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/radioButtonL"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:gravity="center"
                 android:checked="true"
                 android:text="내용"
+                android:textSize="12dp"
                 android:textColor="@color/white"
                 android:fontFamily="@font/font"
                 android:button="@android:color/transparent"
@@ -45,25 +67,37 @@
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/radioButtonR"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:gravity="center"
                 android:checked="false"
                 android:text="사진"
+                android:textSize="12dp"
                 android:textColor="@color/skyblue"
                 android:fontFamily="@font/font"
                 android:button="@android:color/transparent"
                 android:background="@drawable/radio_button_right_selector" />
         </RadioGroup>
 
+        <TextView
+            android:id="@+id/selectedDateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="전체보기"
+            android:textSize="18dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/font"/>
+
         <Button
             android:id="@+id/writeButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/button"
             android:text="오늘 작성"
+            android:textSize="12dp"
             android:textColor="@color/white"
             android:fontFamily="@font/font"
             app:backgroundTint="@color/cardview_shadow_end_color"

@@ -36,6 +36,7 @@ import org.techtown.diary.MainActivity;
 import org.techtown.diary.R;
 import org.techtown.diary.helper.OnRequestListener;
 import org.techtown.diary.helper.OnTabItemSelectedListener;
+import org.techtown.diary.note.NoteDatabaseCallback;
 
 import java.io.File;
 import java.io.InputStream;
@@ -44,9 +45,9 @@ import java.util.Date;
 
 public class WriteFragment extends Fragment {
     // 상수
-    private static final String LOG = "WriteFragment";
-    public static final int REQUEST_CAMERA = 21;
-    public static final int REQUEST_ALBUM = 22;
+    private static final String LOG = "WriteFragment";  // 로그
+    public static final int REQUEST_CAMERA = 21;        // 카메라 액티비티에 보내는 요청
+    public static final int REQUEST_ALBUM = 22;         // 갤러리 액티비티에 보내는 요청
 
     // UI
     private ImageView weatherImageView;
@@ -63,40 +64,52 @@ public class WriteFragment extends Fragment {
     private Button button7;
     private Button button8;
     private Button button9;
-    private Button curButton = null;
-    private CustomDialog dialog;
+    private Button curButton = null;                    // 현재 선택된 감정표현 버튼
+    private CustomDialog dialog;                        // 사진 추가시 띄워지는 커스텀 다이얼로그
 
     // Helper
-    private OnTabItemSelectedListener tabListener;
+    private OnTabItemSelectedListener tabListener;      // 메인 액티비티에서 관리하는 하단 탭 선택 리스터
     private OnRequestListener requestListener;          // 메인 액티비티에서 현재 위치 정보를 가져오게 해주는 리스너
-    private MoodButtonClickListener moodButtonListener;
-    private SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+    private MoodButtonClickListener moodButtonListener; // 감정표현 버튼 눌림에 따른 버튼 스케일 효과를 위한 리스터
+    private NoteDatabaseCallback callback;              // db 쿼리문 실행을 위한 콜백 인터페이스
+    private SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");     // 카메라 앱을 이용해 촬영시 저장되는 파일이름에 사용될 날짜포멧 ex)20210418
 
     // Data
+    private int weatherIndex = -1;                      // 날씨 정보(0:맑음, 1:구름 조금, 2:구름 많음, 3:흐림, 4:비, 5:눈/비, 6:눈)
+    private String address = "";                        // 위치 정보
+    private String contents = "";                       // 일기 내용
     private int moodIndex = -1;                         // 0~8 총 9개의 기분을 index 로 표현(-1은 사용자가 아무런 기분도 선택하지 않은 경우)
+    private String filePath = "";                       // cropper 로 수정까지한 최종 사진 경로
     private Uri fileUri;                                // 카메라로 찍고 난 후 저장되는 파일의 Uri
+    private Object[] objs;                              // db 에 데이터 삽입을 위해 필요한 Object[] 객체
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
+        // 메인 액티비티로 부터온 리스너들 초기화
         if(context instanceof OnTabItemSelectedListener) {
             tabListener = (OnTabItemSelectedListener)context;
         }
         if(context instanceof OnRequestListener) {
             requestListener = (OnRequestListener)context;
         }
+        if(context instanceof NoteDatabaseCallback) {
+            callback = (NoteDatabaseCallback)context;
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
+        // 리스너 해제
         if(tabListener != null) {
             tabListener = null;
         }
         if(requestListener != null) {
             requestListener = null;
+        }
+        if(callback != null) {
+            callback = null;
         }
     }
 
@@ -105,14 +118,14 @@ public class WriteFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_write, container, false);
 
-        moodButtonListener = new MoodButtonClickListener();
+        moodButtonListener = new MoodButtonClickListener();     // 감정 선택에 따른 버튼 스케일 변화 리스너 초기화
 
         dateTextView = (TextView)rootView.findViewById(R.id.dateTextView);
         weatherImageView = (ImageView)rootView.findViewById(R.id.weatherImageView);
         locationTextView = (TextView)rootView.findViewById(R.id.locationTextView);
-        pictureImageView = (ImageView)rootView.findViewById(R.id.pictureImageView);
         contentsEditText = (EditText)rootView.findViewById(R.id.contentsEditText);
-        pictureImageView.setOnClickListener(new View.OnClickListener() {
+        pictureImageView = (ImageView)rootView.findViewById(R.id.pictureImageView);
+        pictureImageView.setOnClickListener(new View.OnClickListener() {    // 사진 추가시
             @Override
             public void onClick(View v) {
                 setDialog();
@@ -144,6 +157,10 @@ public class WriteFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(tabListener != null) {
+                    setMoodIndex();                             // 현재 눌린 기분버튼 종류에 따라 moodIndex 설정
+                    setContents();                              // contentsEditText 에 사용자가 입력한 내용을 contents 에 저장
+                    objs = new Object[]{weatherIndex, address, "", "", contents, moodIndex, filePath};
+                    callback.insertIntoDB(objs);
                     tabListener.onTabSelected(0);       // 일기목록 프래그먼트로 이동
                 }
             }
@@ -170,32 +187,40 @@ public class WriteFragment extends Fragment {
         });
 
         if(requestListener != null) {
-            requestListener.onRequest("getCurrentLocation");
+            requestListener.onRequest("getCurrentLocation");    // 메인 액티비티로부터 현재 위치 정보 가져오기
         }
 
         return rootView;
     }
 
-    public void setLocationTextView(String location) {
-        locationTextView.setText(location);
-    }
-
     public void setWeatherImageView(String weatherStr) {
         if(weatherStr.equals("맑음")) {
             weatherImageView.setImageResource(R.drawable.weather_icon_1);
+            weatherIndex = 0;
         } else if(weatherStr.equals("구름 조금")) {
             weatherImageView.setImageResource(R.drawable.weather_icon_2);
+            weatherIndex = 1;
         } else if(weatherStr.equals("구름 많음")) {
             weatherImageView.setImageResource(R.drawable.weather_icon_3);
+            weatherIndex = 2;
         } else if(weatherStr.equals("구름 흐림")) {
             weatherImageView.setImageResource(R.drawable.weather_icon_4);
+            weatherIndex = 3;
         } else if(weatherStr.equals("비")) {
             weatherImageView.setImageResource(R.drawable.weather_icon_5);
+            weatherIndex = 4;
         } else if(weatherStr.equals("눈/비")) {
             weatherImageView.setImageResource(R.drawable.weather_icon_6);
+            weatherIndex = 5;
         } else {
             weatherImageView.setImageResource(R.drawable.weather_icon_7);
+            weatherIndex = 6;
         }
+    }
+
+    public void setLocationTextView(String location) {
+        locationTextView.setText(location);
+        address = location;
     }
 
     public void setDateTextView(String date) {
@@ -204,6 +229,40 @@ public class WriteFragment extends Fragment {
 
     public void setPictureImageView(Bitmap bitmap) {
         pictureImageView.setImageBitmap(bitmap);
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public void setContents() {
+        contents = contentsEditText.getText().toString();
+    }
+
+    private void setMoodIndex() {
+        if(curButton == null) {
+            // 사용자가 아무런 기분도 선택하지 않는 상황
+            // 선택할 수 있도록 토스트바를 띄워줘야함
+            moodIndex = -1;
+        } else if(curButton == button1) {
+            moodIndex = 0;
+        } else if(curButton == button2) {
+            moodIndex = 1;
+        } else if(curButton == button3) {
+            moodIndex = 2;
+        } else if(curButton == button4) {
+            moodIndex = 3;
+        } else if(curButton == button5) {
+            moodIndex = 4;
+        } else if(curButton == button6) {
+            moodIndex = 5;
+        } else if(curButton == button7) {
+            moodIndex = 6;
+        } else if(curButton == button8) {
+            moodIndex = 7;
+        } else {
+            moodIndex = 8;
+        }
     }
 
     public void setDialog() {
@@ -235,8 +294,9 @@ public class WriteFragment extends Fragment {
 
     public void showCameraActivity() {
         File file = createFile();
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Uri uri = FileProvider.getUriForFile(getContext(), "org.techtown.diary.fileprovider", file);
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
 
         if(intent.resolveActivity(getContext().getPackageManager()) != null) {
@@ -273,35 +333,8 @@ public class WriteFragment extends Fragment {
             return new File(filePath);
         } else {
             File storageFile = Environment.getExternalStorageDirectory();
-            File file = new File(storageFile, fileName);
 
-            return file;
-        }
-    }
-
-    private void buttonToMoodIndex() {
-        if(curButton == null) {
-            // 사용자가 아무런 기분도 선택하지 않는 상황
-            // 선택할 수 있도록 토스트바를 띄워줘야함
-            moodIndex = -1;
-        } else if(curButton == button1) {
-            moodIndex = 0;
-        } else if(curButton == button2) {
-            moodIndex = 1;
-        } else if(curButton == button3) {
-            moodIndex = 2;
-        } else if(curButton == button4) {
-            moodIndex = 3;
-        } else if(curButton == button5) {
-            moodIndex = 4;
-        } else if(curButton == button6) {
-            moodIndex = 5;
-        } else if(curButton == button7) {
-            moodIndex = 6;
-        } else if(curButton == button8) {
-            moodIndex = 7;
-        } else {
-            moodIndex = 8;
+            return new File(storageFile, fileName);
         }
     }
 

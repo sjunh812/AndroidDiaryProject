@@ -30,6 +30,8 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -50,6 +52,8 @@ import org.techtown.diary.helper.KMAGrid;
 import org.techtown.diary.helper.MyApplication;
 import org.techtown.diary.helper.OnRequestListener;
 import org.techtown.diary.helper.OnTabItemSelectedListener;
+import org.techtown.diary.note.NoteDatabaseCallback;
+import org.techtown.diary.note.NoteDatebase;
 import org.techtown.diary.weather.WeatherItem;
 import org.techtown.diary.weather.WeatherResult;
 import org.xmlpull.v1.XmlPullParser;
@@ -57,6 +61,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -65,7 +70,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnTabItemSelectedListener,
-        AutoPermissionsListener, OnRequestListener, MyApplication.OnResponseListener {
+        AutoPermissionsListener, OnRequestListener, MyApplication.OnResponseListener, NoteDatabaseCallback {
     // 상수
     private static final String LOG = "MainActivity";
     private static final int REQUEST_ALL_PERMISSIONS = 11;
@@ -83,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     // Helper
     private GPSListener gpsListener;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
+    private NoteDatebase db;                            // 일기 목록을 담은 db
 
     // 데이터
     private Location curLocation;                       // 현재 위치 정보
@@ -96,6 +102,11 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         setContentView(R.layout.activity_main);
 
         AutoPermissions.Companion.loadAllPermissions(this, REQUEST_ALL_PERMISSIONS);      // 위험권한 체크
+
+        // db 초기화
+        db = new NoteDatebase(this);
+        db.dbInit(NoteDatebase.DB_NAME);
+        db.createTable(NoteDatebase.NOTE_TABLE);
 
         listFragment = new ListFragment();
         writeFragment = new WriteFragment();
@@ -296,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     public void onRequest(String command) {
         if(command.equals("getCurrentLocation")) {
             getCurrentLocation();
-        }  else if(command.equals("checkGPS")) {
+        } else if(command.equals("checkGPS")) {
             if(!checkGPS()) {
                 showGPSDialog();
             }
@@ -391,6 +402,8 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
                 } else {
                     Log.d(LOG, "onActivityResult : REQUEST_CAMERA (NOT RESULT_OK)");
                     if(writeFragment != null) {
+                        getContentResolver().delete(writeFragment.getFileUri(), null, null);
+                        Log.d(LOG, "파일 삭제완료");
                         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.add_image_64_color);
                         writeFragment.setPictureImageView(bitmap);
                     }
@@ -419,6 +432,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
                     String filePath = result.getUri().getPath();
 
                     if (writeFragment != null) {
+                        writeFragment.setFilePath(filePath);
                         Bitmap bitmap = writeFragment.decodeFile(new File(filePath), writeFragment.getPictureWidth(), writeFragment.getPictureHeight());
                         writeFragment.setPictureImageView(bitmap);
                     }
@@ -447,6 +461,13 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     @Override
     public void onGranted(int i, String[] strings) {
 
+    }
+
+    @Override
+    public void insertIntoDB(Object[] objs) {
+        if(db != null) {
+            db.insert(NoteDatebase.NOTE_TABLE, objs);
+        }
     }
 
     // 위치 관리자로부터 위치 정보를 가져오는 리스너

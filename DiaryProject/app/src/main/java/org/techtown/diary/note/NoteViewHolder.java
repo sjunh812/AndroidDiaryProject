@@ -66,8 +66,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
 
     public void setItem(Note item) {
         // 기분 설정
-        String mood = item.getMood();
-        int moodIndex = Integer.parseInt(mood);
+        int moodIndex = item.getMood();
         setMoodImage(moodIndex);
 
         // 사진 설정
@@ -81,8 +80,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         }
 
         // 날씨 설정
-        String weather = item.getWeather();
-        int weatherIndex = Integer.parseInt(weather);
+        int weatherIndex = item.getWeather();
         setWeatherImage(weatherIndex);
 
         // 내용 설정

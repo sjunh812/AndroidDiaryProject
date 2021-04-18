@@ -2,16 +2,16 @@ package org.techtown.diary.note;
 
 public class Note {
     private int _id;                // DB 에서 사용될 id
-    private String weather;         // 날씨
+    private int weather;            // 날씨
     private String address;         // 주소
     private String locationX;
     private String locationY;
     private String contents;        // 내용
-    private String mood;            // 기분
+    private int mood;               // 기분
     private String picture;         // 사진 이미지 경로
     private String createDateStr;   // 일기 작성 일자
 
-    public Note(int _id, String weather, String address, String locationX, String locationY, String contents, String mood, String picture, String createDateStr) {
+    public Note(int _id, int weather, String address, String locationX, String locationY, String contents, int mood, String picture, String createDateStr) {
         this._id = _id;
         this.weather = weather;
         this.address = address;
@@ -31,11 +31,11 @@ public class Note {
         this._id = _id;
     }
 
-    public String getWeather() {
+    public int getWeather() {
         return weather;
     }
 
-    public void setWeather(String weather) {
+    public void setWeather(int weather) {
         this.weather = weather;
     }
 
@@ -71,11 +71,11 @@ public class Note {
         this.contents = contents;
     }
 
-    public String getMood() {
+    public int getMood() {
         return mood;
     }
 
-    public void setMood(String mood) {
+    public void setMood(int mood) {
         this.mood = mood;
     }
 
