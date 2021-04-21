@@ -4,123 +4,177 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="@color/azure"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="10dp"
-    app:cardElevation="5dp"
+    app:cardElevation="2dp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:id="@+id/contentsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:longClickable="true"
+        android:background="@drawable/view"
+        android:orientation="vertical"
         android:padding="10dp"
         android:visibility="visible">
-
-        <ImageView
-            android:id="@+id/moodImageView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="10dp"
-            android:padding="10dp"
-            app:srcCompat="@drawable/mood_angry_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/moodImageView"
+                android:layout_width="57dp"
+                android:layout_height="57dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dp"
+                android:padding="10dp"
+                app:srcCompat="@drawable/mood_angry_color" />
 
             <TextView
-                android:id="@+id/contentsTextView"
+                android:id="@+id/dateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:lineSpacingExtra="5dp"
-                android:fontFamily="@font/font"
-                android:text="내용"
+                android:layout_gravity="center"
+                android:layout_marginRight="8dp"
+                android:textStyle="bold"
+                android:text="2021년 04월 20일"
                 android:textColor="@color/black"
-                android:textSize="15dp" />
+                android:textSize="18dp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/weekTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:text="화"
+                android:textStyle="bold"
+                android:textColor="@color/skyblue"
+                android:textSize="18dp" />
 
-                <ImageView
-                    android:id="@+id/weatherImageView"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentLeft="true"
-                    android:src="@drawable/weather_icon_1"
-                    app:tint="@color/skyblue" />
+            <ImageView
+                android:id="@+id/weatherImageView"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/weather_icon_1"
+                app:tint="@color/skyblue" />
 
-                <ImageView
-                    android:id="@+id/existPictureImageView"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/weatherImageView"
-                    android:src="@drawable/exist_picture" />
+            <ImageView
+                android:id="@+id/existPictureImageView"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="2dp"
+                android:src="@drawable/exist_picture" />
 
-                <TextView
-                    android:id="@+id/locationTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="@font/font"
-                    android:text="고양시 일산서구"
-                    android:textColor="@color/skyblue"
-                    android:textSize="13dp" />
-
-                <TextView
-                    android:id="@+id/dateTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="@font/font"
-                    android:text="2021-04-10"
-                    android:textColor="@color/black"
-                    android:textSize="13dp" />
-
-            </RelativeLayout>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/contentsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:lineSpacingExtra="11dp"
+            android:text="내용"
+            android:textColor="@color/black"
+            android:textSize="17dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/timeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AM 5:00"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/gray"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/locationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="고양시 일산서구"
+                android:textColor="@color/skyblue"
+                android:textSize="14dp" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/photoLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/view"
+        android:longClickable="true"
         android:orientation="vertical"
         android:padding="10dp"
         android:visibility="gone">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/dateTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="2021년 04월 10일"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/weekTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="화"
+                android:textColor="@color/skyblue"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
         <ImageView
             android:id="@+id/pictureImageView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="250dp"
             android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
             android:padding="5dp"
-            android:scaleType="center"
+            android:scaleType="centerInside"
             android:src="@drawable/icons8_no_image_64_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/contentsTextView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="@font/font"
+                android:layout_marginBottom="30dp"
+                android:lineSpacingExtra="11dp"
                 android:text="내용"
-                android:lineSpacingExtra="5dp"
                 android:textColor="@color/black"
                 android:textSize="17dp" />
 
@@ -150,21 +204,19 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:fontFamily="@font/font"
                     android:text="고양시 일산서구"
                     android:textColor="@color/skyblue"
-                    android:textSize="13dp" />
+                    android:textSize="17dp" />
 
                 <TextView
-                    android:id="@+id/dateTextView2"
+                    android:id="@+id/timeTextView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:fontFamily="@font/font"
-                    android:text="2021-04-10"
-                    android:textColor="@color/black"
-                    android:textSize="13dp" />
+                    android:text="AM 5:00"
+                    android:textColor="@color/gray"
+                    android:textSize="17dp" />
 
             </RelativeLayout>
         </LinearLayout>

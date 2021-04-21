@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.PopupOverlay"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:popupTheme="@style/Theme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/azure"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="10dp"
+            android:elevation="2dp"
+            android:layout_marginTop="4dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="10dp"
+                android:textStyle="bold"
+                android:text="적용 예시"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/exampleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:lineSpacingExtra="11dp"
+                android:text="폰트적용 예시입니다~ \n오늘도 좋은 하루 되시기를 바랍니다."
+                android:textColor="@color/black"
+                android:textSize="17dp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:elevation="2dp"
+            android:padding="20dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="10dp"
+                android:textStyle="bold"
+                android:text="폰트"
+                android:textColor="@color/black"
+                android:textSize="20dp" />
+
+            <RadioGroup
+                android:id="@+id/fontGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/fontButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:fontFamily="@font/font1"
+                    android:text="경기청년바탕"
+                    android:textSize="20dp" />
+
+                <RadioButton
+                    android:id="@+id/fontButton2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:textSize="20dp"
+                    android:text="교보손글씨"
+                    android:fontFamily="@font/font2"/>
+
+                <RadioButton
+                    android:id="@+id/fontButton3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:textSize="20dp"
+                    android:text="어비 푸딩체"
+                    android:fontFamily="@font/font3"/>
+
+                <RadioButton
+                    android:id="@+id/fontButton4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:textSize="20dp"
+                    android:text="나눔손글씨펜체"
+                    android:fontFamily="@font/font4" />
+
+                <RadioButton
+                    android:id="@+id/fontButton5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:textSize="20dp"
+                    android:text="카페24 숑숑체"
+                    android:fontFamily="@font/font5" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:gravity="center">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/okButton"
+                android:layout_width="72dp"
+                android:layout_height="37dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/button"
+                android:text="저장"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                app:backgroundTint="@color/cardview_shadow_end_color"
+                app:backgroundTintMode="add" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/cancelButton"
+                android:layout_width="72dp"
+                android:layout_height="37dp"
+                android:layout_toRightOf="@+id/okButton"
+                android:background="@drawable/button"
+                android:text="취소"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                app:backgroundTint="@color/cardview_shadow_end_color"
+                app:backgroundTintMode="add" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

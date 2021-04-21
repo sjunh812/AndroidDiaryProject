@@ -2,7 +2,6 @@ package org.techtown.diary;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -14,29 +13,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Paint;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.gson.Gson;
 import com.pedro.library.AutoPermissions;
 import com.pedro.library.AutoPermissionsListener;
 import com.stanfy.gsonxml.GsonXml;
@@ -47,70 +37,76 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.techtown.diary.fragment.GraphFragment;
 import org.techtown.diary.fragment.ListFragment;
+import org.techtown.diary.fragment.OptionFragment;
 import org.techtown.diary.fragment.WriteFragment;
 import org.techtown.diary.helper.KMAGrid;
 import org.techtown.diary.helper.MyApplication;
+import org.techtown.diary.helper.MyTheme;
 import org.techtown.diary.helper.OnRequestListener;
 import org.techtown.diary.helper.OnTabItemSelectedListener;
+import org.techtown.diary.note.Note;
 import org.techtown.diary.note.NoteDatabaseCallback;
-import org.techtown.diary.note.NoteDatebase;
+import org.techtown.diary.note.NoteDatabase;
 import org.techtown.diary.weather.WeatherItem;
 import org.techtown.diary.weather.WeatherResult;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.File;
-import java.net.URI;
-import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements OnTabItemSelectedListener,
         AutoPermissionsListener, OnRequestListener, MyApplication.OnResponseListener, NoteDatabaseCallback {
     // 상수
     private static final String LOG = "MainActivity";
-    private static final int REQUEST_ALL_PERMISSIONS = 11;
-    private static final int REQUEST_WEATHER_BY_GRID = 1;
+    private static final int REQUEST_ALL_PERMISSIONS = 11;  // 모든 위험권한 허용 요청시 사용(AutoPermissions)
+    private static final int REQUEST_WEATHER_BY_GRID = 1;   // 받아온 위도, 경도 정보를 기상청 격자포멧에 맞게 변경 요청시 사용
+    private static final String IS_RECREATE_KEY = "recreate_key";
 
     // 프래그먼트
     private ListFragment listFragment;
     private WriteFragment writeFragment;
     private GraphFragment graphFragment;
+    private OptionFragment optionFragment;
 
     // UI
-    private BottomNavigationView bottomNavigationView;
+    private BottomNavigationView bottomNavigationView;  // 하단 탭
     private AlertDialog GPSDialog;                      // GPS 가 꺼져있는 경우 띄워지는 Dialog 창
 
     // Helper
-    private GPSListener gpsListener;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
-    private NoteDatebase db;                            // 일기 목록을 담은 db
+    private GPSListener gpsListener;                    // 위치 정보를 가져오기 위해 필요한 리스너
+    private NoteDatabase db;                            // 일기 목록을 담은 db
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
+    public static SimpleDateFormat timeFormat = new SimpleDateFormat("a HH:mm");
 
     // 데이터
     private Location curLocation;                       // 현재 위치 정보
     private String curWeatherStr;                       // 현재 날씨
     private Date curDate;                               // 현재 날짜
     private int locationCount = 0;                      // 현재 위치 정보를 찾은 경우 locationCount++ -> 위치 요청 종료
+    private Note updateItem = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyTheme.applyTheme(this);
         setContentView(R.layout.activity_main);
 
         AutoPermissions.Companion.loadAllPermissions(this, REQUEST_ALL_PERMISSIONS);      // 위험권한 체크
 
         // db 초기화
-        db = new NoteDatebase(this);
-        db.dbInit(NoteDatebase.DB_NAME);
-        db.createTable(NoteDatebase.NOTE_TABLE);
+        db = new NoteDatabase(this);
+        db.dbInit(NoteDatabase.DB_NAME);
+        db.createTable(NoteDatabase.NOTE_TABLE);
 
         listFragment = new ListFragment();
-        writeFragment = new WriteFragment();
         graphFragment = new GraphFragment();
+        optionFragment = new OptionFragment();
 
         bottomNavigationView = (BottomNavigationView)findViewById(R.id.bottomNavigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -126,6 +122,11 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
                         return true;
                     case R.id.tab2:
+                        writeFragment = new WriteFragment();
+                        if(updateItem != null) {
+                            writeFragment.setItem(updateItem);
+                            updateItem = null;
+                        }
                         transaction.replace(R.id.container, writeFragment);
                         transaction.commit();
 
@@ -135,19 +136,27 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
                         transaction.commit();
 
                         return true;
+                    case R.id.tab4:
+                        transaction.replace(R.id.container, optionFragment);
+                        transaction.commit();
+                        return true;
                 }
 
                 return false;
             }
         });
-        onTabSelected(0);       // 일기목록 프래그먼트를 첫 화면으로 지정
+
+        if(savedInstanceState == null) {
+            onTabSelected(0);       // 일기목록 프래그먼트를 첫 화면으로 지정
+        } else {
+            onTabSelected(3);       // 일기목록 프래그먼트를 첫 화면으로 지정
+        }
     }
 
-    // 현재 위치 정보 가져오기
     public void getCurrentLocation() {
-        // 현재 날짜 가져오기
         curDate = new Date();
         String date = dateFormat.format(curDate);
+
         if(writeFragment != null) {
             writeFragment.setDateTextView(date);
         }
@@ -158,17 +167,11 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
             if(checkLocationPermission()) {
                 curLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-                if(curLocation != null) {
-                    double latitude = curLocation.getLatitude();               // 위도
-                    double longitude = curLocation.getLongitude();             // 경도
-                    Log.d(LOG, "LOG : Latitude = " + latitude + ", Longitude = " + longitude);
-                }
-
                 gpsListener = new GPSListener();
                 long minTime = 10000;                                          // 업데이트 주기 10초
                 float minDistance = 0;                                         // 업데이트 거리간격 0
-
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, gpsListener);
+
                 getCurrentAddress();                                           // 위치정보를 주소로 반환(작성 프래그먼트의 locationTextView 갱신)
                 getCurrentWeather();                                           // 위치정보를 이용해 날씨 반환(작성 프래그먼트의 weatherImageView 갱신)
             }
@@ -177,12 +180,12 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         }
     }
 
-    // 현재 위치정보를 이용해 주소로 변환
     public void getCurrentAddress() {
         Geocoder geoCoder = new Geocoder(this);
 
         try {
             List<Address> list = geoCoder.getFromLocation(curLocation.getLatitude(), curLocation.getLongitude(), 1);
+
             if(list != null && list.size() > 0) {
                 Address address = list.get(0);                          // 현재 주소 정보를 가진 Address 객체
                 String locality = address.getLocality();                // 시
@@ -211,7 +214,6 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         }
     }
 
-    // 현재 날씨 정보 가져오기
     public void getCurrentWeather() {
         Map<String, Double> map = KMAGrid.getKMAGrid(curLocation.getLatitude(), curLocation.getLongitude());
 
@@ -227,7 +229,17 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         MyApplication.request(REQUEST_WEATHER_BY_GRID, Request.Method.GET, url, params, this);
     }
 
-    // 위치 권한 확인
+    public void stopLocationService() {
+        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        try {
+            locationManager.removeUpdates(gpsListener);
+            Log.d(LOG, "위치 업데이트 종료");
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean checkLocationPermission() {
         int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
 
@@ -238,7 +250,6 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         return false;
     }
 
-    // GPS 확인
     public boolean checkGPS() {
         LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 
@@ -249,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         return true;
     }
 
-    // GPS 확인 Dialog 보여주기
     public void showGPSDialog() {
         if(GPSDialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this)
@@ -273,18 +283,72 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         GPSDialog.show();
     }
 
-    // 위치 서비스 중단
-    public void stopLocationService() {
-        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+    public static String getDayOfWeek(Date date) {
+        String dayOfWeek = null;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
 
-        try {
-            locationManager.removeUpdates(gpsListener);
-        } catch(Exception e) {
-            e.printStackTrace();
+        int dayNum = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (dayNum) {
+            case 1:
+                dayOfWeek = "일";
+                break;
+            case 2:
+                dayOfWeek = "월";
+                break;
+            case 3:
+                dayOfWeek = "화";
+                break;
+            case 4:
+                dayOfWeek = "수";
+                break;
+            case 5:
+                dayOfWeek = "목";
+                break;
+            case 6:
+                dayOfWeek = "금";
+                break;
+            case 7:
+                dayOfWeek = "토";
+                break;
+        }
+
+        return dayOfWeek;
+    }
+
+    // DB 관련 함수
+    @Override
+    public void insertDB(Object[] objs) {
+        if(db != null) {
+            db.insert(NoteDatabase.NOTE_TABLE, objs);
+        }
+    }
+    @Override
+    public ArrayList<Note> selectAllDB() {
+        ArrayList<Note> items = new ArrayList<>();
+        if(db != null) {
+            items = db.selectAll(NoteDatabase.NOTE_TABLE);
+        }
+
+        return items;
+    }
+
+    @Override
+    public void deleteDB(int id) {
+        if(db != null) {
+            db.delete(NoteDatabase.NOTE_TABLE, id);
         }
     }
 
-    // 하단 탭 선택간 이벤트 구현
+    @Override
+    public void updateDB(Note item) {
+        if(db != null) {
+            db.update(NoteDatabase.NOTE_TABLE, item);
+        }
+    }
+
+    // OnTabItemSelectedListener 구현(하단 탭 선택간 이벤트 구현)
     @Override
     public void onTabSelected(int position) {
         switch(position) {
@@ -297,12 +361,23 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
             case 2:
                 bottomNavigationView.setSelectedItemId(R.id.tab3);
                 break;
+            case 3:
+                bottomNavigationView.setSelectedItemId(R.id.tab4);
+                break;
             default:
-                Log.e(LOG, "ERROR : Tab Position ERROR..");
+                Log.e(LOG, "ERROR : 하단 탭 선택 에러 발생..");
+                break;
         }
     }
 
-    // from Fragment(ReqeustListener)
+    @Override
+    public void showWriteFragment(Note item) {
+        updateItem = item;
+        onTabSelected(1);
+        //getSupportFragmentManager().beginTransaction().replace(R.id.container, writeFragment).commit();
+    }
+
+    // OnRequestListener 구현
     @Override
     public void onRequest(String command) {
         if(command.equals("getCurrentLocation")) {
@@ -314,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         }
     }
 
-    // Volley 응답시 실행되는 자동 호출 함수
+    // OnResponseListener 구현(Volley 응답시 실행되는 자동 호출 함수)
     @Override
     public void onResponse(int reqeustCode, int responseCode, String response) {
         if(responseCode == MyApplication.RESPONSE_OK) {
@@ -337,26 +412,6 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
                 try {
                     WeatherResult result = gsonXml.fromXml(response, WeatherResult.class);
-
-                    for(int i = 0; i < result.body.data.size(); i++) {
-                        WeatherItem item = result.body.data.get(i);
-
-                        switch(item.getDay()) {
-                            case 0:
-                                Log.d(LOG, "<오늘> " + item.getHour() + "시\n");
-                                break;
-                            case 1:
-                                Log.d(LOG, "<내일>\n" + item.getHour() + "시\n");
-                                break;
-                            default:
-                                Log.d(LOG, "<모레>\n" + item.getHour() + "시\n");
-                                break;
-                        }
-
-                        Log.d(LOG, "날씨 : " + item.getWfKor() + "\n");
-                        Log.d(LOG, "기온 : " + item.getTemp() + "\n");
-                    }
-
                     WeatherItem item = result.body.data.get(0);
                     curWeatherStr = item.getWfKor();
 
@@ -378,7 +433,6 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         }
     }
 
-    // back 키 이벤트
     @Override
     public void onBackPressed() {
         if(bottomNavigationView.getSelectedItemId() == R.id.tab1) {
@@ -393,7 +447,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         super.onActivityResult(requestCode, resultCode, data);
 
         switch(requestCode) {
-            case WriteFragment.REQUEST_CAMERA:
+            case WriteFragment.REQUEST_CAMERA:      // 카메라 앱으로 부터
                 if(resultCode == RESULT_OK) {
                     if(writeFragment != null) {
                         Log.d(LOG, "onActivityResult : REQUEST_CAMERA (RESULT_OK) " + writeFragment.getFileUri());
@@ -402,48 +456,71 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
                 } else {
                     Log.d(LOG, "onActivityResult : REQUEST_CAMERA (NOT RESULT_OK)");
                     if(writeFragment != null) {
+                        //writeFragment.checkDeleteCache();
                         getContentResolver().delete(writeFragment.getFileUri(), null, null);
                         Log.d(LOG, "파일 삭제완료");
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.add_image_64_color);
-                        writeFragment.setPictureImageView(bitmap);
+                        //writeFragment.setFilePath("");
+                        //writeFragment.setPictureImageView(null, null, R.drawable.add_image_64_color);
                     }
                 }
                 break;
 
-            case WriteFragment.REQUEST_ALBUM:
+            case WriteFragment.REQUEST_ALBUM:      // 앨범으로 부터
                 if(resultCode == RESULT_OK) {
                     Log.d(LOG, "onActivityResult : REQUEST_ALBUM (RESULT_OK)");
 
                     Uri uri = data.getData();
                     CropImage.activity(uri).setGuidelines(CropImageView.Guidelines.ON).start(this);
                 } else {
+                    //writeFragment.checkDeleteCache();
                     Log.d(LOG, "onActivityResult : REQUEST_ALBUM (NOT RESULT_OK)");
                     if(writeFragment != null) {
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.add_image_64_color);
-                        writeFragment.setPictureImageView(bitmap);
+                        //writeFragment.setFilePath("");
+                        //writeFragment.setPictureImageView(null, null, R.drawable.add_image_64_color);
                     }
                 }
                 break;
 
             case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                 if(resultCode == RESULT_OK) {
+                    writeFragment.checkDeleteCache();
+
                     Log.d(LOG, "onActivityResult : CROP_IMAGE_ACTIVITY_REQUEST_CODE (RESULT_OK)");
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
                     String filePath = result.getUri().getPath();
 
                     if (writeFragment != null) {
                         writeFragment.setFilePath(filePath);
-                        Bitmap bitmap = writeFragment.decodeFile(new File(filePath), writeFragment.getPictureWidth(), writeFragment.getPictureHeight());
-                        writeFragment.setPictureImageView(bitmap);
+                        writeFragment.setPictureImageView(null, result.getUri(), -1);
                     }
                 } else {
+                   // writeFragment.checkDeleteCache();
+
                     Log.d(LOG, "onActivityResult : CROP_IMAGE_ACTIVITY_REQUEST_CODE (NOT RESULT_OK)");
                     if(writeFragment != null) {
-                        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.add_image_64_color);
-                        writeFragment.setPictureImageView(bitmap);
+                        //writeFragment.setFilePath("");
+                        //writeFragment.setPictureImageView(null, null, R.drawable.add_image_64_color);
                     }
                 }
                 break;
+            case OptionFragment.REQUEST_FONT_CHANGE:
+                if(resultCode == RESULT_OK) {
+                    Log.d(LOG, "recreate()호출됨");
+                    recreate();
+                }
+                break;
+        }
+    }
+
+    // 위치 관리자로부터 위치 정보를 가져오는 리스너
+    class GPSListener implements LocationListener {
+        @Override
+        public void onLocationChanged(@NonNull Location location) {
+            curLocation = location;
+            locationCount++;                                        // 현재 위치 정보를 찾았기 때문에 카운팅
+
+            getCurrentAddress();                                    // 갱신된 위치정보를 주소로 반환(작성 프래그먼트의 locationTextView 갱신)
+            getCurrentWeather();                                    // 갱신된 위치정보를 날씨로 반환(작성 프래그먼트의 weatherImageView 갱신)
         }
     }
 
@@ -464,24 +541,40 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     }
 
     @Override
-    public void insertIntoDB(Object[] objs) {
-        if(db != null) {
-            db.insert(NoteDatebase.NOTE_TABLE, objs);
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(IS_RECREATE_KEY, true);
+    }
+
+    /*    public Bitmap decodeUri(Uri uri, int width, int height) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;      // 비트맵을 메모리 할당 전에 먼저 비트맵 크기를 알 수 있음
+        try {
+            BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
+
+            options.inSampleSize = calculateInSampleSize(options, width, height);
+            options.inJustDecodeBounds = false;
+
+            return BitmapFactory.decodeStream(getContentResolver().openInputStream(uri), null, options);
+        } catch(Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    // 위치 관리자로부터 위치 정보를 가져오는 리스너
-    class GPSListener implements LocationListener {
-        @Override
-        public void onLocationChanged(@NonNull Location location) {
-            curLocation = location;
-            locationCount++;                                        // 현재 위치 정보를 찾았기 때문에 카운팅
+    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        int width = options.outWidth;
+        int height = options.outHeight;
+        int inSampleSize = 1;
 
-            double latitude = location.getLatitude();               // 위도
-            double longitude = location.getLongitude();             // 경도
+        if(width > reqWidth || height > reqHeight) {
+            final int halfWidth = width;
+            final int halfHeight = height;
 
-            getCurrentAddress();                                    // 갱신된 위치정보를 주소로 반환(작성 프래그먼트의 locationTextView 갱신)
-            getCurrentWeather();                                    // 갱신된 위치정보를 날씨로 반환(작성 프래그먼트의 weatherImageView 갱신)
+            while((halfWidth / inSampleSize) > reqWidth || (halfHeight / inSampleSize) > reqHeight) {
+                inSampleSize *= 2;
+            }
         }
-    }
+
+        return inSampleSize;
+    }*/
 }

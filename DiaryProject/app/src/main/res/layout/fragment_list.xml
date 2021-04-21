@@ -4,11 +4,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp">
+    android:paddingTop="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -16,10 +18,9 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:text="일기 목록"
-            android:textSize="24dp"
+            android:textSize="25dp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:fontFamily="@font/font"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:layout_marginLeft="10dp"
@@ -27,8 +28,8 @@
 
         <Button
             android:id="@+id/alignButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
@@ -40,7 +41,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp">
 
         <RadioGroup
             android:id="@+id/radioGroup"
@@ -53,29 +56,28 @@
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/radioButtonL"
-                android:layout_width="wrap_content"
+                android:layout_width="48dp"
                 android:layout_height="40dp"
-                android:gravity="center"
-                android:checked="true"
-                android:text="내용"
-                android:textSize="12dp"
-                android:textColor="@color/white"
-                android:fontFamily="@font/font"
+                android:background="@drawable/radio_button_left_selector"
                 android:button="@android:color/transparent"
-                android:background="@drawable/radio_button_left_selector" />
+                android:checked="true"
+                android:gravity="center"
+                android:text="내용"
+                android:textColor="@color/white"
+                android:textSize="16dp" />
 
             <androidx.appcompat.widget.AppCompatRadioButton
                 android:id="@+id/radioButtonR"
-                android:layout_width="wrap_content"
+                android:layout_width="48dp"
                 android:layout_height="40dp"
-                android:gravity="center"
-                android:checked="false"
-                android:text="사진"
-                android:textSize="12dp"
-                android:textColor="@color/skyblue"
-                android:fontFamily="@font/font"
+                android:background="@drawable/radio_button_right_selector"
                 android:button="@android:color/transparent"
-                android:background="@drawable/radio_button_right_selector" />
+                android:checked="false"
+                android:gravity="center"
+                android:text="사진"
+                android:textColor="@color/skyblue"
+                android:textSize="16dp" />
+
         </RadioGroup>
 
         <TextView
@@ -84,22 +86,21 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="전체보기"
-            android:textSize="18dp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/font"/>
+            android:textSize="21dp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/writeButton"
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/button"
             android:text="오늘 작성"
-            android:textSize="12dp"
             android:textColor="@color/white"
-            android:fontFamily="@font/font"
+            android:textSize="16dp"
             app:backgroundTint="@color/cardview_shadow_end_color"
             app:backgroundTintMode="add" />
 
@@ -108,6 +109,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@color/azure" />
 
 </LinearLayout>

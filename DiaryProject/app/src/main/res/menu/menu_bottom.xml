@@ -20,4 +20,10 @@
         android:icon="@drawable/icon_graph"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/tab4"
+        android:title="더보기"
+        android:icon="@drawable/more_icon"
+        app:showAsAction="ifRoom" />
+
 </menu>

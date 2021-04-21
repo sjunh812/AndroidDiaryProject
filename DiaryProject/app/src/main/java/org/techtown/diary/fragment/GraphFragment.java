@@ -1,6 +1,8 @@
 package org.techtown.diary.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -74,7 +76,7 @@ public class GraphFragment extends Fragment {
         chart1.setTransparentCircleAlpha(110);           // 중간원과 바깥원 사이의 얇은 투명원의 알파 값 결정
         chart1.setTransparentCircleRadius(66f);          // 중간원과 바깥원 사이의 얇은 투명원의 반지름
         chart1.setHoleRadius(63f);                       // 중간원의 반지름
-        chart1.setHoleColor(getResources().getColor(R.color.azure));
+        chart1.setHoleColor(getResources().getColor(R.color.white));
         //chart1.setDrawCenterText(true);
         chart1.setHighlightPerTapEnabled(true);          // 특정부분 선택시 확대효과 여부
         Legend legend1 = chart1.getLegend();             // 그래프의 구성요소들을 추가로 명시하는지 여부
@@ -169,9 +171,9 @@ public class GraphFragment extends Fragment {
         PieData data = new PieData(dataSet);
         data.setValueTextSize(14f);                         // 그래프 내 text 크기
         data.setValueTextColor(Color.WHITE);                // 그래프 내 text 색상
-        if(context != null) {                               // 그래프 내 text 폰트
-            data.setValueTypeface(Typeface.createFromAsset(context.getAssets(), "ridibatang.otf"));
-        }
+/*        if(context != null) {                               // 그래프 내 text 폰트
+            data.setValueTypeface(Typeface.createFromAsset(context.getAssets(), "nanumpen.ttf"));
+        }*/
 
         chart1.setData(data);
         chart1.invalidate();

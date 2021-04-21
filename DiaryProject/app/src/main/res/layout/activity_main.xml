@@ -17,10 +17,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:theme="@style/Widget.BottomNavigationView"
+        android:background="@color/white"
         app:elevation="5dp"
-        app:itemTextColor="@drawable/item_color"
         app:itemIconTint="@drawable/item_color"
+        app:itemTextColor="@drawable/item_color"
         app:menu="@menu/menu_bottom" />
 
 </RelativeLayout>

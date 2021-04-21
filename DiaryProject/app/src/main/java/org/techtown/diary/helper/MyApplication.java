@@ -1,10 +1,10 @@
 package org.techtown.diary.helper;
 
+
 import android.app.Application;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -23,6 +23,7 @@ public class MyApplication extends Application {
     public static final int RESPONSE_OK = 200;
     public static final int RESPONSE_ERROR = 400;
 
+    // Helper
     public static RequestQueue requestQueue;        // 웹으로부터 데이터를 요청하기위해 사용되는 RequestQueue
 
     public static interface OnResponseListener {
@@ -79,3 +80,4 @@ public class MyApplication extends Application {
         MyApplication.requestQueue.add(request);
     }
 }
+

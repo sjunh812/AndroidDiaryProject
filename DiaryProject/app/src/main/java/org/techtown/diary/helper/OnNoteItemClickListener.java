@@ -5,5 +5,5 @@ import android.view.View;
 import org.techtown.diary.note.NoteViewHolder;
 
 public interface OnNoteItemClickListener {
-    public void onitemClick(NoteViewHolder holder, View view, int position);
+    public void onItemClick(NoteViewHolder holder, View view, int position);
 }

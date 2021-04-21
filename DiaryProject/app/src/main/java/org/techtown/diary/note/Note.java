@@ -9,9 +9,12 @@ public class Note {
     private String contents;        // 내용
     private int mood;               // 기분
     private String picture;         // 사진 이미지 경로
-    private String createDateStr;   // 일기 작성 일자
+    private String createDateStr;   // 일기 작성 일자(yyyy년 MM월 dd일)
+    private String time;            // 일기 작성 시간(PM 5:00)
+    private String dayOfWeek;       // 일기 작성 요일(화)
 
-    public Note(int _id, int weather, String address, String locationX, String locationY, String contents, int mood, String picture, String createDateStr) {
+    public Note(int _id, int weather, String address, String locationX, String locationY, String contents,
+                int mood, String picture, String createDateStr, String time, String dayOfWeek) {
         this._id = _id;
         this.weather = weather;
         this.address = address;
@@ -21,6 +24,8 @@ public class Note {
         this.mood = mood;
         this.picture = picture;
         this.createDateStr = createDateStr;
+        this.time = time;
+        this.dayOfWeek = dayOfWeek;
     }
 
     public int get_id() {
@@ -93,5 +98,21 @@ public class Note {
 
     public void setCreateDateStr(String createDateStr) {
         this.createDateStr = createDateStr;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(String dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 }

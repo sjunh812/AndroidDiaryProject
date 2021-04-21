@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/skyblue"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:text="사진 삭제"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/cancelButton"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
+            android:background="@drawable/x_icon" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/deleteTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="20dp"
+        android:text="사진을 삭제하시겠습니까?"
+        android:textSize="18dp"
+        android:textColor="@color/black" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/deleteButton"
+            android:layout_width="70dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/button"
+            android:text="삭제"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            app:backgroundTint="@color/cardview_shadow_end_color"
+            app:backgroundTintMode="add" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancelButton2"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/button"
+            android:text="취소"
+            android:textColor="@color/white"
+            android:textSize="15dp"
+            app:backgroundTint="@color/cardview_shadow_end_color"
+            app:backgroundTintMode="add" />
+
+    </LinearLayout>
+</LinearLayout>

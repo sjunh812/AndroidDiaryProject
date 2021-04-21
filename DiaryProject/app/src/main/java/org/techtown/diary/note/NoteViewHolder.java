@@ -1,16 +1,35 @@
 package org.techtown.diary.note;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import org.techtown.diary.R;
+import org.techtown.diary.fragment.WriteFragment;
 import org.techtown.diary.helper.OnNoteItemClickListener;
+import org.techtown.diary.helper.OnNoteItemLongClickListener;
+import org.techtown.diary.helper.OnNoteItemTouchListener;
+import org.techtown.diary.helper.OnRequestListener;
+
+import java.io.File;
+import java.io.InputStream;
 
 public class NoteViewHolder extends RecyclerView.ViewHolder {
     // 내용버튼 선택시 보일 뷰 UI
@@ -21,6 +40,8 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
     private TextView contentsTextView;
     private TextView locationTextView;
     private TextView dateTextView;
+    private TextView timeTextView;
+    private TextView weekTextView;
 
     // 사진버튼 선택시 보일 뷰 UI
     private LinearLayout photoLayout;
@@ -30,11 +51,23 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
     private TextView contentsTextView2;
     private TextView locationTextView2;
     private TextView dateTextView2;
+    private TextView timeTextView2;
+    private TextView weekTextView2;
 
-    private OnNoteItemClickListener listener;
+    private OnNoteItemClickListener clickListener;
+    private OnNoteItemTouchListener touchListener;
+    private OnNoteItemLongClickListener longClickListener;
+    private OnRequestListener requestListener;
+    private Context context;
 
-    public NoteViewHolder(@NonNull View itemView, int type) {
+    public NoteViewHolder(@NonNull View itemView, int type, Context context) {
         super(itemView);
+
+        this.context = context;
+        if(context instanceof OnRequestListener) {
+            requestListener = (OnRequestListener)context;
+        }
+
         contentsLayout = (LinearLayout)itemView.findViewById(R.id.contentsLayout);
         moodImageView = (ImageView)itemView.findViewById(R.id.moodImageView);
         weatherImageView = (ImageView)itemView.findViewById(R.id.weatherImageView);
@@ -42,6 +75,8 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         contentsTextView = (TextView)itemView.findViewById(R.id.contentsTextView);
         locationTextView = (TextView)itemView.findViewById(R.id.locationTextView);
         dateTextView = (TextView)itemView.findViewById(R.id.dateTextView);
+        timeTextView = (TextView)itemView.findViewById(R.id.timeTextView);
+        weekTextView = (TextView)itemView.findViewById(R.id.weekTextView);
 
         photoLayout = (LinearLayout)itemView.findViewById(R.id.photoLayout);
         moodImageView2 = (ImageView)itemView.findViewById(R.id.moodImageView2);
@@ -50,14 +85,54 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         contentsTextView2 = (TextView)itemView.findViewById(R.id.contentsTextView2);
         locationTextView2 = (TextView)itemView.findViewById(R.id.locationTextView2);
         dateTextView2 = (TextView)itemView.findViewById(R.id.dateTextView2);
+        timeTextView2 = (TextView)itemView.findViewById(R.id.timeTextView2);
+        weekTextView2 = (TextView)itemView.findViewById(R.id.weekTextView2);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = getAdapterPosition();
-                if(listener != null) {
-                    listener.onitemClick(NoteViewHolder.this, v, position);
+                if(clickListener != null) {
+                    clickListener.onItemClick(NoteViewHolder.this, v, position);
                 }
+            }
+        });
+
+        itemView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int position = getAdapterPosition();
+                if(touchListener != null) {
+                    touchListener.onItemTouch(NoteViewHolder.this, v, position, event);
+                }
+
+                return true;
+            }
+        });
+
+        contentsLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                int position = getAdapterPosition();
+                if(longClickListener != null) {
+                    longClickListener.onLongClick(NoteViewHolder.this, v, position);
+                    return true;
+                }
+
+                return false;
+            }
+        });
+
+        photoLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                int position = getAdapterPosition();
+                if(longClickListener != null) {
+                    longClickListener.onLongClick(NoteViewHolder.this, v, position);
+                    return true;
+                }
+
+                return false;
             }
         });
 
@@ -73,9 +148,10 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         String picturePath = item.getPicture();
         if(picturePath != null && !picturePath.equals("")) {
             existPictureImageView.setVisibility(View.VISIBLE);
-            pictureImageView.setImageURI(Uri.parse("file://" + picturePath));
+            //pictureImageView.setImageURI(Uri.parse("file://" + picturePath));
+            Glide.with(context).load(Uri.parse("file://" + picturePath)).into(pictureImageView);
         } else {
-            existPictureImageView.setVisibility(View.INVISIBLE);
+            existPictureImageView.setVisibility(View.GONE);
             pictureImageView.setImageResource(R.drawable.icons8_no_image_64_color);
         }
 
@@ -97,6 +173,16 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         String date = item.getCreateDateStr();
         dateTextView.setText(date);
         dateTextView2.setText(date);
+
+        // 시간 설정
+        String time = item.getTime();
+        timeTextView.setText(time);
+        timeTextView2.setText(time);
+
+        // 요일 설정
+        String dayOfWeek = item.getDayOfWeek();
+        weekTextView.setText(dayOfWeek);
+        weekTextView2.setText(dayOfWeek);
     }
 
     private void setMoodImage(int index) {
@@ -192,6 +278,14 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setOnItemClickListener(OnNoteItemClickListener listener) {
-        this.listener = listener;
+        clickListener = listener;
+    }
+
+    public void setOnItemTouchListener(OnNoteItemTouchListener listener) {
+        touchListener = listener;
+    }
+
+    public void setOnItemLongClickListener(OnNoteItemLongClickListener listener) {
+        longClickListener = listener;
     }
 }
