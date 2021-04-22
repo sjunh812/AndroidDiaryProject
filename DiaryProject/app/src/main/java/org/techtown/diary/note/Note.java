@@ -12,9 +12,11 @@ public class Note {
     private String createDateStr;   // 일기 작성 일자(yyyy년 MM월 dd일)
     private String time;            // 일기 작성 시간(PM 5:00)
     private String dayOfWeek;       // 일기 작성 요일(화)
+    private int year;               // 날짜 정렬을 위한 int형 년도
+    private int day;                // 날짜 정렬을 위한 int형 월
 
     public Note(int _id, int weather, String address, String locationX, String locationY, String contents,
-                int mood, String picture, String createDateStr, String time, String dayOfWeek) {
+                int mood, String picture, String createDateStr, String time, String dayOfWeek, int year, int day) {
         this._id = _id;
         this.weather = weather;
         this.address = address;
@@ -26,6 +28,8 @@ public class Note {
         this.createDateStr = createDateStr;
         this.time = time;
         this.dayOfWeek = dayOfWeek;
+        this.year = year;
+        this.day = day;
     }
 
     public int get_id() {
@@ -114,5 +118,21 @@ public class Note {
 
     public void setDayOfWeek(String dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
     }
 }

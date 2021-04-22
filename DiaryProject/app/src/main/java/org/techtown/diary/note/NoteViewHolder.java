@@ -20,7 +20,12 @@ import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
+import org.techtown.diary.MainActivity;
 import org.techtown.diary.R;
 import org.techtown.diary.fragment.WriteFragment;
 import org.techtown.diary.helper.OnNoteItemClickListener;
@@ -149,7 +154,8 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         if(picturePath != null && !picturePath.equals("")) {
             existPictureImageView.setVisibility(View.VISIBLE);
             //pictureImageView.setImageURI(Uri.parse("file://" + picturePath));
-            Glide.with(context).load(Uri.parse("file://" + picturePath)).into(pictureImageView);
+            //Glide.with(context).load(Uri.parse("file://" + picturePath)).into(pictureImageView);
+            Glide.with(context).load(Uri.parse("file://" + picturePath)).apply(RequestOptions.bitmapTransform(MainActivity.option)).into(pictureImageView);
         } else {
             existPictureImageView.setVisibility(View.GONE);
             pictureImageView.setImageResource(R.drawable.icons8_no_image_64_color);

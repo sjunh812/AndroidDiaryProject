@@ -26,6 +26,9 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.FitCenter;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.pedro.library.AutoPermissions;
 import com.pedro.library.AutoPermissionsListener;
@@ -83,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     private NoteDatabase db;                            // 일기 목록을 담은 db
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
     public static SimpleDateFormat timeFormat = new SimpleDateFormat("a HH:mm");
+    public static SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+    public static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
     // 데이터
     private Location curLocation;                       // 현재 위치 정보
@@ -90,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     private Date curDate;                               // 현재 날짜
     private int locationCount = 0;                      // 현재 위치 정보를 찾은 경우 locationCount++ -> 위치 요청 종료
     private Note updateItem = null;
+    public static MultiTransformation option = new MultiTransformation(new FitCenter(), new RoundedCorners(25));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,10 +161,17 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
     public void getCurrentLocation() {
         curDate = new Date();
+        String curYear = yearFormat.format(curDate);
+        String curMonth = monthFormat.format(curDate);
         String date = dateFormat.format(curDate);
 
         if(writeFragment != null) {
             writeFragment.setDateTextView(date);
+            try {
+                writeFragment.setCurDate(Integer.parseInt(curYear), Integer.parseInt(curMonth));
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
         }
 
         LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -346,6 +359,26 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         if(db != null) {
             db.update(NoteDatabase.NOTE_TABLE, item);
         }
+    }
+
+    @Override
+    public ArrayList<Note> selectePart(int year, int month) {
+        ArrayList<Note> items = new ArrayList<>();
+        if(db != null) {
+            items = db.selectPart(NoteDatabase.NOTE_TABLE, year, month);
+        }
+
+        return items;
+    }
+
+    @Override
+    public int selectLastYear() {
+        if(db != null) {
+            int year = db.selectLastYear();
+            return db.selectLastYear();
+        }
+
+        return 0;
     }
 
     // OnTabItemSelectedListener 구현(하단 탭 선택간 이벤트 구현)

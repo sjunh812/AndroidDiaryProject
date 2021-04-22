@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import org.techtown.diary.MainActivity;
+import org.techtown.diary.fragment.ListFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +35,8 @@ public class NoteDatabase {
     public static final String NOTE_PICTURE = "picture";        // 사진 경로
     public static final String NOTE_CREATE_DATE = "create_date";// 일기 생성일
     public static final String NOTE_MODIFY_DATE = "modify_date";// 일기 수정일
+    public static final String NOTE_YEAR  = "year";
+    public static final String NOTE_MONTH = "month";
 
     // SQL
     private static final String dropNoteTableSQL = "DROP TABLE IF EXISTS " + NOTE_TABLE + ";";
@@ -47,13 +50,16 @@ public class NoteDatabase {
             + NOTE_MOOD + " INTEGER DEFAULT -1, "
             + NOTE_PICTURE + " TEXT DEFAULT '', "
             + NOTE_CREATE_DATE + " TIMESTAMP DEFAULT (datetime('now','localtime')), "
-            + NOTE_MODIFY_DATE + " TIMESTAMP DEFAULT (datetime('now','localtime'))"
+            + NOTE_MODIFY_DATE + " TIMESTAMP DEFAULT (datetime('now','localtime')), "
+            + NOTE_YEAR + " INTEGER DEFAULT 1900, "
+            + NOTE_MONTH + " INTEGER DEFAULT 1"
             + ");";
     private static final String createNoteIndexCreateDateSQL = "CREATE UNIQUE INDEX IF NOT EXISTS " + NOTE_INDEX + " ON " +
             NOTE_TABLE + "(" + NOTE_CREATE_DATE + ");";
     private static final String insertNoteSQL = "INSERT INTO " + NOTE_TABLE + "("
-            + NOTE_WEATHER + ", " + NOTE_ADDRESS + ", " + NOTE_LOCATION_X + ", " + NOTE_LOCATION_Y + ", " + NOTE_CONTENTS + ", " + NOTE_MOOD + ", " + NOTE_PICTURE
-            + ") VALUES(?,?,?,?,?,?,?);";
+            + NOTE_WEATHER + ", " + NOTE_ADDRESS + ", " + NOTE_LOCATION_X + ", " + NOTE_LOCATION_Y + ", " + NOTE_CONTENTS + ", "
+            + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_YEAR + ", " + NOTE_MONTH
+            + ") VALUES(?,?,?,?,?,?,?,?,?);";
     private static final String updateNoteSQL = "UPDATE " + NOTE_TABLE + " SET "
             + NOTE_CONTENTS + "=?, "
             + NOTE_MOOD + "=?, "
@@ -63,9 +69,9 @@ public class NoteDatabase {
             + NOTE_MODIFY_DATE + "=" + "(datetime('now','localtime'))"
             + "WHERE " + NOTE_ID + "=?;";
     private static final String selectNoteSQL = "SELECT " + NOTE_ID + ", " + NOTE_WEATHER + ", " + NOTE_ADDRESS + ", " + NOTE_LOCATION_X + ", " + NOTE_LOCATION_Y + ", "
-            + NOTE_CONTENTS + ", " + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_CREATE_DATE +
-            " FROM " + NOTE_TABLE + " ORDER BY " + NOTE_CREATE_DATE + " DESC;";      // 일기 생성일 내림차순 = 최신 일기가 제일 위
-
+            + NOTE_CONTENTS + ", " + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_CREATE_DATE + ", " + NOTE_YEAR + ", " + NOTE_MONTH
+            + " FROM " + NOTE_TABLE + " ORDER BY " + NOTE_CREATE_DATE + " DESC;";      // 일기 생성일 내림차순 = 최신 일기가 제일 위
+    private static final String selectNoteLastYear = "SELECT " + NOTE_CREATE_DATE + " FROM " + NOTE_TABLE + " ORDER BY " + NOTE_CREATE_DATE + " LIMIT 1;";
 
     private Context context;
     private DatabaseHelper helper;
@@ -156,6 +162,9 @@ public class NoteDatabase {
                     int _mood = cursor.getInt(6);
                     String _picture = cursor.getString(7);
                     String _createDate = cursor.getString(8);
+                    int _year = cursor.getInt(9);
+                    int _month = cursor.getInt(10);
+
                     String createDateStr = null;
                     String time = null;
                     String dayOfWeek = null;
@@ -173,7 +182,7 @@ public class NoteDatabase {
                         createDateStr = "";
                     }
 
-                    item = new Note(_id, _weather, _address, _locationX, _locationY, _contents, _mood, _picture, createDateStr, time, dayOfWeek);
+                    item = new Note(_id, _weather, _address, _locationX, _locationY, _contents, _mood, _picture, createDateStr, time, dayOfWeek, _year, _month);
                     items.add(item);
                 }
 
@@ -184,6 +193,87 @@ public class NoteDatabase {
         }
 
         return items;
+    }
+
+    public ArrayList<Note> selectPart(String tableName, int year, int month) {
+        ArrayList<Note> items = new ArrayList<>();
+
+        if(db != null) {
+            if(tableName.equals(NOTE_TABLE)) {
+                Note item = null;
+
+                String sql = "SELECT " + NOTE_ID + ", " + NOTE_WEATHER + ", " + NOTE_ADDRESS + ", " + NOTE_LOCATION_X + ", " + NOTE_LOCATION_Y + ", "
+                        + NOTE_CONTENTS + ", " + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_CREATE_DATE + ", " + NOTE_YEAR + ", " + NOTE_MONTH
+                        + " FROM " + NOTE_TABLE + " WHERE " + NOTE_YEAR + "=" + year + " AND " + NOTE_MONTH + "=" + month
+                        + " ORDER BY " + NOTE_CREATE_DATE + " DESC;";
+                Cursor cursor = db.rawQuery(sql, null);
+
+                while(cursor.moveToNext()) {
+                    int _id = cursor.getInt(0);
+                    int _weather = cursor.getInt(1);
+                    String _address = cursor.getString(2);
+                    String _locationX = cursor.getString(3);
+                    String _locationY = cursor.getString(4);
+                    String _contents = cursor.getString(5);
+                    int _mood = cursor.getInt(6);
+                    String _picture = cursor.getString(7);
+                    String _createDate = cursor.getString(8);
+                    int _year = cursor.getInt(9);
+                    int _month = cursor.getInt(10);
+                    String createDateStr = null;
+                    String time = null;
+                    String dayOfWeek = null;
+
+                    if(_createDate != null && _createDate.length() > 10) {
+                        try {
+                            Date date = timeFormat.parse(_createDate);
+                            createDateStr = MainActivity.dateFormat.format(date);
+                            time = MainActivity.timeFormat.format(date);
+                            dayOfWeek = MainActivity.getDayOfWeek(date);
+                        } catch(Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        createDateStr = "";
+                    }
+
+                    item = new Note(_id, _weather, _address, _locationX, _locationY, _contents, _mood, _picture, createDateStr, time, dayOfWeek, _year, _month);
+                    items.add(item);
+                }
+
+                cursor.close();
+            }
+        } else {
+            Log.d(LOG, "db를 먼저 오픈해주세요");
+        }
+
+        return items;
+    }
+
+    public int selectLastYear() {
+        int year = 0;
+
+        if(db != null) {
+            Cursor cursor = db.rawQuery(selectNoteLastYear, null);
+            cursor.moveToFirst();
+            if(cursor.getCount() != 0) {
+                String _createDate = cursor.getString(0);
+                try {
+                    Date date = ListFragment.yearFormat.parse(_createDate);
+                    String yearStr = ListFragment.yearFormat.format(date);
+                    year = Integer.parseInt(yearStr);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            cursor.close();
+        } else {
+            Log.d(LOG, "db를 먼저 오픈해주세요");
+        }
+
+        return year;
     }
 
     private class DatabaseHelper extends SQLiteOpenHelper {

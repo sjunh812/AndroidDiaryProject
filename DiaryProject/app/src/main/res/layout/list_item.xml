@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:lineSpacingExtra="11dp"
+            android:lineSpacingExtra="5dp"
             android:text="내용"
             android:textColor="@color/black"
             android:textSize="17dp" />
@@ -173,7 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
-                android:lineSpacingExtra="11dp"
+                android:lineSpacingExtra="5dp"
                 android:text="내용"
                 android:textColor="@color/black"
                 android:textSize="17dp" />

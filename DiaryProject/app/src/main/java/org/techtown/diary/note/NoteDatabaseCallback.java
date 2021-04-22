@@ -7,4 +7,6 @@ public interface NoteDatabaseCallback {
     public ArrayList<Note> selectAllDB();
     public void deleteDB(int id);
     public void updateDB(Note item);
+    public ArrayList<Note> selectePart(int year, int month);
+    public int selectLastYear();
 }

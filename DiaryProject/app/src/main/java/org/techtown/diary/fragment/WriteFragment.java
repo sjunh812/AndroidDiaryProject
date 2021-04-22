@@ -30,7 +30,9 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
+import org.techtown.diary.MainActivity;
 import org.techtown.diary.custom.CustomDeleteDialog;
 import org.techtown.diary.custom.CustomDialog;
 import org.techtown.diary.R;
@@ -80,13 +82,15 @@ public class WriteFragment extends Fragment {
     // Data
     private Note updateItem = null;
     private Context context;
-    private int weatherIndex = -1;                      // 날씨 정보(0:맑음, 1:구름 조금, 2:구름 많음, 3:흐림, 4:비, 5:눈/비, 6:눈)
+    private int weatherIndex = 0;                       // 날씨 정보(0:맑음, 1:구름 조금, 2:구름 많음, 3:흐림, 4:비, 5:눈/비, 6:눈)
     private String address = "";                        // 위치 정보
     private String contents = "";                       // 일기 내용
     private int moodIndex = -1;                         // 0~8 총 9개의 기분을 index 로 표현(-1은 사용자가 아무런 기분도 선택하지 않은 경우)
     private String filePath = "";                       // cropper 로 수정까지한 최종 사진 경로
     private Uri fileUri;                                // 카메라로 찍고 난 후 저장되는 파일의 Uri
     private Object[] objs;                              // db 에 데이터 삽입을 위해 필요한 Object[] 객체
+    private int curYear;
+    private int curMonth;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -183,7 +187,7 @@ public class WriteFragment extends Fragment {
                     setContents();                              // contentsEditText 에 사용자가 입력한 내용을 contents 에 저장
 
                     if(updateItem == null) {                        // 새 일기 작성
-                        objs = new Object[]{weatherIndex, address, "", "", contents, moodIndex, filePath};
+                        objs = new Object[]{weatherIndex, address, "", "", contents, moodIndex, filePath, curYear, curMonth};
                         callback.insertDB(objs);
 
                         tabListener.onTabSelected(0);       // 일기목록 프래그먼트로 이동
@@ -255,7 +259,7 @@ public class WriteFragment extends Fragment {
         } else if(weatherStr.equals("구름 많음")) {
             weatherImageView.setImageResource(R.drawable.weather_icon_3);
             weatherIndex = 2;
-        } else if(weatherStr.equals("구름 흐림")) {
+        } else if(weatherStr.equals("흐림")) {
             weatherImageView.setImageResource(R.drawable.weather_icon_4);
             weatherIndex = 3;
         } else if(weatherStr.equals("비")) {
@@ -264,9 +268,11 @@ public class WriteFragment extends Fragment {
         } else if(weatherStr.equals("눈/비")) {
             weatherImageView.setImageResource(R.drawable.weather_icon_6);
             weatherIndex = 5;
-        } else {
+        } else if(weatherStr.equals("눈")){
             weatherImageView.setImageResource(R.drawable.weather_icon_7);
             weatherIndex = 6;
+        } else {
+            Log.d(LOG, "Unknown weather string : " + weatherStr);
         }
     }
 
@@ -283,8 +289,10 @@ public class WriteFragment extends Fragment {
             weatherImageView.setImageResource(R.drawable.weather_icon_5);
         } else if(weatherIndex == 5) {
             weatherImageView.setImageResource(R.drawable.weather_icon_6);
-        } else {
+        } else if(weatherIndex == 6){
             weatherImageView.setImageResource(R.drawable.weather_icon_7);
+        } else {
+            Log.d(LOG, "Unknown weather index : " + weatherIndex);
         }
     }
 
@@ -297,12 +305,18 @@ public class WriteFragment extends Fragment {
         dateTextView.setText(date);
     }
 
+    public void setCurDate(int curYear, int curMonth) {
+        this.curYear = curYear;
+        this.curMonth = curMonth;
+    }
+
     public void setPictureImageView(Bitmap bitmap, Uri uri, int res) {
         if(bitmap != null) {
             pictureImageView.setImageBitmap(bitmap);
         }
         if(uri != null) {
-            pictureImageView.setImageURI(uri);
+            //pictureImageView.setImageURI(uri);
+            Glide.with(this).load(uri).apply(RequestOptions.bitmapTransform(MainActivity.option)).into(pictureImageView);
         }
         if(res != -1) {
             pictureImageView.setImageResource(res);
@@ -486,7 +500,7 @@ public class WriteFragment extends Fragment {
         setLocationTextView(address);
 
         if(!path.equals("") && path != null) {
-            Glide.with(context).load(Uri.parse("file://" + path)).into(pictureImageView);
+            Glide.with(context).load(Uri.parse("file://" + path)).apply(RequestOptions.bitmapTransform(MainActivity.option)).into(pictureImageView);
             filePath = path;
         }
 

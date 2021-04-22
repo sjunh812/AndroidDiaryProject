@@ -56,7 +56,7 @@ public class ListFragment extends Fragment {
     private NoteAdapter adapter;                       // 일기 목록을 담은 리사이클러 뷰의 어뎁터
     private OnTabItemSelectedListener tabListener;     // 메인 액티비티 하단 탭의 탭선택 콜백함수를 호출 해주는 리스너
     private NoteDatabaseCallback callback;
-    private SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+    public static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
     private MyArrayAdapter yearAdapter;
     private MyArrayAdapter monthAdapter;
     private GestureDetector detector;
@@ -64,8 +64,9 @@ public class ListFragment extends Fragment {
 
     // Data
     private int curYear;                               // 현재 년도 ex)2021
+    private int lastYear;
     private int layoutType = 0;                        // 0:내용 레이아웃, 1:사진 레이아웃
-    private String[] years = {"2020년", "2021년"};
+    private String[] years;
     private String[] months = {"1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"};
     private int selectedYear;
     private int selectedMonth;
@@ -99,6 +100,8 @@ public class ListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
         curYear = getCurrentYear();
+        caluclateYearArray();
+
         gestureListener = new GestureListener();
         detector = new GestureDetector(getContext(), gestureListener);
 
@@ -110,14 +113,6 @@ public class ListFragment extends Fragment {
         adapter = new NoteAdapter(getContext());
         adapter.setItems(callback.selectAllDB());
         listRecyclerView.setAdapter(adapter);
-
-/*        adapter.setOnItemTouchListener(new OnNoteItemTouchListener() {
-            @Override
-            public void onItemTouch(NoteViewHolder holder, View view, int position, MotionEvent event) {
-                selectedItem = adapter.getItem(position);
-                detector.onTouchEvent(event);
-            }
-        });*/
 
         adapter.setOnItemLongClickListener(new OnNoteItemLongClickListener() {
             @Override
@@ -245,6 +240,11 @@ public class ListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 selectedDateTextView.setText(selectedYear + "년 " + selectedMonth + "월");
+
+                ArrayList<Note> items = callback.selectePart(selectedYear, selectedMonth);
+                adapter.setItems(items);
+                adapter.notifyDataSetChanged();
+
                 alignDialog.dismiss();
             }
         });
@@ -253,6 +253,10 @@ public class ListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 selectedDateTextView.setText("전체보기");
+
+                callback.selectAllDB();
+                adapter.notifyDataSetChanged();
+
                 alignDialog.dismiss();
             }
         });
@@ -293,6 +297,22 @@ public class ListFragment extends Fragment {
         int year = Integer.parseInt(yearStr);
 
         return year;
+    }
+
+    public void caluclateYearArray() {
+        lastYear = callback.selectLastYear();
+        if(lastYear == 0) {
+            lastYear = curYear;
+        }
+        int yearDiff = curYear - lastYear;
+
+        ArrayList<String> yearsArray = new ArrayList<>();
+        for(int i = yearDiff; i > 0; i--) {
+            yearsArray.add(curYear - yearDiff + "년");
+        }
+        yearsArray.add(curYear + "년");
+
+        years = yearsArray.toArray(new String[yearDiff + 1]);
     }
 
     public void update() {
