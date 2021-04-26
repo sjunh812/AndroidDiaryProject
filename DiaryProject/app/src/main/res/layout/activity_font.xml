@@ -30,7 +30,6 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:padding="10dp"
-            android:elevation="2dp"
             android:layout_marginTop="4dp"
             android:orientation="vertical">
 
@@ -63,7 +62,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:elevation="2dp"
             android:padding="20dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
@@ -91,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:fontFamily="@font/font1"
-                    android:text="경기청년바탕"
+                    android:text="고양체"
                     android:textSize="20dp" />
 
                 <RadioButton
@@ -118,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:textSize="20dp"
-                    android:text="나눔손글씨펜체"
+                    android:text="할아버지의 나눔"
                     android:fontFamily="@font/font4" />
 
                 <RadioButton

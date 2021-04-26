@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Paint;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -13,7 +14,10 @@ import org.techtown.diary.fragment.ListFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class NoteDatabase {
@@ -71,7 +75,7 @@ public class NoteDatabase {
     private static final String selectNoteSQL = "SELECT " + NOTE_ID + ", " + NOTE_WEATHER + ", " + NOTE_ADDRESS + ", " + NOTE_LOCATION_X + ", " + NOTE_LOCATION_Y + ", "
             + NOTE_CONTENTS + ", " + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_CREATE_DATE + ", " + NOTE_YEAR + ", " + NOTE_MONTH
             + " FROM " + NOTE_TABLE + " ORDER BY " + NOTE_CREATE_DATE + " DESC;";      // 일기 생성일 내림차순 = 최신 일기가 제일 위
-    private static final String selectNoteLastYear = "SELECT " + NOTE_CREATE_DATE + " FROM " + NOTE_TABLE + " ORDER BY " + NOTE_CREATE_DATE + " LIMIT 1;";
+    private static final String selectNoteLastYear = "SELECT " + NOTE_YEAR + " FROM " + NOTE_TABLE + " ORDER BY " + NOTE_YEAR + " LIMIT 1;";
 
     private Context context;
     private DatabaseHelper helper;
@@ -250,6 +254,75 @@ public class NoteDatabase {
         return items;
     }
 
+    public HashMap<Integer, Integer> selectMoodCount(boolean isAll, boolean isYear, boolean isMonth) {
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
+
+        Date date = new Date();
+        int curYear = Integer.parseInt(MainActivity.yearFormat.format(date));
+        int curMonth = Integer.parseInt(MainActivity.monthFormat.format(date));
+
+        if(db != null) {
+            String sql = null;
+
+            if(isAll) {
+                sql = "SELECT " + NOTE_MOOD + ", COUNT(" + NOTE_MOOD + ") FROM " + NOTE_TABLE + " GROUP BY " + NOTE_MOOD + ";";
+            } else if(isYear) {
+                sql = "SELECT " + NOTE_MOOD + ", COUNT(" + NOTE_MOOD + ") FROM " + NOTE_TABLE
+                        + " WHERE " + NOTE_YEAR + "=" + curYear
+                        + " GROUP BY " + NOTE_MOOD + ";";
+            } else if(isMonth) {
+                sql = "SELECT " + NOTE_MOOD + ", COUNT(" + NOTE_MOOD + ") FROM " + NOTE_TABLE
+                        + " WHERE " + NOTE_MONTH + "=" + curMonth
+                        + " GROUP BY " + NOTE_MOOD + ";";
+            }
+
+            if(sql != null) {
+                Cursor cursor = db.rawQuery(sql, null);
+
+                while(cursor.moveToNext()) {
+                    int moodIndex = cursor.getInt(0);
+                    int count = cursor.getInt(1);
+
+                    hashMap.put(moodIndex, count);
+                }
+
+                cursor.close();
+            }
+        } else {
+            Log.d(LOG, "db를 먼저 오픈해주세요");
+        }
+
+        return hashMap;
+    }
+
+    public HashMap<Integer, Integer> selectMoodCountWeek(int weekOfDay) {
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
+
+        if(db != null) {
+            String sql = "SELECT " + NOTE_MOOD + " COUNT(" + NOTE_MOOD + ")"
+                    + " WHERE " + "STRFTIME('%w', " + NOTE_CREATE_DATE + ")=" + weekOfDay
+                    + " AND " + NOTE_CREATE_DATE + ">" + getMonth(-1)
+                    + " AND " + NOTE_CREATE_DATE + "<" + getDay(1)
+                    + " GROUP BY " + NOTE_MOOD + ";";
+
+            Cursor cursor = db.rawQuery(sql, null);
+
+            while(cursor.moveToNext()) {
+                int moodIndex = cursor.getInt(0);
+                int count = cursor.getInt(1);
+
+                hashMap.put(moodIndex, count);
+            }
+
+            cursor.close();
+        } else {
+            Log.d(LOG, "db를 먼저 오픈해주세요");
+        }
+
+        return hashMap;
+    }
+
+
     public int selectLastYear() {
         int year = 0;
 
@@ -257,22 +330,14 @@ public class NoteDatabase {
             Cursor cursor = db.rawQuery(selectNoteLastYear, null);
             cursor.moveToFirst();
             if(cursor.getCount() != 0) {
-                String _createDate = cursor.getString(0);
-                try {
-                    Date date = ListFragment.yearFormat.parse(_createDate);
-                    String yearStr = ListFragment.yearFormat.format(date);
-                    year = Integer.parseInt(yearStr);
-                } catch(Exception e) {
-                    e.printStackTrace();
-                }
+                year = cursor.getInt(0);
             }
-
 
             cursor.close();
         } else {
             Log.d(LOG, "db를 먼저 오픈해주세요");
         }
-
+        Log.d(LOG, "last year : " + year);
         return year;
     }
 
@@ -292,5 +357,23 @@ public class NoteDatabase {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         }
+    }
+
+    public String getMonth(int amount) {
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MONTH, amount);
+
+        return MainActivity.dateFormat2.format(cal.getTime());
+    }
+
+    public String getDay(int amount) {
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DAY_OF_MONTH, amount);
+
+        return MainActivity.dateFormat2.format(cal.getTime());
     }
 }

@@ -1,14 +1,7 @@
 package org.techtown.diary.note;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,25 +9,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.MultiTransformation;
-import com.bumptech.glide.load.resource.bitmap.FitCenter;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.techtown.diary.MainActivity;
 import org.techtown.diary.R;
-import org.techtown.diary.fragment.WriteFragment;
 import org.techtown.diary.helper.OnNoteItemClickListener;
 import org.techtown.diary.helper.OnNoteItemLongClickListener;
 import org.techtown.diary.helper.OnNoteItemTouchListener;
 import org.techtown.diary.helper.OnRequestListener;
-
-import java.io.File;
-import java.io.InputStream;
 
 public class NoteViewHolder extends RecyclerView.ViewHolder {
     // 내용버튼 선택시 보일 뷰 UI
@@ -158,7 +143,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
             Glide.with(context).load(Uri.parse("file://" + picturePath)).apply(RequestOptions.bitmapTransform(MainActivity.option)).into(pictureImageView);
         } else {
             existPictureImageView.setVisibility(View.GONE);
-            pictureImageView.setImageResource(R.drawable.icons8_no_image_64_color);
+            pictureImageView.setImageResource(R.drawable.no_image_64_color);
         }
 
         // 날씨 설정

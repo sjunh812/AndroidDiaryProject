@@ -5,7 +5,6 @@
         android:drawable="@color/transparentGray">
     </item>
 
-    <item android:drawable="@color/white">
-    </item>
+    <item android:drawable="@color/white" />
 
 </selector>

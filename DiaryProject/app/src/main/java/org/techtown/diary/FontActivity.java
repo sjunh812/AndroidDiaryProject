@@ -68,7 +68,7 @@ public class FontActivity extends AppCompatActivity {
 
                 switch(checkedId) {
                     case R.id.fontButton:
-                        font = Typeface.createFromAsset(getAssets(), "font1.otf");
+                        font = Typeface.createFromAsset(getAssets(), "font1.ttf");
                         exampleTextView.setTypeface(font);
                         selectedFontIndex = 0;
                         break;

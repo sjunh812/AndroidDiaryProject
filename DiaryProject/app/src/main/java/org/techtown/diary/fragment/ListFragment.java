@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.techtown.diary.MainActivity;
 import org.techtown.diary.custom.CustomAlignDialog;
 import org.techtown.diary.R;
 import org.techtown.diary.custom.CustomUpdateDialog;
@@ -56,7 +59,7 @@ public class ListFragment extends Fragment {
     private NoteAdapter adapter;                       // 일기 목록을 담은 리사이클러 뷰의 어뎁터
     private OnTabItemSelectedListener tabListener;     // 메인 액티비티 하단 탭의 탭선택 콜백함수를 호출 해주는 리스너
     private NoteDatabaseCallback callback;
-    public static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+    //public static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
     private MyArrayAdapter yearAdapter;
     private MyArrayAdapter monthAdapter;
     private GestureDetector detector;
@@ -70,6 +73,8 @@ public class ListFragment extends Fragment {
     private String[] months = {"1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"};
     private int selectedYear;
     private int selectedMonth;
+    private int selectedYearPos;
+    private int selectedMonthPos;
     private Note selectedItem;
 
     @Override
@@ -101,6 +106,7 @@ public class ListFragment extends Fragment {
 
         curYear = getCurrentYear();
         caluclateYearArray();
+        initSpinnerPosition();
 
         gestureListener = new GestureListener();
         detector = new GestureDetector(getContext(), gestureListener);
@@ -126,7 +132,7 @@ public class ListFragment extends Fragment {
             }
         });
 
-        Button alignButton = (Button)rootView.findViewById(R.id.alignButton);
+        ImageButton alignButton = (ImageButton)rootView.findViewById(R.id.alignButton);
         alignButton.setOnTouchListener(mOnTouchListener);
         alignButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,6 +186,13 @@ public class ListFragment extends Fragment {
         monthAdapter = new MyArrayAdapter(getContext(), android.R.layout.simple_spinner_item, months);
 
         return rootView;
+    }
+
+    private void initSpinnerPosition() {
+        selectedYearPos = years.length - 1;
+        selectedMonthPos = getCurrentMonth() - 1;
+
+        Log.d(LOG, "selectedyYearPos : " + selectedYearPos + ", selectedMonthPos : " + selectedMonthPos);
     }
 
     public void setDeleteDialog() {
@@ -241,7 +254,7 @@ public class ListFragment extends Fragment {
             public void onClick(View v) {
                 selectedDateTextView.setText(selectedYear + "년 " + selectedMonth + "월");
 
-                ArrayList<Note> items = callback.selectePart(selectedYear, selectedMonth);
+                ArrayList<Note> items = callback.selectPart(selectedYear, selectedMonth);
                 adapter.setItems(items);
                 adapter.notifyDataSetChanged();
 
@@ -254,7 +267,8 @@ public class ListFragment extends Fragment {
             public void onClick(View v) {
                 selectedDateTextView.setText("전체보기");
 
-                callback.selectAllDB();
+                ArrayList<Note> items = callback.selectAllDB();
+                adapter.setItems(items);
                 adapter.notifyDataSetChanged();
 
                 alignDialog.dismiss();
@@ -262,12 +276,14 @@ public class ListFragment extends Fragment {
         });
 
         alignDialog.setYearSpinnerAdapter(yearAdapter);
+        alignDialog.setSelectedYearSpinner(selectedYearPos);
         alignDialog.setYearSpinnerItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int size = years.length;
                 int gap = size - (position + 1);
 
+                selectedYearPos = position;
                 selectedYear = curYear - gap;
             }
 
@@ -278,9 +294,11 @@ public class ListFragment extends Fragment {
         });
 
         alignDialog.setMonthSpinnerAdapter(monthAdapter);
+        alignDialog.setSelectMonthSpinner(selectedMonthPos);
         alignDialog.setMonthSpinnerItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedMonthPos = position;
                 selectedMonth = position + 1;
             }
 
@@ -291,12 +309,20 @@ public class ListFragment extends Fragment {
         });
     }
 
-    public int getCurrentYear() {
+    public static int getCurrentYear() {
         Date date = new Date();
-        String yearStr = yearFormat.format(date);
+        String yearStr = MainActivity.yearFormat.format(date);
         int year = Integer.parseInt(yearStr);
 
         return year;
+    }
+
+    public static int getCurrentMonth() {
+        Date date = new Date();
+        String monthStr = MainActivity.monthFormat.format(date);
+        int month = Integer.parseInt(monthStr);
+
+        return month;
     }
 
     public void caluclateYearArray() {
@@ -308,7 +334,7 @@ public class ListFragment extends Fragment {
 
         ArrayList<String> yearsArray = new ArrayList<>();
         for(int i = yearDiff; i > 0; i--) {
-            yearsArray.add(curYear - yearDiff + "년");
+            yearsArray.add(curYear - i + "년");
         }
         yearsArray.add(curYear + "년");
 
@@ -342,7 +368,8 @@ public class ListFragment extends Fragment {
             View view = super.getView(position, convertView, parent);
             //Typeface font = Typeface.createFromAsset(getContext().getAssets(), "ridibatang.otf");
             //((TextView)view).setTypeface(font);
-            ((TextView)view).setTextSize(15);
+            ((TextView)view).setGravity(Gravity.CENTER);
+            ((TextView)view).setTextSize(17);
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 ((TextView)view).setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -356,8 +383,9 @@ public class ListFragment extends Fragment {
             View view = super.getDropDownView(position, convertView, parent);
             //Typeface font = Typeface.createFromAsset(getContext().getAssets(), "ridibatang.otf");
             //((TextView)view).setTypeface(font);
-            ((TextView)view).setHeight(80);
-            ((TextView)view).setTextSize(15);
+            ((TextView)view).setGravity(Gravity.CENTER_VERTICAL);
+            ((TextView)view).setHeight(88);
+            ((TextView)view).setTextSize(17);
 
             return view;
         }
@@ -366,7 +394,7 @@ public class ListFragment extends Fragment {
     private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            Button button = (Button) v;
+            ImageButton button = (ImageButton) v;
             int action = event.getAction();
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

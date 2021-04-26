@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     public static SimpleDateFormat timeFormat = new SimpleDateFormat("a HH:mm");
     public static SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
     public static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+    public static SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
 
     // 데이터
     private Location curLocation;                       // 현재 위치 정보
@@ -109,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         db = new NoteDatabase(this);
         db.dbInit(NoteDatabase.DB_NAME);
         db.createTable(NoteDatabase.NOTE_TABLE);
+        //Object[] objs = {3, "test2", "", "", "test2", 3, "", 2020, 12};
+        //db.insert(NoteDatabase.NOTE_TABLE, objs);
 
         listFragment = new ListFragment();
         graphFragment = new GraphFragment();
@@ -201,11 +205,16 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
             if(list != null && list.size() > 0) {
                 Address address = list.get(0);                          // 현재 주소 정보를 가진 Address 객체
+                String adminArea = address.getAdminArea();              // 인천광역시, 서울특별시..
                 String locality = address.getLocality();                // 시
                 String subLocality = address.getSubLocality();          // 구
                 String thoroughfare = address.getThoroughfare();        // 동
                 String subThoroughfare = address.getSubThoroughfare();  // 읍 면?
                 String subStr = subLocality;
+
+                if(locality == null) {
+                    locality = adminArea;
+                }
 
                 if(subLocality == null) {
                     subStr = thoroughfare;
@@ -362,13 +371,33 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     }
 
     @Override
-    public ArrayList<Note> selectePart(int year, int month) {
+    public ArrayList<Note> selectPart(int year, int month) {
         ArrayList<Note> items = new ArrayList<>();
         if(db != null) {
             items = db.selectPart(NoteDatabase.NOTE_TABLE, year, month);
         }
 
         return items;
+    }
+
+    @Override
+    public HashMap<Integer, Integer> selectMoodCount(boolean isAll, boolean isYear, boolean isMonth) {
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
+        if(db != null) {
+            hashMap = db.selectMoodCount(isAll, isYear, isMonth);
+        }
+
+        return hashMap;
+    }
+
+    @Override
+    public HashMap<Integer, Integer> selectMoodCountWeek(int weekOfDay) {
+        HashMap<Integer, Integer> hashMap = new HashMap<>();
+        if(db != null) {
+            hashMap = db.selectMoodCountWeek(weekOfDay);
+        }
+
+        return hashMap;
     }
 
     @Override

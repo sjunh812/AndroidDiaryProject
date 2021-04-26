@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Font Activity 스타일 -->
     <style name="Theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/white</item>
@@ -13,12 +14,11 @@
     <!-- Toolbar의 타이틀 텍스트-->
     <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">25dp</item>
     </style>
 
-    출처: https://jabstorage.tistory.com/31 [개발 잡동사니 저장소]
-
     <!-- -->
-    <!-- 경기청년바탕 폰트 테마(NoActionBar) -->
+    <!-- 고양체 폰트 테마(NoActionBar) -->
     <!-- -->
     <style name="Theme.DiaryProject" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -34,6 +34,7 @@
         <!-- API 23 이상부터 가능(상태바 위의 상태표시줄 색상) -->
         <item name="android:windowLightStatusBar">true</item>
         <!-- Customize your theme here. -->
+        <item name="toolbarStyle">@style/ToolbarStyle</item>
         <!--custom font-family 적용-->
         <item name="bottomNavigationStyle">@style/Widget.BottomNavigationView</item>
         <item name="android:textViewStyle">@style/customTextViewFontStyle</item>
@@ -43,12 +44,10 @@
         <item name="android:checkboxStyle">@style/customCheckboxFontStyle</item>
         <item name="android:spinnerStyle">@style/customSpinnerFontStyle</item>
     </style>
-
     <!-- 커스텀 폰트가 적용된 BottomNavigationView -->
     <style name="Widget.BottomNavigationView" parent="Widget.Design.BottomNavigationView">
         <item name="fontFamily">@font/font1</item>
     </style>
-
     <!-- Custom font 적용 -->
     <style name="customTextViewFontStyle" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:fontFamily">@font/font1</item>
@@ -106,7 +105,6 @@
     <style name="Widget.BottomNavigationView2" parent="Widget.Design.BottomNavigationView">
         <item name="android:fontFamily">@font/font2</item>
     </style>
-
     <!-- Custom font 적용 -->
     <style name="customTextViewFontStyle2" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:fontFamily">@font/font2</item>
@@ -164,7 +162,6 @@
     <style name="Widget.BottomNavigationView3" parent="Widget.Design.BottomNavigationView">
         <item name="fontFamily">@font/font2</item>
     </style>
-
     <!-- Custom font 적용 -->
     <style name="customTextViewFontStyle3" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:fontFamily">@font/font3</item>
@@ -191,7 +188,7 @@
     </style>
 
     <!-- -->
-    <!-- 나눔손글씨펜 폰트테마(NoActionBar) -->
+    <!-- 할아버지의 나눔 폰트테마(NoActionBar) -->
     <!-- -->
     <style name="Theme.DiaryProject4" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->

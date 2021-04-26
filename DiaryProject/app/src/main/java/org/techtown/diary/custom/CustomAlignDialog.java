@@ -63,11 +63,19 @@ public class CustomAlignDialog extends Dialog {
         yearSpinner.setOnItemSelectedListener(listener);
     }
 
+    public void setSelectedYearSpinner(int position) {
+        yearSpinner.setSelection(position);
+    }
+
     public void setMonthSpinnerAdapter(ArrayAdapter<String> adapter) {
         monthSpinner.setAdapter(adapter);
     }
 
     public void setMonthSpinnerItemSelectedListener(AdapterView.OnItemSelectedListener listener) {
         monthSpinner.setOnItemSelectedListener(listener);
+    }
+
+    public void setSelectMonthSpinner(int position) {
+        monthSpinner.setSelection(position);
     }
 }

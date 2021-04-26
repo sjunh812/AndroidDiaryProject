@@ -33,17 +33,16 @@
             android:layout_height="28dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            app:tint="@color/skyblue" />
+            android:layout_marginRight="50dp" />
 
         <TextView
             android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
             android:textColor="@color/black"
             android:textStyle="bold"
-            android:textSize="21dp"
+            android:textSize="18dp"
             android:text="" />
 
         <TextView
@@ -53,7 +52,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="위치정보 없음"
-            android:textSize="16dp"
+            android:textSize="13dp"
             android:textColor="@color/skyblue" />
 
     </RelativeLayout>
