@@ -14,6 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/azure2"
             app:popupTheme="@style/Theme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -22,7 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/azure"
+        android:background="@color/azure2"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -51,7 +52,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:lineSpacingExtra="11dp"
-                android:text="폰트적용 예시입니다~ \n오늘도 좋은 하루 되시기를 바랍니다."
+                android:text="가나다라마바사아자차카타파하\n폰트적용 예시입니다~ \n오늘도 좋은 하루 되세요:)"
                 android:textColor="@color/black"
                 android:textSize="17dp" />
 
@@ -71,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="20dp"
                 android:textStyle="bold"
                 android:text="폰트"
                 android:textColor="@color/black"
@@ -89,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:fontFamily="@font/font1"
-                    android:text="고양체"
+                    android:text="카페24 고운밤"
                     android:textSize="20dp" />
 
                 <RadioButton

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -39,6 +38,7 @@ import com.stanfy.gsonxml.XmlParserCreator;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import org.techtown.diary.fragment.CalendarFragment;
 import org.techtown.diary.fragment.GraphFragment;
 import org.techtown.diary.fragment.ListFragment;
 import org.techtown.diary.fragment.OptionFragment;
@@ -68,12 +68,13 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         AutoPermissionsListener, OnRequestListener, MyApplication.OnResponseListener, NoteDatabaseCallback {
     // 상수
     private static final String LOG = "MainActivity";
-    private static final int REQUEST_ALL_PERMISSIONS = 11;  // 모든 위험권한 허용 요청시 사용(AutoPermissions)
-    private static final int REQUEST_WEATHER_BY_GRID = 1;   // 받아온 위도, 경도 정보를 기상청 격자포멧에 맞게 변경 요청시 사용
     private static final String IS_RECREATE_KEY = "recreate_key";
+    private static final int REQUEST_WEATHER_BY_GRID = 1;   // 받아온 위도, 경도 정보를 기상청 격자포멧에 맞게 변경 요청시 사용
+    private static final int REQUEST_ALL_PERMISSIONS = 11;  // 모든 위험권한 허용 요청시 사용(AutoPermissions)
 
     // 프래그먼트
     private ListFragment listFragment;
+    private CalendarFragment calendarFragment;
     private WriteFragment writeFragment;
     private GraphFragment graphFragment;
     private OptionFragment optionFragment;
@@ -86,10 +87,10 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     private GPSListener gpsListener;                    // 위치 정보를 가져오기 위해 필요한 리스너
     private NoteDatabase db;                            // 일기 목록을 담은 db
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
-    public static SimpleDateFormat timeFormat = new SimpleDateFormat("a HH:mm");
-    public static SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
-    public static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
     public static SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+    public static SimpleDateFormat timeFormat = new SimpleDateFormat("a HH:mm");
+    public static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+    public static SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
 
     // 데이터
     private Location curLocation;                       // 현재 위치 정보
@@ -115,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         //db.insert(NoteDatabase.NOTE_TABLE, objs);
 
         listFragment = new ListFragment();
+        calendarFragment = new CalendarFragment();
         graphFragment = new GraphFragment();
         optionFragment = new OptionFragment();
 
@@ -132,6 +134,11 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
                         return true;
                     case R.id.tab2:
+                        transaction.replace(R.id.container, calendarFragment);
+                        transaction.commit();
+
+                        return true;
+                    case R.id.tab3:
                         writeFragment = new WriteFragment();
                         if(updateItem != null) {
                             writeFragment.setItem(updateItem);
@@ -141,12 +148,12 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
                         transaction.commit();
 
                         return true;
-                    case R.id.tab3:
+                    case R.id.tab4:
                         transaction.replace(R.id.container, graphFragment);
                         transaction.commit();
 
                         return true;
-                    case R.id.tab4:
+                    case R.id.tab5:
                         transaction.replace(R.id.container, optionFragment);
                         transaction.commit();
                         return true;
@@ -159,15 +166,16 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         if(savedInstanceState == null) {
             onTabSelected(0);       // 일기목록 프래그먼트를 첫 화면으로 지정
         } else {
-            onTabSelected(3);       // 일기목록 프래그먼트를 첫 화면으로 지정
+            // 폰트설정 이후 옵션 프래그먼트로 돌아와야하는 상황
+            onTabSelected(4);       // 일기목록 프래그먼트를 첫 화면으로 지정
         }
     }
 
-    public void getCurrentLocation() {
-        curDate = new Date();
-        String curYear = yearFormat.format(curDate);
-        String curMonth = monthFormat.format(curDate);
-        String date = dateFormat.format(curDate);
+    public void getCurrentLocation() {                      // 날짜정보 + 위치정보 + 날씨정보
+        curDate = new Date();                               // 현재 날짜정보
+        String curYear = yearFormat.format(curDate);        // yyyy
+        String curMonth = monthFormat.format(curDate);      // MM
+        String date = dateFormat.format(curDate);           // yyyy년 MM월 dd일
 
         if(writeFragment != null) {
             writeFragment.setDateTextView(date);
@@ -184,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
             if(checkLocationPermission()) {
                 curLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
-                gpsListener = new GPSListener();
+                gpsListener = new GPSListener();                               // 위치정보를 가져오기위한 리스너 설정
                 long minTime = 10000;                                          // 업데이트 주기 10초
                 float minDistance = 0;                                         // 업데이트 거리간격 0
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, gpsListener);
@@ -237,6 +245,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     }
 
     public void getCurrentWeather() {
+        // 현재 위치의 위도 경도들 이용하여 기상청이 만든 격자포멧으로 변환
         Map<String, Double> map = KMAGrid.getKMAGrid(curLocation.getLatitude(), curLocation.getLongitude());
 
         double gridX = map.get("X");
@@ -426,6 +435,9 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
             case 3:
                 bottomNavigationView.setSelectedItemId(R.id.tab4);
                 break;
+            case 4:
+                bottomNavigationView.setSelectedItemId(R.id.tab5);
+                break;
             default:
                 Log.e(LOG, "ERROR : 하단 탭 선택 에러 발생..");
                 break;
@@ -435,7 +447,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     @Override
     public void showWriteFragment(Note item) {
         updateItem = item;
-        onTabSelected(1);
+        onTabSelected(2);
         //getSupportFragmentManager().beginTransaction().replace(R.id.container, writeFragment).commit();
     }
 

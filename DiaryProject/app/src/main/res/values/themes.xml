@@ -3,7 +3,7 @@
     <!-- Font Activity 스타일 -->
     <style name="Theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorPrimaryVariant">@color/azure</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="toolbarStyle">@style/ToolbarStyle</item>
     </style>
@@ -17,13 +17,19 @@
         <item name="android:textSize">25dp</item>
     </style>
 
+    <!-- Calendar Date의 타이틀 텍스트-->
+    <style name="CalendarDateTextStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15dp</item>
+    </style>
+
     <!-- -->
-    <!-- 고양체 폰트 테마(NoActionBar) -->
+    <!-- 카페24 고운밤 폰트 테마(NoActionBar) -->
     <!-- -->
     <style name="Theme.DiaryProject" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorPrimaryVariant">@color/azure2</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -43,12 +49,18 @@
         <item name="radioButtonStyle">@style/customRadioButtonFontStyle</item>
         <item name="android:checkboxStyle">@style/customCheckboxFontStyle</item>
         <item name="android:spinnerStyle">@style/customSpinnerFontStyle</item>
+        <item name="mcv_headerTextAppearance">@style/customCalenderHeaderFontStyle</item>
+        <item name="mcv_dateTextAppearance">@style/customCalenderHeaderFontStyle</item>
     </style>
     <!-- 커스텀 폰트가 적용된 BottomNavigationView -->
     <style name="Widget.BottomNavigationView" parent="Widget.Design.BottomNavigationView">
         <item name="fontFamily">@font/font1</item>
     </style>
     <!-- Custom font 적용 -->
+    <style name="customCalenderHeaderFontStyle">
+        <item name="android:fontFamily">@font/font1</item>
+    </style>
+
     <style name="customTextViewFontStyle" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:fontFamily">@font/font1</item>
     </style>
@@ -79,7 +91,7 @@
     <style name="Theme.DiaryProject2" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorPrimaryVariant">@color/azure2</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -99,6 +111,8 @@
         <item name="android:spinnerStyle">@style/customSpinnerFontStyle2</item>
         <item name="radioButtonStyle">@style/customRadioButtonFontStyle2</item>
         <item name="bottomNavigationStyle">@style/Widget.BottomNavigationView2</item>
+        <item name="mcv_headerTextAppearance">@style/customCalenderHeaderFontStyle2</item>
+        <item name="mcv_dateTextAppearance">@style/customCalenderHeaderFontStyle2</item>
     </style>
 
     <!-- 커스텀 폰트가 적용된 BottomNavigationView -->
@@ -106,6 +120,10 @@
         <item name="android:fontFamily">@font/font2</item>
     </style>
     <!-- Custom font 적용 -->
+    <style name="customCalenderHeaderFontStyle2">
+        <item name="android:fontFamily">@font/font2</item>
+    </style>
+
     <style name="customTextViewFontStyle2" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:fontFamily">@font/font2</item>
     </style>
@@ -136,7 +154,7 @@
     <style name="Theme.DiaryProject3" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorPrimaryVariant">@color/azure2</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -156,6 +174,8 @@
         <item name="android:spinnerStyle">@style/customSpinnerFontStyle3</item>
         <item name="radioButtonStyle">@style/customRadioButtonFontStyle3</item>
         <item name="bottomNavigationStyle">@style/Widget.BottomNavigationView3</item>
+        <item name="mcv_headerTextAppearance">@style/customCalenderHeaderFontStyle3</item>
+        <item name="mcv_dateTextAppearance">@style/customCalenderHeaderFontStyle3</item>
     </style>
 
     <!-- 커스텀 폰트가 적용된 BottomNavigationView -->
@@ -163,6 +183,10 @@
         <item name="fontFamily">@font/font2</item>
     </style>
     <!-- Custom font 적용 -->
+    <style name="customCalenderHeaderFontStyle3">
+        <item name="android:fontFamily">@font/font3</item>
+    </style>
+
     <style name="customTextViewFontStyle3" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:fontFamily">@font/font3</item>
     </style>
@@ -193,7 +217,7 @@
     <style name="Theme.DiaryProject4" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorPrimaryVariant">@color/azure2</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -213,6 +237,8 @@
         <item name="android:spinnerStyle">@style/customSpinnerFontStyle4</item>
         <item name="radioButtonStyle">@style/customRadioButtonFontStyle4</item>
         <item name="bottomNavigationStyle">@style/Widget.BottomNavigationView4</item>
+        <item name="mcv_headerTextAppearance">@style/customCalenderHeaderFontStyle4</item>
+        <item name="mcv_dateTextAppearance">@style/customCalenderHeaderFontStyle4</item>
     </style>
 
     <!-- 커스텀 폰트가 적용된 BottomNavigationView -->
@@ -221,6 +247,10 @@
     </style>
 
     <!-- Custom font 적용 -->
+    <style name="customCalenderHeaderFontStyle4">
+        <item name="android:fontFamily">@font/font4</item>
+    </style>
+
     <style name="customTextViewFontStyle4" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:fontFamily">@font/font4</item>
     </style>
@@ -251,7 +281,7 @@
     <style name="Theme.DiaryProject5" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/white</item>
+        <item name="colorPrimaryVariant">@color/azure2</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -270,6 +300,8 @@
         <item name="radioButtonStyle">@style/customRadioButtonFontStyle5</item>
         <item name="android:checkboxStyle">@style/customCheckboxFontStyle5</item>
         <item name="android:spinnerStyle">@style/customSpinnerFontStyle5</item>
+        <item name="mcv_headerTextAppearance">@style/customCalenderHeaderFontStyle5</item>
+        <item name="mcv_dateTextAppearance">@style/customCalenderHeaderFontStyle5</item>
     </style>
 
     <!-- 커스텀 폰트가 적용된 BottomNavigationView -->
@@ -278,6 +310,10 @@
     </style>
 
     <!-- Custom font 적용 -->
+    <style name="customCalenderHeaderFontStyle5">
+        <item name="android:fontFamily">@font/font5</item>
+    </style>
+
     <style name="customTextViewFontStyle5" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:fontFamily">@font/font5</item>
     </style>

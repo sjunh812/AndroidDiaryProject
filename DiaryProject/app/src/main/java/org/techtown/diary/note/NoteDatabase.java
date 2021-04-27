@@ -170,6 +170,7 @@ public class NoteDatabase {
                     int _month = cursor.getInt(10);
 
                     String createDateStr = null;
+                    String createDateStr2 = null;
                     String time = null;
                     String dayOfWeek = null;
 
@@ -177,6 +178,7 @@ public class NoteDatabase {
                         try {
                             Date date = timeFormat.parse(_createDate);
                             createDateStr = MainActivity.dateFormat.format(date);
+                            createDateStr2 = MainActivity.dateFormat2.format(date);
                             time = MainActivity.timeFormat.format(date);
                             dayOfWeek = MainActivity.getDayOfWeek(date);
                         } catch(Exception e) {
@@ -187,6 +189,7 @@ public class NoteDatabase {
                     }
 
                     item = new Note(_id, _weather, _address, _locationX, _locationY, _contents, _mood, _picture, createDateStr, time, dayOfWeek, _year, _month);
+                    item.setCreateDateStr2(createDateStr2);
                     items.add(item);
                 }
 

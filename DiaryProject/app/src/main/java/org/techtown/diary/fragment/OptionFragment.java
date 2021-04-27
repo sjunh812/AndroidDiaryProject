@@ -65,7 +65,7 @@ public class OptionFragment extends Fragment {
     private void setCurFontText() {
         switch(curFontIndex) {
             case 0:
-                curFontTextView.setText("고양체");
+                curFontTextView.setText("카페24 고운밤");
                 break;
             case 1:
                 curFontTextView.setText("교보손글씨");
@@ -80,7 +80,7 @@ public class OptionFragment extends Fragment {
                 curFontTextView.setText("카페24 숑숑체");
                 break;
             default:
-                curFontTextView.setText("고양체");
+                curFontTextView.setText("카페24 고운밤");
                 break;
         }
     }

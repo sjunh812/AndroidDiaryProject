@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/azure2"
     android:paddingTop="10dp">
 
     <RelativeLayout
@@ -36,7 +36,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:background="@drawable/circle_view"
-            android:padding="6dp"
+            android:padding="10dp"
             android:scaleType="centerInside"
             android:src="@drawable/align_icon" />
 
@@ -114,6 +114,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:nestedScrollingEnabled="false"
-        android:background="@color/azure" />
+        android:background="@color/azure2" />
 
 </LinearLayout>

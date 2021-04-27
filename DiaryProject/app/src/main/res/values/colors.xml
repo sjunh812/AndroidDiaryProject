@@ -17,7 +17,7 @@
     <color name="orange">#FF7F00</color>
     <color name="pink">#FFB6C1</color>
     <color name="azure">#F1FFFF</color>
-    <color name="azure2">#FAFFFF</color>
+    <color name="azure2">#F9FFFF</color>
     <color name="transparent">#00000000</color>
     <color name="transparentGray">#88D2D2D2</color>
 </resources>

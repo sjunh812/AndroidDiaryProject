@@ -177,7 +177,7 @@ public class ListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(tabListener != null) {
-                    tabListener.onTabSelected(1);
+                    tabListener.onTabSelected(2);
                 }
             }
         });

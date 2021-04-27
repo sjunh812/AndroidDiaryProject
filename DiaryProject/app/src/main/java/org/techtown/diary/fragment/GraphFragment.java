@@ -175,19 +175,19 @@ public class GraphFragment extends Fragment {
                 HashMap<Integer, Integer> hashMap = null;
 
                 if(checkedId == R.id.allButton) {
-                    moodTitleTextView.setText("전체 기분 통계");
+                    moodTitleTextView.setText("전체");
                     selectRadioIndex = 0;
                     hashMap = callback.selectMoodCount(true, false, false);
                     chart1.setCenterText("전체");     // 원형 그래프 가운데 text 표기
 
                 } else if(checkedId == R.id.yearButton) {
-                    moodTitleTextView.setText(MainActivity.yearFormat.format(new Date()) + "년 기분 통계");
+                    moodTitleTextView.setText(MainActivity.yearFormat.format(new Date()) + "년");
                     selectRadioIndex = 1;
                     hashMap = callback.selectMoodCount(false, true, false);
                     chart1.setCenterText(MainActivity.yearFormat.format(new Date()) + "년");     // 원형 그래프 가운데 text 표기
 
                 } else if(checkedId == R.id.monthButton) {
-                    moodTitleTextView.setText(Integer.parseInt(MainActivity.monthFormat.format(new Date())) + "월 기분 통계");
+                    moodTitleTextView.setText(Integer.parseInt(MainActivity.monthFormat.format(new Date())) + "월");
                     selectRadioIndex = 2;
                     hashMap = callback.selectMoodCount(false, false, true);
                     chart1.setCenterText(Integer.parseInt(MainActivity.monthFormat.format(new Date())) + "월");      // 원형 그래프 가운데 text 표기
@@ -216,7 +216,7 @@ public class GraphFragment extends Fragment {
         chart1.setTransparentCircleAlpha(110);           // 중간원과 바깥원 사이의 얇은 투명원의 알파 값 결정
         chart1.setTransparentCircleRadius(66f);          // 중간원과 바깥원 사이의 얇은 투명원의 반지름
         chart1.setHoleRadius(58f);                       // 중간원의 반지름
-        chart1.setHoleColor(getResources().getColor(R.color.white));
+        chart1.setHoleColor(getResources().getColor(R.color.azure2));
         //chart1.setDrawCenterText(true);
         chart1.setHighlightPerTapEnabled(true);          // 특정부분 선택시 확대효과 여부
         Legend legend1 = chart1.getLegend();             // 그래프의 구성요소들을 추가로 명시하는지 여부
@@ -310,7 +310,7 @@ public class GraphFragment extends Fragment {
 
         PieDataSet dataSet = new PieDataSet(entries, "기분별 비율");
         dataSet.setDrawIcons(true);                             // 아이콘 표시 여부
-        dataSet.setSliceSpace(4f);                              // 그래프 간격
+        dataSet.setSliceSpace(10f);                              // 그래프 간격
         dataSet.setIconsOffset(new MPPointF(0, -40));      // 아이콘 offset
         //dataSet.setSelectionShift(5f);                        // 특정부분 선택시 확대효과 크기
         dataSet.setColors(colors);

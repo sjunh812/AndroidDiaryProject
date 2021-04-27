@@ -10,6 +10,7 @@ public class Note {
     private int mood;               // 기분
     private String picture;         // 사진 이미지 경로
     private String createDateStr;   // 일기 작성 일자(yyyy년 MM월 dd일)
+    private String createDateStr2;  // 일기 작성 일자(yyyy-MM-dd)
     private String time;            // 일기 작성 시간(PM 5:00)
     private String dayOfWeek;       // 일기 작성 요일(화)
     private int year;               // 날짜 정렬을 위한 int형 년도
@@ -134,5 +135,13 @@ public class Note {
 
     public void setDay(int day) {
         this.day = day;
+    }
+
+    public String getCreateDateStr2() {
+        return createDateStr2;
+    }
+
+    public void setCreateDateStr2(String createDateStr2) {
+        this.createDateStr2 = createDateStr2;
     }
 }

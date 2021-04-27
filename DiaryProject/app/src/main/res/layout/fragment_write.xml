@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/azure2"
     android:paddingTop="10dp">
 
     <TextView
@@ -64,7 +65,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/azure"
+            android:background="@color/azure2"
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
@@ -85,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginBottom="10dp"
                         android:text="사진 선택"
                         android:textStyle="bold"
                         android:textColor="@color/black"
@@ -96,7 +97,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginBottom="10dp"
-                        android:text="탭하여 사진을 추가해주세요\n(삭제하려면 길게 눌렀다가 떼주세요)"
+                        android:text="탭하여 사진을 추가해주세요.\n(삭제하려면 길게 눌렀다가 떼주세요.)"
                         android:textColor="@color/skyblue"
                         android:textSize="18dp" />
 
@@ -147,7 +148,7 @@
                             android:layout_marginBottom="10dp"
                             android:background="@color/white"
                             android:gravity="top"
-                            android:hint="이곳을 터치해주세요"
+                            android:hint="이곳을 터치해주세요."
                             android:lineSpacingExtra="5dp"
                             android:padding="10dp"
                             android:textColor="@color/black"
@@ -178,11 +179,20 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginBottom="30dp"
-                        android:text="오늘 기분을 골라주세요"
+                        android:layout_marginBottom="10dp"
+                        android:text="기분 선택"
                         android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="20dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="30dp"
+                        android:text="오늘의 기분을 선택해주세요."
+                        android:textColor="@color/skyblue"
+                        android:textSize="18dp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
