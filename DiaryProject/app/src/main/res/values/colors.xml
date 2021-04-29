@@ -20,4 +20,19 @@
     <color name="azure2">#F9FFFF</color>
     <color name="transparent">#00000000</color>
     <color name="transparentGray">#88D2D2D2</color>
+
+    <color name="pastel_700">#CAA6FE</color>
+    <color name="pastel_500">#DEDEFF</color>
+    <color name="pastel_200">#FCFCFF</color>
+
+    <color name="pastel_red">#FFAFB0</color>
+    <color name="pastel_blue">#AEE4FF</color>
+    <color name="pastel_skyblue">#C4F4FE</color>
+    <color name="pastel_green">#BEE9B4</color>
+    <color name="pastel_yellow">#FDFA87</color>
+    <color name="pastel_gray">#DFD4E4</color>
+    <color name="pastel_black">#808080</color>
+    <color name="pastel_orange">#F2CFA5</color>
+    <color name="pastel_pink">#FCC6F7</color>
+
 </resources>

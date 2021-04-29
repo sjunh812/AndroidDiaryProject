@@ -2,25 +2,26 @@ package org.techtown.diary.fragment;
 
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -32,14 +33,13 @@ import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import org.techtown.diary.MainActivity;
 import org.techtown.diary.R;
+import org.techtown.diary.calendar.CalendarAdapter;
 import org.techtown.diary.note.Note;
 import org.techtown.diary.note.NoteDatabaseCallback;
 import org.threeten.bp.DayOfWeek;
 import org.threeten.bp.LocalDate;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 
@@ -47,9 +47,12 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
     private MaterialCalendarView calendarView;
     private TextView dateTextView;
     private RecyclerView recyclerView;
+    private LinearLayout showDiaryStateView;
 
     private NoteDatabaseCallback callback;
     private ArrayList<Note> items;
+
+    private CalendarAdapter adapter;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -77,7 +80,23 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
         items = callback.selectAllDB();
 
         dateTextView = (TextView)rootView.findViewById(R.id.dateTextView);
+        showDiaryStateView = (LinearLayout)rootView.findViewById(R.id.showDiaryStateView);
+
         recyclerView = (RecyclerView)rootView.findViewById(R.id.recyclerView);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+
+                if(parent.getChildAdapterPosition(view) != parent.getAdapter().getItemCount() - 1) {
+                    outRect.top = 30;
+                }
+            }
+        });
+        adapter = new CalendarAdapter(getContext());
+        recyclerView.setAdapter(adapter);
 
         initCalendarView(rootView);
 
@@ -86,8 +105,13 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
 
     private void initCalendarView(View rootView) {
         calendarView = (MaterialCalendarView)rootView.findViewById(R.id.calendar);
+        calendarView.state().edit()
+                .setMinimumDate(CalendarDay.from(2020, 1, 1))
+                .setMaximumDate(CalendarDay.from(2021, 12, 31))
+                .commit();
         calendarView.setOnDateChangedListener(this);
         calendarView.setSelectedDate(CalendarDay.today());
+        onDateSelected(calendarView, CalendarDay.today(), true);
         calendarView.addDecorators(new SaturdayDecorator(), new SundayDecorator(), new TodayDecorator());
 
         for(Note note : items) {
@@ -102,7 +126,6 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
         }
     }
 
-
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         // 선택한 날짜에 맞게 dateTextView 설정
@@ -111,6 +134,28 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
         int day = date.getDay();
 
         dateTextView.setText(year + "년 " + month + "월 " + day + "일");
+
+        // 해당 날짜에 일기가 있을 경우, RecyclerView 를 이용해 보여줌
+        adapter.clearItems();
+        for(Note item : items) {
+            try {
+                Date _date = MainActivity.dateFormat2.parse(item.getCreateDateStr2());
+                if((_date.getYear() + 1900) == year && (_date.getMonth() + 1) == month && _date.getDate() == day) {
+                    adapter.addItem(item);
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if(adapter.getItemCount() == 0) {
+            showDiaryStateView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            showDiaryStateView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+
+            adapter.notifyDataSetChanged();
+        }
     }
 
     class MyDayDecorator implements DayViewDecorator {
@@ -131,34 +176,43 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
 
         @Override
         public void decorate(DayViewFacade view) {
-            view.addSpan(new RelativeSizeSpan(0.7f));
+            //view.addSpan(new RelativeSizeSpan(0.7f));
             switch(moodIndex) {
                 case 0:
-                    view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_angry_color));
+                    view.addSpan(new DotSpan(10f, context.getResources().getColor(R.color.pastel_red)));
+                    //view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_angry_color));
                     break;
                 case 1:
-                    view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_cool_color));
+                    view.addSpan(new DotSpan(10f, context.getResources().getColor(R.color.pastel_blue)));
+                    //view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_cool_color));
                     break;
                 case 2:
-                    view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_crying_color));
+                    view.addSpan(new DotSpan(10f, context.getResources().getColor(R.color.pastel_skyblue)));
+                    //view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_crying_color));
                     break;
                 case 3:
-                    view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_ill_color));
+                    view.addSpan(new DotSpan(10f, context.getResources().getColor(R.color.pastel_green)));
+                    //view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_ill_color));
                     break;
                 case 4:
-                    view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_laugh_color));
+                    view.addSpan(new DotSpan(10f, context.getResources().getColor(R.color.pastel_yellow)));
+                    //view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_laugh_color));
                     break;
                 case 5:
-                    view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_meh_color));
+                    view.addSpan(new DotSpan(10f, context.getResources().getColor(R.color.pastel_gray)));
+                    //view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_meh_color));
                     break;
                 case 6:
-                    view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_sad));
+                    view.addSpan(new DotSpan(10f, context.getResources().getColor(R.color.pastel_black)));
+                    //view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_sad));
                     break;
                 case 7:
-                    view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_smile_color));
+                    view.addSpan(new DotSpan(10f, context.getResources().getColor(R.color.pastel_orange)));
+                    //view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_smile_color));
                     break;
                 case 8:
-                    view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_yawn_color));
+                    view.addSpan(new DotSpan(10f, context.getResources().getColor(R.color.pastel_pink)));
+                    //view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.mood_yawn_color));
                     break;
             }
         }

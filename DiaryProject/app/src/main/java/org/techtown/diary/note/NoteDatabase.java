@@ -64,12 +64,27 @@ public class NoteDatabase {
             + NOTE_WEATHER + ", " + NOTE_ADDRESS + ", " + NOTE_LOCATION_X + ", " + NOTE_LOCATION_Y + ", " + NOTE_CONTENTS + ", "
             + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_YEAR + ", " + NOTE_MONTH
             + ") VALUES(?,?,?,?,?,?,?,?,?);";
+    private static final String insertNoteSQL2 = "INSERT INTO " + NOTE_TABLE + "("
+            + NOTE_WEATHER + ", " + NOTE_ADDRESS + ", " + NOTE_LOCATION_X + ", " + NOTE_LOCATION_Y + ", " + NOTE_CONTENTS + ", "
+            + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_YEAR + ", " + NOTE_MONTH + ", " + NOTE_CREATE_DATE
+            + ") VALUES(?,?,?,?,?,?,?,?,?,?);";
     private static final String updateNoteSQL = "UPDATE " + NOTE_TABLE + " SET "
             + NOTE_CONTENTS + "=?, "
             + NOTE_MOOD + "=?, "
             + NOTE_LOCATION_X + "='" + "', "
             + NOTE_LOCATION_Y + "='" + "', "
             + NOTE_PICTURE + "=?, "
+            + NOTE_MODIFY_DATE + "=" + "(datetime('now','localtime'))"
+            + "WHERE " + NOTE_ID + "=?;";
+    private static final String updateNoteSQL2 = "UPDATE " + NOTE_TABLE + " SET "
+            + NOTE_CONTENTS + "=?, "
+            + NOTE_MOOD + "=?, "
+            + NOTE_LOCATION_X + "='" + "', "
+            + NOTE_LOCATION_Y + "='" + "', "
+            + NOTE_PICTURE + "=?, "
+            + NOTE_CREATE_DATE + "=?, "
+            + NOTE_YEAR + "=?, "
+            + NOTE_MONTH + "=?, "
             + NOTE_MODIFY_DATE + "=" + "(datetime('now','localtime'))"
             + "WHERE " + NOTE_ID + "=?;";
     private static final String selectNoteSQL = "SELECT " + NOTE_ID + ", " + NOTE_WEATHER + ", " + NOTE_ADDRESS + ", " + NOTE_LOCATION_X + ", " + NOTE_LOCATION_Y + ", "
@@ -118,6 +133,17 @@ public class NoteDatabase {
         }
     }
 
+    public void insert2(String tableName, Object[] objs) {
+        if(db != null) {
+            if(tableName.equals(NOTE_TABLE)) {
+                db.execSQL(insertNoteSQL2, objs);
+                Log.d(LOG, "Note 테이블에 데이터 삽입 성공");
+            }
+        } else {
+            Log.d(LOG, "db를 먼저 오픈해주세요");
+        }
+    }
+
     public void delete(String tableName, int id) {
         if(db != null) {
             if(tableName.equals(NOTE_TABLE)) {
@@ -141,6 +167,27 @@ public class NoteDatabase {
                 Object[] objs = { contents, moodIndex, path, id };
 
                 db.execSQL(updateNoteSQL, objs);
+                Log.d(LOG, "Note 테이블 데이터 수정성공 : " + id);
+            }
+        } else {
+            Log.d(LOG, "db를 먼저 오픈해주세요");
+        }
+    }
+
+    public void update2(String tableName, Note item) {
+        if(db != null) {
+            if(tableName.equals(NOTE_TABLE)) {
+                int id = item.get_id();
+                String contents = item.getContents();
+                int moodIndex = item.getMood();
+                String path = item.getPicture();
+                String date = item.getCreateDateStr2();
+                int year = item.getYear();
+                int month = item.getDay();
+
+                Object[] objs = { contents, moodIndex, path, date, year, month, id };
+
+                db.execSQL(updateNoteSQL2, objs);
                 Log.d(LOG, "Note 테이블 데이터 수정성공 : " + id);
             }
         } else {

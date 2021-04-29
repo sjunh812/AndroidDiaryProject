@@ -3,6 +3,7 @@ package org.techtown.diary.fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -116,6 +117,17 @@ public class ListFragment extends Fragment {
         RecyclerView listRecyclerView = (RecyclerView)rootView.findViewById(R.id.listRecyclerView);
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         listRecyclerView.setLayoutManager(manager);
+        listRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+
+                //outRect.top = 30;
+                if(parent.getChildAdapterPosition(view) != 0) {
+                    outRect.top = 30;
+                }
+            }
+        });
         adapter = new NoteAdapter(getContext());
         adapter.setItems(callback.selectAllDB());
         listRecyclerView.setAdapter(adapter);
@@ -161,18 +173,18 @@ public class ListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 radioButtonL.setTextColor(Color.WHITE);
-                radioButtonR.setTextColor(getResources().getColor(R.color.skyblue));
+                radioButtonR.setTextColor(getResources().getColor(R.color.pastel_500));
             }
         });
         radioButtonR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                radioButtonL.setTextColor(getResources().getColor(R.color.skyblue));
+                radioButtonL.setTextColor(getResources().getColor(R.color.pastel_500));
                 radioButtonR.setTextColor(Color.WHITE);
             }
         });
 
-        Button writeButton = (Button)rootView.findViewById(R.id.writeButton);           // 작성 프래그먼트로 이동(메인액티비티를 거침)
+        ImageButton writeButton = (ImageButton)rootView.findViewById(R.id.writeButton);           // 작성 프래그먼트로 이동(메인액티비티를 거침)
         writeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -351,9 +363,9 @@ public class ListFragment extends Fragment {
 
         if(radioButtonL.isChecked()) {
             radioButtonL.setTextColor(Color.WHITE);
-            radioButtonR.setTextColor(getResources().getColor(R.color.skyblue));
+            radioButtonR.setTextColor(getResources().getColor(R.color.pastel_500));
         } else {
-            radioButtonL.setTextColor(getResources().getColor(R.color.skyblue));
+            radioButtonL.setTextColor(getResources().getColor(R.color.pastel_500));
             radioButtonR.setTextColor(Color.WHITE);
         }
     }

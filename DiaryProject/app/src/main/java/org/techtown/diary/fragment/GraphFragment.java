@@ -178,19 +178,19 @@ public class GraphFragment extends Fragment {
                     moodTitleTextView.setText("전체");
                     selectRadioIndex = 0;
                     hashMap = callback.selectMoodCount(true, false, false);
-                    chart1.setCenterText("전체");     // 원형 그래프 가운데 text 표기
+                    //chart1.setCenterText("전체");     // 원형 그래프 가운데 text 표기
 
                 } else if(checkedId == R.id.yearButton) {
                     moodTitleTextView.setText(MainActivity.yearFormat.format(new Date()) + "년");
                     selectRadioIndex = 1;
                     hashMap = callback.selectMoodCount(false, true, false);
-                    chart1.setCenterText(MainActivity.yearFormat.format(new Date()) + "년");     // 원형 그래프 가운데 text 표기
+                    //chart1.setCenterText(MainActivity.yearFormat.format(new Date()) + "년");     // 원형 그래프 가운데 text 표기
 
                 } else if(checkedId == R.id.monthButton) {
                     moodTitleTextView.setText(Integer.parseInt(MainActivity.monthFormat.format(new Date())) + "월");
                     selectRadioIndex = 2;
                     hashMap = callback.selectMoodCount(false, false, true);
-                    chart1.setCenterText(Integer.parseInt(MainActivity.monthFormat.format(new Date())) + "월");      // 원형 그래프 가운데 text 표기
+                   // chart1.setCenterText(Integer.parseInt(MainActivity.monthFormat.format(new Date())) + "월");      // 원형 그래프 가운데 text 표기
                 }
 
                 chart1.setCenterTextTypeface(getCurTypeFace());
@@ -212,13 +212,16 @@ public class GraphFragment extends Fragment {
         // 원형 그래프(기분별)
         chart1.setUsePercentValues(true);
         chart1.getDescription().setEnabled(false);       // 추가 설명란 false
-        chart1.setTransparentCircleColor(getResources().getColor(R.color.white));   // 중간원과 바깥원 사이의 얇은 투명원의 색상 결정
-        chart1.setTransparentCircleAlpha(110);           // 중간원과 바깥원 사이의 얇은 투명원의 알파 값 결정
-        chart1.setTransparentCircleRadius(66f);          // 중간원과 바깥원 사이의 얇은 투명원의 반지름
-        chart1.setHoleRadius(58f);                       // 중간원의 반지름
-        chart1.setHoleColor(getResources().getColor(R.color.azure2));
+        chart1.setDrawHoleEnabled(false);
+        chart1.setExtraOffsets(5,10,5,10);
+        chart1.setHighlightPerTapEnabled(false);        // 특정부분 선택시 확대효과 여부
+
+        //chart1.setTransparentCircleColor(getResources().getColor(R.color.white));   // 중간원과 바깥원 사이의 얇은 투명원의 색상 결정
+        //chart1.setTransparentCircleAlpha(110);           // 중간원과 바깥원 사이의 얇은 투명원의 알파 값 결정
+        //chart1.setTransparentCircleRadius(66f);          // 중간원과 바깥원 사이의 얇은 투명원의 반지름
+        //chart1.setHoleRadius(58f);                       // 중간원의 반지름
+        //chart1.setHoleColor(getResources().getColor(R.color.azure2));
         //chart1.setDrawCenterText(true);
-        chart1.setHighlightPerTapEnabled(true);          // 특정부분 선택시 확대효과 여부
         Legend legend1 = chart1.getLegend();             // 그래프의 구성요소들을 추가로 명시하는지 여부
         legend1.setEnabled(false);                        // 추가 구성요소 명시 false
         chart1.setEntryLabelColor(Color.WHITE);          // entry label 색상
@@ -311,7 +314,7 @@ public class GraphFragment extends Fragment {
         PieDataSet dataSet = new PieDataSet(entries, "기분별 비율");
         dataSet.setDrawIcons(true);                             // 아이콘 표시 여부
         dataSet.setSliceSpace(10f);                              // 그래프 간격
-        dataSet.setIconsOffset(new MPPointF(0, -40));      // 아이콘 offset
+        dataSet.setIconsOffset(new MPPointF(0, 55));      // 아이콘 offset
         //dataSet.setSelectionShift(5f);                        // 특정부분 선택시 확대효과 크기
         dataSet.setColors(colors);
         dataSet.setValueFormatter(new ValueFormatter() {
@@ -480,31 +483,31 @@ public class GraphFragment extends Fragment {
     private void addColor(int moodIndex) {
         switch(moodIndex) {
             case 0:
-                colors.add(getResources().getColor(R.color.red));
+                colors.add(getResources().getColor(R.color.pastel_red));
                 break;
             case 1:
-                colors.add(getResources().getColor(R.color.blue));
+                colors.add(getResources().getColor(R.color.pastel_blue));
                 break;
             case 2:
-                colors.add(getResources().getColor(R.color.skyblue));
+                colors.add(getResources().getColor(R.color.pastel_skyblue));
                 break;
             case 3:
-                colors.add(getResources().getColor(R.color.lightgreen));
+                colors.add(getResources().getColor(R.color.pastel_green));
                 break;
             case 4:
-                colors.add(getResources().getColor(R.color.yellow));
+                colors.add(getResources().getColor(R.color.pastel_yellow));
                 break;
             case 5:
-                colors.add(getResources().getColor(R.color.gray));
+                colors.add(getResources().getColor(R.color.pastel_gray));
                 break;
             case 6:
-                colors.add(getResources().getColor(R.color.black));
+                colors.add(getResources().getColor(R.color.pastel_black));
                 break;
             case 7:
-                colors.add(getResources().getColor(R.color.orange));
+                colors.add(getResources().getColor(R.color.pastel_orange));
                 break;
             case 8:
-                colors.add(getResources().getColor(R.color.pink));
+                colors.add(getResources().getColor(R.color.pastel_pink));
                 break;
         }
     }

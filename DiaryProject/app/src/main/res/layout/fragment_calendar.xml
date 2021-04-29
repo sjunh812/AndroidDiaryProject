@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azure2">
+    android:background="@color/pastel_200">
 
     <TextView
         android:layout_width="wrap_content"
@@ -23,17 +23,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/azure2"
+        android:background="@color/pastel_200"
         android:orientation="vertical"
-        android:paddingRight="20dp"
-        android:paddingLeft="20dp">
+        android:paddingRight="25dp"
+        android:paddingLeft="25dp">
 
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
             android:id="@+id/calendar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:mcv_selectionColor="#3350BCDF"
+            app:mcv_selectionColor="@color/pastel_500"
             app:mcv_selectionMode="single" />
 
         <TextView
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:textSize="17dp"
             android:text="2021년 4월 28일"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:textColor="@color/black" />
 
         <FrameLayout
@@ -50,6 +50,7 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/showDiaryStateView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
@@ -66,13 +67,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="17dp"
-                    android:textColor="@color/skyblue"
+                    android:textColor="@color/gray"
                     android:text="일기가 없습니다.." />
 
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
+                android:visibility="gone"
+                android:paddingTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

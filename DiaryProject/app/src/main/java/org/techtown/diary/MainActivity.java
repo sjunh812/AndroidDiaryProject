@@ -89,8 +89,10 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy년 MM월 dd일");
     public static SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
     public static SimpleDateFormat timeFormat = new SimpleDateFormat("a HH:mm");
+    public static SimpleDateFormat timeFormat2 = new SimpleDateFormat("HH:mm:SS");
     public static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
     public static SimpleDateFormat monthFormat = new SimpleDateFormat("MM");
+    public static SimpleDateFormat dayFormat = new SimpleDateFormat("dd");
 
     // 데이터
     private Location curLocation;                       // 현재 위치 정보
@@ -116,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         //db.insert(NoteDatabase.NOTE_TABLE, objs);
 
         listFragment = new ListFragment();
-        calendarFragment = new CalendarFragment();
         graphFragment = new GraphFragment();
         optionFragment = new OptionFragment();
 
@@ -134,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
                         return true;
                     case R.id.tab2:
+                        calendarFragment = new CalendarFragment();
                         transaction.replace(R.id.container, calendarFragment);
                         transaction.commit();
 
@@ -175,12 +177,13 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         curDate = new Date();                               // 현재 날짜정보
         String curYear = yearFormat.format(curDate);        // yyyy
         String curMonth = monthFormat.format(curDate);      // MM
+        String curDay = dayFormat.format(curDate);          // dd
         String date = dateFormat.format(curDate);           // yyyy년 MM월 dd일
 
         if(writeFragment != null) {
             writeFragment.setDateTextView(date);
             try {
-                writeFragment.setCurDate(Integer.parseInt(curYear), Integer.parseInt(curMonth));
+                writeFragment.setCurDate(Integer.parseInt(curYear), Integer.parseInt(curMonth), Integer.parseInt(curDay));
             } catch(Exception e) {
                 e.printStackTrace();
             }
@@ -355,6 +358,14 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
             db.insert(NoteDatabase.NOTE_TABLE, objs);
         }
     }
+
+    @Override
+    public void insertDB2(Object[] objs) {
+        if(db != null) {
+            db.insert2(NoteDatabase.NOTE_TABLE, objs);
+        }
+    }
+
     @Override
     public ArrayList<Note> selectAllDB() {
         ArrayList<Note> items = new ArrayList<>();
@@ -376,6 +387,13 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     public void updateDB(Note item) {
         if(db != null) {
             db.update(NoteDatabase.NOTE_TABLE, item);
+        }
+    }
+
+    @Override
+    public void updateDB2(Note item) {
+        if(db != null) {
+            db.update2(NoteDatabase.NOTE_TABLE, item);
         }
     }
 

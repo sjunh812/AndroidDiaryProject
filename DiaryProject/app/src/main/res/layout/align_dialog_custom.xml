@@ -9,7 +9,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/skyblue"
+        android:background="@color/pastel_500"
         android:padding="10dp">
 
         <TextView
@@ -37,7 +37,6 @@
             android:src="@drawable/x_icon" />
 
     </RelativeLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azure2"
+    android:background="@color/pastel_200"
     android:paddingTop="10dp">
 
     <TextView
@@ -41,8 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:clickable="true"
             android:textColor="@color/black"
-            android:textStyle="bold"
             android:textSize="18dp"
             android:text="" />
 
@@ -54,7 +54,7 @@
             android:layout_centerVertical="true"
             android:text="위치정보 없음"
             android:textSize="13dp"
-            android:textColor="@color/skyblue" />
+            android:textColor="@color/pastel_700" />
 
     </RelativeLayout>
 
@@ -65,107 +65,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/azure2"
+            android:background="@color/pastel_200"
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="2dp"
-                app:cardUseCompatPadding="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:text="사진 선택"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:textSize="20dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:text="탭하여 사진을 추가해주세요.\n(삭제하려면 길게 눌렀다가 떼주세요.)"
-                        android:textColor="@color/skyblue"
-                        android:textSize="18dp" />
-
-                    <ImageView
-                        android:id="@+id/pictureImageView"
-                        android:layout_width="match_parent"
-                        android:layout_height="270dp"
-                        android:layout_marginBottom="10dp"
-                        android:longClickable="true"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/add_image_64_color" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="2dp"
-                app:cardUseCompatPadding="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
-                        android:text="일기 입력"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:textSize="20dp" />
-
-                    <androidx.core.widget.NestedScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <EditText
-                            android:id="@+id/contentsEditText"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp"
-                            android:background="@color/white"
-                            android:gravity="top"
-                            android:hint="이곳을 터치해주세요."
-                            android:lineSpacingExtra="5dp"
-                            android:padding="10dp"
-                            android:textColor="@color/black"
-                            android:textColorHint="@color/skyblue"
-                            android:textSize="18dp" />
-
-                    </androidx.core.widget.NestedScrollView>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
                 android:layout_height="380dp"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="2dp"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="1dp"
                 app:cardUseCompatPadding="true">
 
                 <LinearLayout
@@ -181,7 +88,6 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:text="기분 선택"
-                        android:textStyle="bold"
                         android:textColor="@color/black"
                         android:textSize="20dp" />
 
@@ -191,7 +97,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginBottom="30dp"
                         android:text="오늘의 기분을 선택해주세요."
-                        android:textColor="@color/skyblue"
+                        android:textColor="@color/pastel_700"
                         android:textSize="18dp" />
 
                     <LinearLayout
@@ -448,6 +354,98 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="일기 입력"
+                        android:textColor="@color/black"
+                        android:textSize="20dp" />
+
+                    <androidx.core.widget.NestedScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <EditText
+                            android:id="@+id/contentsEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:background="@color/white"
+                            android:gravity="top"
+                            android:hint="이곳을 터치해주세요."
+                            android:lineSpacingExtra="5dp"
+                            android:padding="10dp"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/pastel_700"
+                            android:textSize="18dp" />
+
+                    </androidx.core.widget.NestedScrollView>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="1dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="사진 선택"
+                        android:textColor="@color/black"
+                        android:textSize="20dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:text="탭하여 사진을 추가해주세요.\n(삭제하려면 길게 눌렀다가 떼주세요.)"
+                        android:textColor="@color/pastel_700"
+                        android:textSize="18dp" />
+
+                    <ImageView
+                        android:id="@+id/pictureImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="270dp"
+                        android:layout_marginBottom="10dp"
+                        android:longClickable="true"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/add_image_64_color" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -493,6 +491,7 @@
                     app:backgroundTintMode="add"
                     android:text="닫기"
                     android:textSize="16dp"
+                    android:textStyle="bold"
                     android:textColor="@color/white"/>
 
             </RelativeLayout>

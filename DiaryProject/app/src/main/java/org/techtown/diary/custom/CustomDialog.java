@@ -5,13 +5,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 
 import org.techtown.diary.R;
 
 public class CustomDialog extends Dialog {
-    Button cancelButton;
+    ImageButton cancelButton;
     Button cameraButton;
     Button albumButton;
 
@@ -29,7 +30,7 @@ public class CustomDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_custom);
 
-        cancelButton = (Button)findViewById(R.id.cancelButton);
+        cancelButton = (ImageButton)findViewById(R.id.cancelButton);
         cameraButton = (Button)findViewById(R.id.cameraButton);
         albumButton = (Button)findViewById(R.id.albumButton);
     }

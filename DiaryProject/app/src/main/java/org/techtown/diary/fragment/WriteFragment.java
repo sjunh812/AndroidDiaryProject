@@ -33,6 +33,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.techtown.diary.MainActivity;
+import org.techtown.diary.custom.CustomDatePickerDialog;
 import org.techtown.diary.custom.CustomDeleteDialog;
 import org.techtown.diary.custom.CustomDialog;
 import org.techtown.diary.R;
@@ -71,6 +72,7 @@ public class WriteFragment extends Fragment {
     private Button curButton = null;                    // 현재 선택된 감정표현 버튼
     private CustomDialog dialog;                        // 사진 추가시 띄워지는 커스텀 다이얼로그
     private CustomDeleteDialog deleteDialog;            // 사진 삭제시 띄워지는 커스텀 다이얼로그
+    private CustomDatePickerDialog pickerDialog;
 
     // Helper
     private OnTabItemSelectedListener tabListener;      // 메인 액티비티에서 관리하는 하단 탭 선택 리스터
@@ -91,6 +93,8 @@ public class WriteFragment extends Fragment {
     private Object[] objs;                              // db 에 데이터 삽입을 위해 필요한 Object[] 객체
     private int curYear;
     private int curMonth;
+    private int curDay;
+    private String dateText = null;                            // yyyy-MM-dd HH:mm
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -131,6 +135,12 @@ public class WriteFragment extends Fragment {
         moodButtonListener = new MoodButtonClickListener();     // 감정 선택에 따른 버튼 스케일 변화 리스너 초기화
 
         dateTextView = (TextView)rootView.findViewById(R.id.dateTextView);
+        dateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDatePickerDialog();
+            }
+        });
         weatherImageView = (ImageView)rootView.findViewById(R.id.weatherImageView);
         locationTextView = (TextView)rootView.findViewById(R.id.locationTextView);
         contentsEditText = (EditText)rootView.findViewById(R.id.contentsEditText);
@@ -187,8 +197,14 @@ public class WriteFragment extends Fragment {
                     setContents();                              // contentsEditText 에 사용자가 입력한 내용을 contents 에 저장
 
                     if(updateItem == null) {                        // 새 일기 작성
-                        objs = new Object[]{weatherIndex, address, "", "", contents, moodIndex, filePath, curYear, curMonth};
-                        callback.insertDB(objs);
+                        if(dateText != null) {
+                            String date = dateText + " " + MainActivity.timeFormat2.format(new Date());
+                            objs = new Object[]{weatherIndex, address, "", "", contents, moodIndex, filePath, curYear, curMonth, date};
+                            callback.insertDB2(objs);
+                        } else {
+                            objs = new Object[]{weatherIndex, address, "", "", contents, moodIndex, filePath, curYear, curMonth};
+                            callback.insertDB(objs);
+                        }
 
                         tabListener.onTabSelected(0);       // 일기목록 프래그먼트로 이동
                     } else {                                        // 기존 일기 수정
@@ -196,7 +212,16 @@ public class WriteFragment extends Fragment {
                         updateItem.setMood(moodIndex);
                         updateItem.setPicture(filePath);
 
-                        callback.updateDB(updateItem);
+                        if(dateText != null) {
+                            String date = dateText + " " + MainActivity.timeFormat2.format(new Date());
+                            updateItem.setYear(curYear);
+                            updateItem.setDay(curMonth);
+                            updateItem.setCreateDateStr2(date);
+                            callback.updateDB2(updateItem);
+                        } else {
+                            callback.updateDB(updateItem);
+                        }
+
                         tabListener.onTabSelected(0);       // 일기목록 프래그먼트로 이동
                     }
                 }
@@ -305,9 +330,10 @@ public class WriteFragment extends Fragment {
         dateTextView.setText(date);
     }
 
-    public void setCurDate(int curYear, int curMonth) {
+    public void setCurDate(int curYear, int curMonth, int curDay) {
         this.curYear = curYear;
         this.curMonth = curMonth;
+        this.curDay = curDay;
     }
 
     public void setPictureImageView(Bitmap bitmap, Uri uri, int res) {
@@ -426,6 +452,33 @@ public class WriteFragment extends Fragment {
         });
     }
 
+    public void setDatePickerDialog() {
+        pickerDialog = new CustomDatePickerDialog(getContext(), curYear, curMonth, curDay);
+        pickerDialog.show();
+        pickerDialog.setCancelable(true);
+
+        pickerDialog.setCancelButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickerDialog.dismiss();
+            }
+        });
+
+        pickerDialog.setOkButtonOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                curYear = pickerDialog.getCurYear();
+                curMonth = pickerDialog.getCurMonth() + 1;
+                curDay = pickerDialog.getCurDay();
+                Date newDate = new Date(curYear - 1900, curMonth - 1, curDay);
+                dateText = MainActivity.dateFormat2.format(newDate);
+                dateTextView.setText(MainActivity.dateFormat.format(newDate));
+
+                pickerDialog.dismiss();
+            }
+        });
+    }
+
     public void setDeletePictureDialog() {
         deleteDialog = new CustomDeleteDialog(getContext());
         deleteDialog.show();
@@ -494,6 +547,15 @@ public class WriteFragment extends Fragment {
         String path = updateItem.getPicture();
         String contents = updateItem.getContents();
         int moodIndex = updateItem.getMood();
+        String date2Str = updateItem.getCreateDateStr2();
+        try {
+            Date date2 = MainActivity.dateFormat2.parse(date2Str);
+            curYear = date2.getYear() + 1900;
+            curMonth = date2.getMonth() + 1;
+            curDay = date2.getDate();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
 
         setWeatherImageView2(weatherIndex);
         setDateTextView(date);

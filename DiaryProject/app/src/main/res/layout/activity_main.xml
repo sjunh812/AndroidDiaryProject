@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:background="@color/azure2"
+        android:background="@color/pastel_200"
         app:elevation="0dp"
         app:itemIconTint="@drawable/item_color"
         app:itemTextColor="@drawable/item_color"

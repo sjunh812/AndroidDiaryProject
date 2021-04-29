@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azure2"
+    android:background="@color/pastel_200"
     android:paddingTop="10dp">
 
     <RelativeLayout
@@ -29,12 +29,24 @@
             android:layout_marginRight="10dp"/>
 
         <ImageButton
+            android:id="@+id/writeButton"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_toLeftOf="@+id/alignButton"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/circle_view"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/write" />
+
+        <ImageButton
             android:id="@+id/alignButton"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
+            android:layout_marginRight="7dp"
             android:background="@drawable/circle_view"
             android:padding="10dp"
             android:scaleType="centerInside"
@@ -53,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
             android:orientation="horizontal"
             android:padding="10dp">
 
@@ -78,7 +90,7 @@
                 android:checked="false"
                 android:gravity="center"
                 android:text="사진"
-                android:textColor="@color/skyblue"
+                android:textColor="@color/pastel_500"
                 android:textSize="14dp" />
 
         </RadioGroup>
@@ -90,10 +102,9 @@
             android:layout_centerInParent="true"
             android:text="전체보기"
             android:textSize="18dp"
-            android:textStyle="bold"
             android:textColor="@color/black" />
 
-        <androidx.appcompat.widget.AppCompatButton
+<!--        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/writeButton"
             android:layout_width="80dp"
             android:layout_height="35dp"
@@ -105,7 +116,7 @@
             android:textColor="@color/white"
             android:textSize="14dp"
             app:backgroundTint="@color/cardview_shadow_end_color"
-            app:backgroundTintMode="add" />
+            app:backgroundTintMode="add" />-->
 
     </RelativeLayout>
 
@@ -113,7 +124,9 @@
         android:id="@+id/listRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:nestedScrollingEnabled="false"
-        android:background="@color/azure2" />
+        android:background="@color/pastel_200" />
 
 </LinearLayout>
