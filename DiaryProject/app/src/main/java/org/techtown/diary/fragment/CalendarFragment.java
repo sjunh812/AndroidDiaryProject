@@ -83,15 +83,16 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
         showDiaryStateView = (LinearLayout)rootView.findViewById(R.id.showDiaryStateView);
 
         recyclerView = (RecyclerView)rootView.findViewById(R.id.recyclerView);
-        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, true);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
+        //recyclerView.scrollToPosition(0);
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
 
                 if(parent.getChildAdapterPosition(view) != parent.getAdapter().getItemCount() - 1) {
-                    outRect.top = 30;
+                    outRect.bottom = 30;
                 }
             }
         });

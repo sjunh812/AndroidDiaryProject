@@ -11,8 +11,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
             android:background="@drawable/circle_view"
             android:padding="10dp"
             android:scaleType="centerInside"
-            android:src="@drawable/write" />
+            android:src="@drawable/write_icon" />
 
         <ImageButton
             android:id="@+id/alignButton"
@@ -50,7 +50,7 @@
             android:background="@drawable/circle_view"
             android:padding="10dp"
             android:scaleType="centerInside"
-            android:src="@drawable/align_icon" />
+            android:src="@drawable/search_icon" />
 
     </RelativeLayout>
 
@@ -100,33 +100,48 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="전체보기"
+            android:text="전체"
             android:textSize="18dp"
             android:textColor="@color/black" />
 
-<!--        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/writeButton"
-            android:layout_width="80dp"
-            android:layout_height="35dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/button"
-            android:text="오늘 작성"
-            android:textColor="@color/white"
-            android:textSize="14dp"
-            app:backgroundTint="@color/cardview_shadow_end_color"
-            app:backgroundTintMode="add" />-->
-
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listRecyclerView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:nestedScrollingEnabled="false"
-        android:background="@color/pastel_200" />
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/showDiaryStateView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="7dp"
+                android:src="@drawable/mood_crying_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17dp"
+                android:text="일기가 없습니다.."
+                android:textColor="@color/gray" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/pastel_200"
+            android:nestedScrollingEnabled="false"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:visibility="visible" />
+
+    </FrameLayout>
 </LinearLayout>

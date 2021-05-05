@@ -445,7 +445,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -495,6 +494,7 @@
                     android:textColor="@color/white"/>
 
             </RelativeLayout>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

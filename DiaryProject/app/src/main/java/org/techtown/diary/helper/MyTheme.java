@@ -3,13 +3,13 @@ package org.techtown.diary.helper;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import org.techtown.diary.R;
 
 public class MyTheme {
+    // 상수
     private static final String LOG = "MyTheme";
     public static final String SHARED_PREFERENCES_NAME = "pref";
     public static final String FONT_KEY = "font_key";

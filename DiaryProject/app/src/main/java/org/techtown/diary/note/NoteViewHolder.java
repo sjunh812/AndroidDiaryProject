@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -181,42 +183,62 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
             case 0:     // 화남
                 moodImageView.setImageResource(R.drawable.mood_angry_color);
                 moodImageView2.setImageResource(R.drawable.mood_angry_color);
+                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_red));
+                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_red));
                 break;
             case 1:     // 쿨
                 moodImageView.setImageResource(R.drawable.mood_cool_color);
                 moodImageView2.setImageResource(R.drawable.mood_cool_color);
+                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_blue));
+                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_blue));
                 break;
             case 2:     // 슬픔
                 moodImageView.setImageResource(R.drawable.mood_crying_color);
                 moodImageView2.setImageResource(R.drawable.mood_crying_color);
+                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_skyblue));
+                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_skyblue));
                 break;
             case 3:     // 아픔
                 moodImageView.setImageResource(R.drawable.mood_ill_color);
                 moodImageView2.setImageResource(R.drawable.mood_ill_color);
+                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_green));
+                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_green));
                 break;
             case 4:     // 웃음
                 moodImageView.setImageResource(R.drawable.mood_laugh_color);
                 moodImageView2.setImageResource(R.drawable.mood_laugh_color);
+                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_yellow));
+                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_yellow));
                 break;
             case 5:     // 보통
                 moodImageView.setImageResource(R.drawable.mood_meh_color);
                 moodImageView2.setImageResource(R.drawable.mood_meh_color);
+                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_gray));
+                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_gray));
                 break;
             case 6:     // 나쁨
                 moodImageView.setImageResource(R.drawable.mood_sad);
                 moodImageView2.setImageResource(R.drawable.mood_sad);
+                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_black));
+                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_black));
                 break;
             case 7:     // 좋음
                 moodImageView.setImageResource(R.drawable.mood_smile_color);
                 moodImageView2.setImageResource(R.drawable.mood_smile_color);
+                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_orange));
+                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_orange));
                 break;
             case 8:     // 졸림
                 moodImageView.setImageResource(R.drawable.mood_yawn_color);
                 moodImageView2.setImageResource(R.drawable.mood_yawn_color);
+                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_pink));
+                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_pink));
                 break;
             default:    // default(미소)
                 moodImageView.setImageResource(R.drawable.mood_smile_color);
                 moodImageView2.setImageResource(R.drawable.mood_smile_color);
+                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_orange));
+                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_orange));
                 break;
         }
     }

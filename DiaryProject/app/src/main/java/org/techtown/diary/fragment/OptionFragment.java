@@ -16,12 +16,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import org.techtown.diary.AlarmActivity;
 import org.techtown.diary.FontActivity;
 import org.techtown.diary.R;
 import org.techtown.diary.helper.MyTheme;
 
 public class OptionFragment extends Fragment {
     public static final int REQUEST_FONT_CHANGE = 101;
+    public static final int REQUEST_ALARM_SETTING = 102;
 
     private TextView curFontTextView;
 
@@ -56,6 +58,15 @@ public class OptionFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), FontActivity.class);
                 getActivity().startActivityForResult(intent, REQUEST_FONT_CHANGE);
+            }
+        });
+
+        RelativeLayout noticeLayout = (RelativeLayout)rootView.findViewById(R.id.noticeLayout);
+        noticeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), AlarmActivity.class);
+                getActivity().startActivityForResult(intent, REQUEST_ALARM_SETTING);
             }
         });
 

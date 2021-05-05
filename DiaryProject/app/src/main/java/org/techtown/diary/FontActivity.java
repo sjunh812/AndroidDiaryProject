@@ -17,11 +17,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import org.techtown.diary.helper.MyApplication;
 import org.techtown.diary.helper.MyTheme;
 
 public class FontActivity extends AppCompatActivity {
+    // 상수
     private static final String LOG = "FontActivity";
+
+    // UI
     private TextView exampleTextView;
     private RadioButton fontButton;
     private RadioButton fontButton2;
@@ -29,9 +31,9 @@ public class FontActivity extends AppCompatActivity {
     private RadioButton fontButton4;
     private RadioButton fontButton5;
 
+    // 데이터
     private int curFontIndex = 0;
     private int selectedFontIndex = -1;
-
     private Intent intent;
 
     @Override
@@ -40,25 +42,25 @@ public class FontActivity extends AppCompatActivity {
         MyTheme.applyTheme(this);
         setContentView(R.layout.activity_font);
 
+        // 현재 app 에 설정된 폰트 인덱스를 SharedPreferences 를 이용해 가져옴
         SharedPreferences pref = getSharedPreferences(MyTheme.SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         if(pref != null) {
             curFontIndex = pref.getInt(MyTheme.FONT_KEY, 0);
-            Log.d(LOG, "from fontAcitvity fontIndex : " + curFontIndex);
         }
 
+        // UI 초기화
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.setTitle("폰트 설정");
         toolbar.setTitleTextColor(getResources().getColor(R.color.black));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);          // 툴바의 왼쪽 돌아가기버튼 사용을 위한 코드
 
+        exampleTextView = (TextView)findViewById(R.id.exampleTextView); // 폰트 적용 예시를 보여주는 텍스트 (폰트 적용에 따라 폰트가 바뀌어야함)
         fontButton = (RadioButton)findViewById(R.id.fontButton);
         fontButton2 = (RadioButton)findViewById(R.id.fontButton2);
         fontButton3 = (RadioButton)findViewById(R.id.fontButton3);
         fontButton4 = (RadioButton)findViewById(R.id.fontButton4);
         fontButton5 = (RadioButton)findViewById(R.id.fontButton5);
-
-        exampleTextView = (TextView)findViewById(R.id.exampleTextView);
 
         RadioGroup fontGroup = (RadioGroup)findViewById(R.id.fontGroup);
         fontGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -100,7 +102,6 @@ public class FontActivity extends AppCompatActivity {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(LOG, "번호 : " + selectedFontIndex);
                 MyTheme.applyTheme(getApplicationContext(), selectedFontIndex);
                 intent = getIntent();
                 setResult(RESULT_OK, intent);
@@ -116,7 +117,7 @@ public class FontActivity extends AppCompatActivity {
             }
         });
 
-        setExampleTextViewFont();
+        setExampleTextViewFont();       // SharedPreferences 를 통해 가져온 폰트 인덱스를 통해 라디어 버튼 세팅
     }
 
     private void setExampleTextViewFont() {
@@ -137,7 +138,7 @@ public class FontActivity extends AppCompatActivity {
                 fontButton5.setChecked(true);
                 break;
             default:
-                Log.d(LOG, "ERROR : curFontInex Error");
+                Log.e(LOG, "SharedPreferences 로부터 잘못된 폰트 인덱스 가져옴");
         }
     }
 
@@ -145,7 +146,7 @@ public class FontActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if(id == android.R.id.home) {
+        if(id == android.R.id.home) {   // 툴바 왼쪽 돌아가기 버튼 선택 시
             finish();
             return true;
         }

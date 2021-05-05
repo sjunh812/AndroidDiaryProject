@@ -2,11 +2,9 @@ package org.techtown.diary.fragment;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,11 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,8 +36,7 @@ import org.techtown.diary.note.NoteViewHolder;
 import org.techtown.diary.helper.OnTabItemSelectedListener;
 import org.techtown.diary.note.Note;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
+import java.io.File;;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -49,38 +45,41 @@ public class ListFragment extends Fragment {
     private static final String LOG = "ListFragment";
 
     // UI
-    private TextView selectedDateTextView;
+    private LinearLayout showDiaryStateView;           // DB 조회시 일기가 없는 경우에 나타나는 상태 뷰 (일기없음)
+    private RecyclerView listRecyclerView;             // 일기를 보여주는 리사이클러 뷰
+    private TextView selectedDateTextView;             // 일기 기간별 정렬에 따라 나타나는 텍스트 (ex) 전체보기)
     private RadioGroup radioGroup;                     // 커스텀 라디오버튼을 담은 라디오그룹
     private AppCompatRadioButton radioButtonL;         // 커스텀 라디오버튼중 왼쪽(내용)
     private AppCompatRadioButton radioButtonR;         // 커스텀 라디오버튼중 오른쪽(사진)
-    private CustomAlignDialog alignDialog;
-    private CustomUpdateDialog deleteDialog;
+    private CustomAlignDialog alignDialog;             // 일기 기간별 정렬 다이얼로그
+    private CustomUpdateDialog deleteDialog;           // 일기 삭제(수정) 다이얼로그
 
     // Helper
     private NoteAdapter adapter;                       // 일기 목록을 담은 리사이클러 뷰의 어뎁터
     private OnTabItemSelectedListener tabListener;     // 메인 액티비티 하단 탭의 탭선택 콜백함수를 호출 해주는 리스너
-    private NoteDatabaseCallback callback;
-    //public static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
-    private MyArrayAdapter yearAdapter;
-    private MyArrayAdapter monthAdapter;
-    private GestureDetector detector;
-    private GestureListener gestureListener;
+    private NoteDatabaseCallback callback;             // DB 콜백 인터페이스
+    private MyArrayAdapter yearAdapter;                // 일기 기간별 정렬시 년도 스피너의 어뎁터
+    private MyArrayAdapter monthAdapter;               // 일기 기간별 정렬시 월 스피너의 어뎁터
+    private GestureDetector detector;                  // 일기 목록을 길게 눌렀을 때의 이벤트를 위한 제스처 객체
+    private GestureListener gestureListener;           // 제스처 객체에 필요한 리스너
 
     // Data
-    private int curYear;                               // 현재 년도 ex)2021
-    private int lastYear;
-    private int layoutType = 0;                        // 0:내용 레이아웃, 1:사진 레이아웃
-    private String[] years;
-    private String[] months = {"1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"};
-    private int selectedYear;
-    private int selectedMonth;
-    private int selectedYearPos;
-    private int selectedMonthPos;
-    private Note selectedItem;
+    private int curYear;                               // 현재 년도 (ex)2021)
+    private int lastYear;                              // 마지막 년도 (DB 안에 있는)
+    private int layoutType = 0;                        // 0 : 내용 레이아웃, 1 : 사진 레이아웃
+    private String[] years;                            // 년도 스피너의 어뎁터에 사용될 String 배열 (ArrayAdapter -> String[] 필요)
+    private String[] months = {"1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"};      // 월 스피너의 어뎁터에 사용될 String 배열
+    private int selectedYear;                          // 년도 스피너에서 선택된 년도
+    private int selectedMonth;                         // 월 스피너에서 선택된 월
+    private int selectedYearPos;                       // 이전에 선택한 년도의 스피너 position
+    private int selectedMonthPos;                      // 이전에 선택한 월 스피너 position
+    private Note selectedItem;                         // 일기목록을 길게 눌렀을 때 선택되는 일기의 Note 객체
+    private boolean isAligned = false;                 // 사용자가 일기 기간별 정렬했는지 여부
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+
         if(context instanceof OnTabItemSelectedListener) {
             tabListener = (OnTabItemSelectedListener)context;
         }
@@ -92,6 +91,7 @@ public class ListFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
         if(tabListener != null) {
             tabListener = null;
         }
@@ -105,47 +105,19 @@ public class ListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
-        curYear = getCurrentYear();
-        caluclateYearArray();
-        initSpinnerPosition();
+        curYear = getCurrentYear();     // 현재년도 가져오기
+        caluclateYearArray();           // 현재년도와 DB 내 마지막 년도를 이용하여 years 배열 설정 (년도 스피너의 어뎁터에 사용될)
+        initSpinnerPosition();          // 초기 스피너 포지션 값을 지정하기위해 selectedYearPos 와 selectedMonthPos 초기화 (금년, 금월로 지정)
 
-        gestureListener = new GestureListener();
+        gestureListener = new GestureListener();        // GestureDetector.OnGestureListener 를 상속받은 객체
         detector = new GestureDetector(getContext(), gestureListener);
-
         selectedDateTextView = (TextView)rootView.findViewById(R.id.selectedDateTextView);
+        showDiaryStateView = (LinearLayout)rootView.findViewById(R.id.showDiaryStateView);
 
-        RecyclerView listRecyclerView = (RecyclerView)rootView.findViewById(R.id.listRecyclerView);
-        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        listRecyclerView.setLayoutManager(manager);
-        listRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                super.getItemOffsets(outRect, view, parent, state);
-
-                //outRect.top = 30;
-                if(parent.getChildAdapterPosition(view) != 0) {
-                    outRect.top = 30;
-                }
-            }
-        });
-        adapter = new NoteAdapter(getContext());
-        adapter.setItems(callback.selectAllDB());
-        listRecyclerView.setAdapter(adapter);
-
-        adapter.setOnItemLongClickListener(new OnNoteItemLongClickListener() {
-            @Override
-            public void onLongClick(NoteViewHolder holder, View view, int position) {
-                selectedItem = adapter.getItem(position);
-                Log.d(LOG, "길게눌림");
-                if(selectedItem != null) {
-                    setDeleteDialog();
-                    Log.d(LOG, "길게눌림");
-                }
-            }
-        });
+        initRecyclerView(rootView);     // 리사이클러 뷰에 관한 초기설정
+        setShowDiaryStateView();        // 일기목록이 비어있는 확인
 
         ImageButton alignButton = (ImageButton)rootView.findViewById(R.id.alignButton);
-        alignButton.setOnTouchListener(mOnTouchListener);
         alignButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,6 +138,7 @@ public class ListFragment extends Fragment {
                 }
             }
         });
+
         radioButtonL = (AppCompatRadioButton)rootView.findViewById(R.id.radioButtonL);
         radioButtonR = (AppCompatRadioButton)rootView.findViewById(R.id.radioButtonR);
 
@@ -176,6 +149,7 @@ public class ListFragment extends Fragment {
                 radioButtonR.setTextColor(getResources().getColor(R.color.pastel_500));
             }
         });
+
         radioButtonR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,11 +174,59 @@ public class ListFragment extends Fragment {
         return rootView;
     }
 
-    private void initSpinnerPosition() {
-        selectedYearPos = years.length - 1;
-        selectedMonthPos = getCurrentMonth() - 1;
+    private void initRecyclerView(View rootView) {
+        listRecyclerView = (RecyclerView)rootView.findViewById(R.id.listRecyclerView);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
-        Log.d(LOG, "selectedyYearPos : " + selectedYearPos + ", selectedMonthPos : " + selectedMonthPos);
+        listRecyclerView.setLayoutManager(manager);
+        listRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                super.getItemOffsets(outRect, view, parent, state);
+
+                if(parent.getChildAdapterPosition(view) != 0) {
+                    outRect.top = 40;
+                }
+            }
+        });
+
+        adapter = new NoteAdapter(getContext());
+
+        if(!isAligned) {        // 전체보기 상태
+            adapter.setItems(callback.selectAllDB());
+            selectedDateTextView.setText("전체");
+        } else {                // 일기 기간별 정렬 상태
+            adapter.setItems(callback.selectPart(selectedYear, selectedMonth));
+            selectedDateTextView.setText(selectedYear + "년 " + selectedMonth + "월");
+        }
+
+        adapter.setOnItemLongClickListener(new OnNoteItemLongClickListener() {
+            @Override
+            public void onLongClick(NoteViewHolder holder, View view, int position) {
+                selectedItem = adapter.getItem(position);
+
+                if(selectedItem != null) {
+                    setDeleteDialog();
+                }
+            }
+        });
+
+        listRecyclerView.setAdapter(adapter);
+    }
+
+    private void setShowDiaryStateView() {
+        if(adapter.getItemCount() == 0) {
+            showDiaryStateView.setVisibility(View.VISIBLE);
+            listRecyclerView.setVisibility(View.GONE);
+        } else {
+            showDiaryStateView.setVisibility(View.GONE);
+            listRecyclerView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void initSpinnerPosition() {
+        selectedYearPos = years.length - 1;             // 제일 마지막 인덱스 = 현재 년도
+        selectedMonthPos = getCurrentMonth() - 1;       // ex) 4월 -> 3 (pos)
     }
 
     public void setDeleteDialog() {
@@ -230,11 +252,17 @@ public class ListFragment extends Fragment {
                         File file = new File(path);
                         file.delete();
                     }
-                    // 해당 db 삭제
-                    callback.deleteDB(id);
-                    adapter.setItems(callback.selectAllDB());
-                    adapter.notifyDataSetChanged();
 
+                    callback.deleteDB(id);          // 해당 db 삭제
+
+                    if(!isAligned) {                // 전체보기 상태
+                        adapter.setItems(callback.selectAllDB());
+                    } else {                        // 기간별 보기 상태
+                        adapter.setItems(callback.selectPart(selectedYear, selectedMonth));
+                    }
+
+                    adapter.notifyDataSetChanged();
+                    setShowDiaryStateView();
                     deleteDialog.dismiss();
                 }
             }
@@ -267,8 +295,10 @@ public class ListFragment extends Fragment {
                 selectedDateTextView.setText(selectedYear + "년 " + selectedMonth + "월");
 
                 ArrayList<Note> items = callback.selectPart(selectedYear, selectedMonth);
+                isAligned = true;
                 adapter.setItems(items);
                 adapter.notifyDataSetChanged();
+                setShowDiaryStateView();
 
                 alignDialog.dismiss();
             }
@@ -277,11 +307,13 @@ public class ListFragment extends Fragment {
         alignDialog.setAllButtonOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedDateTextView.setText("전체보기");
+                selectedDateTextView.setText("전체");
 
                 ArrayList<Note> items = callback.selectAllDB();
+                isAligned = false;
                 adapter.setItems(items);
                 adapter.notifyDataSetChanged();
+                setShowDiaryStateView();
 
                 alignDialog.dismiss();
             }
@@ -353,10 +385,6 @@ public class ListFragment extends Fragment {
         years = yearsArray.toArray(new String[yearDiff + 1]);
     }
 
-    public void update() {
-        adapter.notifyDataSetChanged();
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -378,8 +406,6 @@ public class ListFragment extends Fragment {
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             View view = super.getView(position, convertView, parent);
-            //Typeface font = Typeface.createFromAsset(getContext().getAssets(), "ridibatang.otf");
-            //((TextView)view).setTypeface(font);
             ((TextView)view).setGravity(Gravity.CENTER);
             ((TextView)view).setTextSize(17);
 
@@ -393,8 +419,6 @@ public class ListFragment extends Fragment {
         @Override
         public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             View view = super.getDropDownView(position, convertView, parent);
-            //Typeface font = Typeface.createFromAsset(getContext().getAssets(), "ridibatang.otf");
-            //((TextView)view).setTypeface(font);
             ((TextView)view).setGravity(Gravity.CENTER_VERTICAL);
             ((TextView)view).setHeight(88);
             ((TextView)view).setTextSize(17);
@@ -402,27 +426,6 @@ public class ListFragment extends Fragment {
             return view;
         }
     }
-
-    private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            ImageButton button = (ImageButton) v;
-            int action = event.getAction();
-
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        button.setBackgroundTintMode(PorterDuff.Mode.SRC_IN);
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        button.setBackgroundTintMode(PorterDuff.Mode.SRC_ATOP);
-                        break;
-                }
-            }
-
-            return false;
-        }
-    };
 
     private class GestureListener implements GestureDetector.OnGestureListener {
 
@@ -451,7 +454,6 @@ public class ListFragment extends Fragment {
             // 길게 터치한 경우
             if(selectedItem != null) {
                 setDeleteDialog();
-                Log.d(LOG, "길게눌림");
             }
         }
 

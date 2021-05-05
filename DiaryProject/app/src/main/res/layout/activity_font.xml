@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/azure2"
+            android:background="@color/pastel_200"
             app:popupTheme="@style/Theme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -23,14 +23,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/azure2"
+        android:background="@color/pastel_200"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:padding="10dp"
+            android:padding="30dp"
             android:layout_marginTop="4dp"
             android:orientation="vertical">
 
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:fontFamily="@font/font1"
-                    android:text="카페24 고운밤"
+                    android:text="  카페24 고운밤"
                     android:textSize="20dp" />
 
                 <RadioButton
@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:textSize="20dp"
-                    android:text="교보손글씨"
+                    android:text="  교보손글씨"
                     android:fontFamily="@font/font2"/>
 
                 <RadioButton
@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:textSize="20dp"
-                    android:text="어비 푸딩체"
+                    android:text="  어비 푸딩체"
                     android:fontFamily="@font/font3"/>
 
                 <RadioButton
@@ -117,7 +117,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:textSize="20dp"
-                    android:text="할아버지의 나눔"
+                    android:text="  할아버지의 나눔"
                     android:fontFamily="@font/font4" />
 
                 <RadioButton
@@ -126,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:textSize="20dp"
-                    android:text="카페24 숑숑체"
+                    android:text="  카페24 숑숑체"
                     android:fontFamily="@font/font5" />
 
             </RadioGroup>
@@ -164,7 +164,5 @@
                 app:backgroundTintMode="add" />
 
         </RelativeLayout>
-
     </LinearLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

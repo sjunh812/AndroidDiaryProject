@@ -6,8 +6,8 @@
     android:orientation="vertical"
     android:paddingLeft="25dp"
     android:paddingRight="25dp"
-    android:paddingTop="15dp"
-    android:paddingBottom="15dp">
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,8 +15,8 @@
         
         <ImageView
             android:id="@+id/moodImageView"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentLeft="true"
             android:src="@drawable/mood_angry_color" />
 
@@ -54,7 +54,8 @@
         android:id="@+id/contentsTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:text="내용입니다\n띄어쓰기"
         android:textSize="15dp"
         android:textColor="@color/black" />

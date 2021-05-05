@@ -26,7 +26,7 @@
     <!-- -->
     <!-- 카페24 고운밤 폰트 테마(NoActionBar) -->
     <!-- -->
-    <style name="Theme.DiaryProject" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.DiaryProject" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/pastel_200</item>
@@ -88,7 +88,7 @@
     <!-- -->
     <!-- 교보손글씨 폰트 테마(NoActionBar) -->
     <!-- -->
-    <style name="Theme.DiaryProject2" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.DiaryProject2" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/pastel_200</item>
@@ -151,7 +151,7 @@
     <!-- -->
     <!-- 어비 푸딩체 폰트테마(NoActionBar) -->
     <!-- -->
-    <style name="Theme.DiaryProject3" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.DiaryProject3" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/pastel_200</item>
@@ -214,7 +214,7 @@
     <!-- -->
     <!-- 할아버지의 나눔 폰트테마(NoActionBar) -->
     <!-- -->
-    <style name="Theme.DiaryProject4" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.DiaryProject4" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/pastel_200</item>
@@ -278,7 +278,7 @@
     <!-- -->
     <!-- 카페24 숑숑체 폰트테마(NoActionBar) -->
     <!-- -->
-    <style name="Theme.DiaryProject5" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.DiaryProject5" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/pastel_200</item>

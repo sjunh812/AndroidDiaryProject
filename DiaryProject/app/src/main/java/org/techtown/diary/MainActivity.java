@@ -9,9 +9,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -101,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     private int locationCount = 0;                      // 현재 위치 정보를 찾은 경우 locationCount++ -> 위치 요청 종료
     private Note updateItem = null;
     public static MultiTransformation option = new MultiTransformation(new FitCenter(), new RoundedCorners(25));
+
+    private AlarmManager alarmManager;
+    private PendingIntent pendingIntent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -535,6 +542,19 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences pref = getSharedPreferences(AlarmActivity.SHARED_PREFERENCES_NAME2, Activity.MODE_PRIVATE);
+        if(pref != null) {
+            if(pref.getBoolean(AlarmActivity.IS_ALARM_KEY, false)) {
+                //Toast.makeText(this, pref.getInt(AlarmActivity.HOUR_KEY, 22) + "시 " +
+                        //pref.getInt(AlarmActivity.MINUTE_KEY, 0) + "분에 알림을 보내야합니다.", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -603,6 +623,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
                 break;
         }
     }
+
 
     // 위치 관리자로부터 위치 정보를 가져오는 리스너
     class GPSListener implements LocationListener {

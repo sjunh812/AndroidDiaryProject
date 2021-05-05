@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +27,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> implements
     private OnNoteItemLongClickListener longClickListener;
 
     private int layoutType = 0;
+    private long duration = 1000;
 
     public NoteAdapter(Context context) {
         this.context = context;
@@ -106,7 +109,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> implements
             touchListener.onItemTouch(holder, view, position, event);
         }
     }
-
 
     @Override
     public void onLongClick(NoteViewHolder holder, View view, int position) {
