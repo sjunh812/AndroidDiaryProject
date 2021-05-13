@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -15,6 +16,8 @@ public class CustomDeleteDialog extends Dialog {
     ImageButton cancelButton;
     Button deleteButton;
     Button cancelButton2;
+    TextView titleTextView;
+    TextView deleteTextView;
 
     public CustomDeleteDialog(@NonNull Context context) {
         super(context);
@@ -28,6 +31,9 @@ public class CustomDeleteDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delete_dialog_custom);
+
+        titleTextView = (TextView)findViewById(R.id.titleTextView);
+        deleteTextView = (TextView)findViewById(R.id.deleteTextView);
 
         cancelButton = (ImageButton)findViewById(R.id.cancelButton);
         deleteButton = (Button)findViewById(R.id.deleteButton);
@@ -44,5 +50,21 @@ public class CustomDeleteDialog extends Dialog {
 
     public void setCancelButton2OnClickListener(View.OnClickListener listener) {
         cancelButton2.setOnClickListener(listener);
+    }
+
+    public void setTitleTextView(String text) {
+        titleTextView.setText(text);
+    }
+
+    public void setDeleteTextView(String text) {
+        deleteTextView.setText(text);
+    }
+
+    public void setDeleteButtonText(String text) {
+        deleteButton.setText(text);
+    }
+
+    public void setCancelButton2Text(String text) {
+        cancelButton2.setText(text);
     }
 }

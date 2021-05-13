@@ -1,7 +1,10 @@
 package org.techtown.diary.custom;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +16,7 @@ import androidx.annotation.NonNull;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 
 import org.techtown.diary.R;
+import org.techtown.diary.helper.MyTheme;
 
 import java.util.Calendar;
 
@@ -27,6 +31,7 @@ public class CustomDatePickerDialog extends Dialog {
 
     public CustomDatePickerDialog(@NonNull Context context, int year, int month, int day) {
         super(context);
+
         curYear = year;
         curMonth = month;
         curDay = day;

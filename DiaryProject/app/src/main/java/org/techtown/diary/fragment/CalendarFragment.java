@@ -1,19 +1,18 @@
 package org.techtown.diary.fragment;
 
-
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -34,6 +33,9 @@ import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 import org.techtown.diary.MainActivity;
 import org.techtown.diary.R;
 import org.techtown.diary.calendar.CalendarAdapter;
+import org.techtown.diary.calendar.CalendarViewHolder;
+import org.techtown.diary.helper.OnCalItemClickListener;
+import org.techtown.diary.helper.OnRequestListener;
 import org.techtown.diary.note.Note;
 import org.techtown.diary.note.NoteDatabaseCallback;
 import org.threeten.bp.DayOfWeek;
@@ -42,17 +44,19 @@ import org.threeten.bp.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
-
 public class CalendarFragment extends Fragment implements OnDateSelectedListener{
     private MaterialCalendarView calendarView;
     private TextView dateTextView;
     private RecyclerView recyclerView;
     private LinearLayout showDiaryStateView;
+    private Button writeButton;
 
+    private OnRequestListener requestListener;
     private NoteDatabaseCallback callback;
     private ArrayList<Note> items;
 
     private CalendarAdapter adapter;
+    private String dateStr = null;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -60,6 +64,9 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
 
         if(context instanceof NoteDatabaseCallback) {
             callback = (NoteDatabaseCallback)context;
+        }
+        if(context instanceof OnRequestListener) {
+            requestListener = (OnRequestListener)context;
         }
     }
 
@@ -69,6 +76,9 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
 
         if(callback != null) {
             callback = null;
+        }
+        if(requestListener != null) {
+            requestListener = null;
         }
     }
 
@@ -81,11 +91,32 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
 
         dateTextView = (TextView)rootView.findViewById(R.id.dateTextView);
         showDiaryStateView = (LinearLayout)rootView.findViewById(R.id.showDiaryStateView);
+        writeButton = (Button)rootView.findViewById(R.id.writeButton);
+        writeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dateStr != null) {
+                    try {
+                        Date date = MainActivity.dateFormat.parse(dateStr);
+                        requestListener.onRequestWriteFragmentFromCal(date);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
 
+        initRecyclerView(rootView);
+        initCalendarView(rootView);
+
+        return rootView;
+    }
+
+    private void initRecyclerView(View rootView) {
         recyclerView = (RecyclerView)rootView.findViewById(R.id.recyclerView);
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+
         recyclerView.setLayoutManager(manager);
-        //recyclerView.scrollToPosition(0);
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
@@ -96,16 +127,24 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
                 }
             }
         });
+
         adapter = new CalendarAdapter(getContext());
+        adapter.setOnCalItemClickListener(new OnCalItemClickListener() {
+            @Override
+            public void onItemClick(CalendarViewHolder holder, View view, int position) {
+                Note item = adapter.getItem(position);
+
+                requestListener.onRequestDetailActivity(item);
+            }
+        });
+
         recyclerView.setAdapter(adapter);
-
-        initCalendarView(rootView);
-
-        return rootView;
     }
 
     private void initCalendarView(View rootView) {
         calendarView = (MaterialCalendarView)rootView.findViewById(R.id.calendar);
+        calendarView.getLeftArrow().setColorFilter(getResources().getColor(R.color.font), PorterDuff.Mode.SRC_IN);
+        calendarView.getRightArrow().setColorFilter(getResources().getColor(R.color.font), PorterDuff.Mode.SRC_IN);
         calendarView.state().edit()
                 .setMinimumDate(CalendarDay.from(2020, 1, 1))
                 .setMaximumDate(CalendarDay.from(2021, 12, 31))
@@ -129,14 +168,15 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
 
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-        // 선택한 날짜에 맞게 dateTextView 설정
+        /* 선택한 날짜에 맞게 dateTextView 설정 */
         int year = date.getYear();
         int month = date.getMonth();
         int day = date.getDay();
 
-        dateTextView.setText(year + "년 " + month + "월 " + day + "일");
+        dateStr = year + "년 " + month + "월 " + day + "일";
+        dateTextView.setText(dateStr);
 
-        // 해당 날짜에 일기가 있을 경우, RecyclerView 를 이용해 보여줌
+        /* 해당 날짜에 일기가 있을 경우, RecyclerView 를 이용해 보여줌 */
         adapter.clearItems();
         for(Note item : items) {
             try {
@@ -148,6 +188,7 @@ public class CalendarFragment extends Fragment implements OnDateSelectedListener
                 e.printStackTrace();
             }
         }
+
         if(adapter.getItemCount() == 0) {
             showDiaryStateView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);

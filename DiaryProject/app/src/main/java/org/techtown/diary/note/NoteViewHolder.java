@@ -1,6 +1,7 @@
 package org.techtown.diary.note;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.techtown.diary.MainActivity;
+import org.techtown.diary.PhotoActivity;
 import org.techtown.diary.R;
 import org.techtown.diary.helper.OnNoteItemClickListener;
 import org.techtown.diary.helper.OnNoteItemLongClickListener;
@@ -45,6 +47,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
     private TextView dateTextView2;
     private TextView timeTextView2;
     private TextView weekTextView2;
+    private LinearLayout showPhotoStateView;
 
     private OnNoteItemClickListener clickListener;
     private OnNoteItemTouchListener touchListener;
@@ -79,8 +82,19 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         dateTextView2 = (TextView)itemView.findViewById(R.id.dateTextView2);
         timeTextView2 = (TextView)itemView.findViewById(R.id.timeTextView2);
         weekTextView2 = (TextView)itemView.findViewById(R.id.weekTextView2);
+        showPhotoStateView = (LinearLayout)itemView.findViewById(R.id.showPhotoStateView);
 
-        itemView.setOnClickListener(new View.OnClickListener() {
+        contentsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = getAdapterPosition();
+                if(clickListener != null) {
+                    clickListener.onItemClick(NoteViewHolder.this, v, position);
+                }
+            }
+        });
+
+        photoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int position = getAdapterPosition();
@@ -138,14 +152,30 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
 
         // 사진 설정
         String picturePath = item.getPicture();
+
+        pictureImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(picturePath != null && !picturePath.equals("")) {
+                    Intent intent  = new Intent(context, PhotoActivity.class);
+                    intent.putExtra("picturePath", picturePath);
+                    context.startActivity(intent);
+                }
+            }
+        });
+
         if(picturePath != null && !picturePath.equals("")) {
             existPictureImageView.setVisibility(View.VISIBLE);
             //pictureImageView.setImageURI(Uri.parse("file://" + picturePath));
             //Glide.with(context).load(Uri.parse("file://" + picturePath)).into(pictureImageView);
             Glide.with(context).load(Uri.parse("file://" + picturePath)).apply(RequestOptions.bitmapTransform(MainActivity.option)).into(pictureImageView);
+            pictureImageView.setVisibility(View.VISIBLE);
+            showPhotoStateView.setVisibility(View.GONE);
         } else {
             existPictureImageView.setVisibility(View.GONE);
-            pictureImageView.setImageResource(R.drawable.no_image_64_color);
+            pictureImageView.setVisibility(View.GONE);
+            showPhotoStateView.setVisibility(View.VISIBLE);
+            //pictureImageView.setImageResource(R.drawable.no_image_64_color);
         }
 
         // 날씨 설정
@@ -183,62 +213,62 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
             case 0:     // 화남
                 moodImageView.setImageResource(R.drawable.mood_angry_color);
                 moodImageView2.setImageResource(R.drawable.mood_angry_color);
-                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_red));
-                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_red));
+                //contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_red));
+                //photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_red));
                 break;
             case 1:     // 쿨
                 moodImageView.setImageResource(R.drawable.mood_cool_color);
                 moodImageView2.setImageResource(R.drawable.mood_cool_color);
-                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_blue));
-                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_blue));
+                //contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_blue));
+                //photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_blue));
                 break;
             case 2:     // 슬픔
                 moodImageView.setImageResource(R.drawable.mood_crying_color);
                 moodImageView2.setImageResource(R.drawable.mood_crying_color);
-                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_skyblue));
-                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_skyblue));
+                //contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_skyblue));
+                //photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_skyblue));
                 break;
             case 3:     // 아픔
                 moodImageView.setImageResource(R.drawable.mood_ill_color);
                 moodImageView2.setImageResource(R.drawable.mood_ill_color);
-                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_green));
-                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_green));
+                //contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_green));
+                //photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_green));
                 break;
             case 4:     // 웃음
                 moodImageView.setImageResource(R.drawable.mood_laugh_color);
                 moodImageView2.setImageResource(R.drawable.mood_laugh_color);
-                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_yellow));
-                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_yellow));
+                //contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_yellow));
+                //photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_yellow));
                 break;
             case 5:     // 보통
                 moodImageView.setImageResource(R.drawable.mood_meh_color);
                 moodImageView2.setImageResource(R.drawable.mood_meh_color);
-                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_gray));
-                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_gray));
+                //contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_gray));
+                //photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_gray));
                 break;
             case 6:     // 나쁨
                 moodImageView.setImageResource(R.drawable.mood_sad);
                 moodImageView2.setImageResource(R.drawable.mood_sad);
-                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_black));
-                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_black));
+                //contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_black));
+                //photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_black));
                 break;
             case 7:     // 좋음
                 moodImageView.setImageResource(R.drawable.mood_smile_color);
                 moodImageView2.setImageResource(R.drawable.mood_smile_color);
-                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_orange));
-                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_orange));
+                //contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_orange));
+                //photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_orange));
                 break;
             case 8:     // 졸림
                 moodImageView.setImageResource(R.drawable.mood_yawn_color);
                 moodImageView2.setImageResource(R.drawable.mood_yawn_color);
-                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_pink));
-                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_pink));
+                //contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_pink));
+                //photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_pink));
                 break;
             default:    // default(미소)
                 moodImageView.setImageResource(R.drawable.mood_smile_color);
                 moodImageView2.setImageResource(R.drawable.mood_smile_color);
-                contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_orange));
-                photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_orange));
+                //contentsLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_orange));
+                //photoLayout.setBackground(context.getResources().getDrawable(R.drawable.border_view_orange));
                 break;
         }
     }

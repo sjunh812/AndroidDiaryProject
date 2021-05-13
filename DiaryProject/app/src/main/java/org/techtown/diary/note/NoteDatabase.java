@@ -399,7 +399,7 @@ public class NoteDatabase {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(dropNoteTableSQL);
+            //db.execSQL(dropNoteTableSQL);
             Log.d(LOG, "Note 테이블 삭제 완료");
         }
 

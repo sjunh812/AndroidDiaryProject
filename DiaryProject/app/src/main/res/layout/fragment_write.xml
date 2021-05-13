@@ -4,28 +4,58 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/pastel_200"
-    android:paddingTop="10dp">
+    android:background="@color/background">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="일기 작성"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"/>
+        android:layout_marginRight="10dp">
+
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="일기작성"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:textColor="@color/font"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_alignParentLeft="true" />
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_toLeftOf="@+id/saveButton"
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle_view"
+            android:padding="14dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/trash_icon" />
+
+        <ImageButton
+            android:id="@+id/saveButton"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/circle_view"
+            android:padding="12dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/check_icon" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:elevation="1dp">
 
         <ImageView
@@ -42,9 +72,21 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:clickable="true"
-            android:textColor="@color/black"
-            android:textSize="18dp"
-            android:text="" />
+            android:textColor="@color/font"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/dateTextImageView"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_toRightOf="@id/dateTextView"
+            android:paddingLeft="7dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/navigate_down" />
 
         <TextView
             android:id="@+id/locationTextView"
@@ -53,7 +95,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:text="위치정보 없음"
-            android:textSize="13dp"
+            android:textSize="12dp"
             android:textColor="@color/pastel_700" />
 
     </RelativeLayout>
@@ -65,13 +107,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/pastel_200"
+            android:background="@color/background"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="380dp"
+                android:layout_height="400dp"
                 app:cardCornerRadius="5dp"
+                app:cardBackgroundColor="@color/background_sub"
                 app:cardElevation="1dp"
                 app:cardUseCompatPadding="true">
 
@@ -88,7 +133,8 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:text="기분 선택"
-                        android:textColor="@color/black"
+                        android:textColor="@color/font"
+                        android:textStyle="bold"
                         android:textSize="20dp" />
 
                     <TextView
@@ -103,6 +149,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -131,7 +178,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="화남"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/font"
                                     android:textSize="16dp" />
 
                             </LinearLayout>
@@ -156,7 +203,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="쿨"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/font"
                                     android:textSize="16dp" />
 
                             </LinearLayout>
@@ -180,7 +227,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="슬픔"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/font"
                                     android:textSize="16dp" />
 
                             </LinearLayout>
@@ -213,7 +260,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="아픔"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/font"
                                     android:textSize="16dp" />
 
                             </LinearLayout>
@@ -238,7 +285,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="웃음"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/font"
                                     android:textSize="16dp" />
 
                             </LinearLayout>
@@ -262,7 +309,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="보통"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/font"
                                     android:textSize="16dp" />
 
                             </LinearLayout>
@@ -296,7 +343,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="나쁨"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/font"
                                     android:textSize="16dp" />
 
                             </LinearLayout>
@@ -321,7 +368,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="좋음"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/font"
                                     android:textSize="16dp" />
 
                             </LinearLayout>
@@ -345,7 +392,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="5dp"
                                     android:text="피곤"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/font"
                                     android:textSize="16dp" />
 
                             </LinearLayout>
@@ -359,6 +406,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/background_sub"
                 app:cardUseCompatPadding="true">
 
                 <LinearLayout
@@ -372,9 +420,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp"
+                        android:layout_marginBottom="5dp"
                         android:text="일기 입력"
-                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textColor="@color/font"
                         android:textSize="20dp" />
 
                     <androidx.core.widget.NestedScrollView
@@ -386,12 +435,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
-                            android:background="@color/white"
+                            android:background="@color/background_sub"
                             android:gravity="top"
                             android:hint="이곳을 터치해주세요."
                             android:lineSpacingExtra="5dp"
                             android:padding="10dp"
-                            android:textColor="@color/black"
+                            android:textColor="@color/font"
                             android:textColorHint="@color/pastel_700"
                             android:textSize="18dp" />
 
@@ -406,6 +455,7 @@
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="1dp"
+                app:cardBackgroundColor="@color/background_sub"
                 app:cardUseCompatPadding="true">
 
                 <LinearLayout
@@ -421,7 +471,8 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="10dp"
                         android:text="사진 선택"
-                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textColor="@color/font"
                         android:textSize="20dp" />
 
                     <TextView
@@ -433,26 +484,43 @@
                         android:textColor="@color/pastel_700"
                         android:textSize="18dp" />
 
-                    <ImageView
-                        android:id="@+id/pictureImageView"
+                    <FrameLayout
+                        android:id="@+id/pictureContainer"
                         android:layout_width="match_parent"
-                        android:layout_height="270dp"
-                        android:layout_marginBottom="10dp"
-                        android:longClickable="true"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/add_image_64_color" />
+                        android:layout_height="300dp"
+                        android:clickable="true">
+
+                        <ImageView
+                            android:id="@+id/pictureImageView"
+                            android:layout_width="match_parent"
+                            android:layout_height="270dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_gravity="center"
+                            android:longClickable="true"
+                            android:scaleType="centerInside"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/addPictureImageView"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:visibility="visible"
+                            android:layout_gravity="center"
+                            android:src="@drawable/add_image_64_color" />
+
+                    </FrameLayout>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <RelativeLayout
+           <!-- <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
                 android:layout_marginBottom="10dp">
 
-                <androidx.appcompat.widget.AppCompatButton
+&lt;!&ndash;                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/deleteButton"
                     android:layout_width="70dp"
                     android:layout_height="35dp"
@@ -476,9 +544,9 @@
                     app:backgroundTintMode="add"
                     android:text="저장"
                     android:textSize="16dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white" />&ndash;&gt;
 
-                <androidx.appcompat.widget.AppCompatButton
+&lt;!&ndash;                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/closeButton"
                     android:layout_width="70dp"
                     android:layout_height="35dp"
@@ -490,11 +558,9 @@
                     app:backgroundTintMode="add"
                     android:text="닫기"
                     android:textSize="16dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/white"/>&ndash;&gt;
 
-            </RelativeLayout>
-
+            </RelativeLayout>-->
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

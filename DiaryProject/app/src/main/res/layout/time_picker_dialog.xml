@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/pastel_500"
+        android:background="@color/background_button"
         android:padding="10dp">
 
         <TextView
@@ -45,14 +45,15 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/okButton"
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
         android:layout_gravity="center"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
         android:layout_margin="10dp"
         android:background="@drawable/button"
-        app:backgroundTint="@color/cardview_shadow_end_color"
-        app:backgroundTintMode="add"
+        android:text="확인"
+        android:textStyle="bold"
         android:textColor="@color/white"
-        android:text="확인" />
+        app:backgroundTint="@color/cardview_shadow_end_color"
+        app:backgroundTintMode="add" />
 
 </LinearLayout>

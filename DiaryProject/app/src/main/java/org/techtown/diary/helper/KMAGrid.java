@@ -14,7 +14,7 @@ public class KMAGrid {
     public static final double YO = 136;        // 기1준점 Y좌표(GRID)
 
     public static Map<String, Double> getKMAGrid(double latitude, double longitude) {
-        // LCC DFS 좌표변환 ( code : "TO_GRID"(위경도->좌표, lat_X:위도,  lng_Y:경도), "TO_GPS"(좌표->위경도,  lat_X:x, lng_Y:y) )
+        /* LCC DFS 좌표변환 ( code : "TO_GRID"(위경도->좌표, lat_X:위도,  lng_Y:경도), "TO_GPS"(좌표->위경도,  lat_X:x, lng_Y:y) ) */
         double DEGRAD = Math.PI / 180.0;
         double RADDEG = 180.0 / Math.PI;
 

@@ -3,8 +3,10 @@ package org.techtown.diary.helper;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import org.techtown.diary.R;
 
@@ -13,16 +15,39 @@ public class MyTheme {
     private static final String LOG = "MyTheme";
     public static final String SHARED_PREFERENCES_NAME = "pref";
     public static final String FONT_KEY = "font_key";
+    public static final String MODE_KEY = "mode_key";
 
     public static void applyTheme(@NonNull Context context) {
         int fontIndex = 0;      // default
-        SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
+        int modeIndex = 0;      // default
 
+        SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         if(pref != null) {
             fontIndex = pref.getInt(FONT_KEY, 0);
+            modeIndex = pref.getInt(MODE_KEY, 0);
         }
 
+        applyDarkmode(context, modeIndex);
         applyTheme(context, fontIndex);
+    }
+
+    public static void applyDarkmode(Context context, int modeIndex) {
+        SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt(MODE_KEY, modeIndex);
+        editor.commit();
+
+        if(modeIndex == 0) {        // 시스템 설정에 따른 테마모드
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
+            }
+        } else if(modeIndex == 1){  // 라이트 모드
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        } else if(modeIndex == 2) { // 다크 모드
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
     }
 
     public static void applyTheme(@NonNull Context context, int fontIndex) {

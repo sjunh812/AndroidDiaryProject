@@ -1,6 +1,8 @@
 package org.techtown.diary.note;
 
-public class Note {
+import java.io.Serializable;
+
+public class Note implements Serializable {
     private int _id;                // DB 에서 사용될 id
     private int weather;            // 날씨
     private String address;         // 주소

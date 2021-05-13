@@ -1,12 +1,12 @@
 package org.techtown.diary.helper;
 
-
 import android.app.Application;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
@@ -18,15 +18,15 @@ import java.net.URL;
 import java.util.Map;
 
 public class MyApplication extends Application {
-    // 상수
+    /* 상수 */
     private static final String LOG = "MyApplication";
     public static final int RESPONSE_OK = 200;
     public static final int RESPONSE_ERROR = 400;
 
-    // Helper
+    /* Helper */
     public static RequestQueue requestQueue;        // 웹으로부터 데이터를 요청하기위해 사용되는 RequestQueue
 
-    public static interface OnResponseListener {
+    public static interface OnResponseListener {    // Volley 응답 시 사용될 응답 리스너
         public void onResponse(int reqeustCode, int responseCode, String response);
     }
 
@@ -39,7 +39,7 @@ public class MyApplication extends Application {
                 @Override
                 protected HttpURLConnection createConnection(URL url) throws IOException {
                     HttpURLConnection connection = super.createConnection(url);
-                    connection.setInstanceFollowRedirects(false);
+                    connection.setInstanceFollowRedirects(false);               // 리다이렉트를 따라갈지 여부 = false
 
                     return connection;
                 }
@@ -75,9 +75,9 @@ public class MyApplication extends Application {
             }
         };
 
-        request.setShouldCache(false);     // 캐시가 남아있어도 사용x
-        request.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        MyApplication.requestQueue.add(request);
+        request.setShouldCache(false);              // 캐시가 남아있어도 사용 x
+        request.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 1, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        MyApplication.requestQueue.add(request);    // requestQueue 에 해당 request 를 추가
     }
 }
 

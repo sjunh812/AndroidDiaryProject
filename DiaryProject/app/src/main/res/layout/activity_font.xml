@@ -14,7 +14,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/pastel_200"
+            android:background="@color/background"
             app:popupTheme="@style/Theme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -23,13 +23,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/pastel_200"
+        android:background="@color/background"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/background_sub"
             android:padding="30dp"
             android:layout_marginTop="4dp"
             android:orientation="vertical">
@@ -42,7 +42,7 @@
                 android:layout_marginBottom="10dp"
                 android:textStyle="bold"
                 android:text="적용 예시"
-                android:textColor="@color/black"
+                android:textColor="@color/font"
                 android:textSize="20dp" />
 
             <TextView
@@ -53,7 +53,7 @@
                 android:layout_margin="10dp"
                 android:lineSpacingExtra="11dp"
                 android:text="가나다라마바사아자차카타파하\n폰트적용 예시입니다~ \n오늘도 좋은 하루 되세요:)"
-                android:textColor="@color/black"
+                android:textColor="@color/font"
                 android:textSize="17dp" />
 
 
@@ -62,7 +62,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/background_sub"
             android:padding="20dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
@@ -75,7 +75,7 @@
                 android:layout_marginBottom="20dp"
                 android:textStyle="bold"
                 android:text="폰트"
-                android:textColor="@color/black"
+                android:textColor="@color/font"
                 android:textSize="20dp" />
 
             <RadioGroup
@@ -89,17 +89,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
+                    android:textColor="@color/font"
                     android:fontFamily="@font/font1"
-                    android:text="  카페24 고운밤"
-                    android:textSize="20dp" />
+                    android:text="  넥슨배찌체"
+                    android:textSize="18dp" />
 
                 <RadioButton
                     android:id="@+id/fontButton2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
-                    android:textSize="20dp"
-                    android:text="  교보손글씨"
+                    android:textColor="@color/font"
+                    android:textSize="18dp"
+                    android:text="  점꼴체"
                     android:fontFamily="@font/font2"/>
 
                 <RadioButton
@@ -107,8 +109,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
-                    android:textSize="20dp"
-                    android:text="  어비 푸딩체"
+                    android:textColor="@color/font"
+                    android:textSize="18dp"
+                    android:text="  다시시작해체"
                     android:fontFamily="@font/font3"/>
 
                 <RadioButton
@@ -116,7 +119,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
-                    android:textSize="20dp"
+                    android:textColor="@color/font"
+                    android:textSize="18dp"
                     android:text="  할아버지의 나눔"
                     android:fontFamily="@font/font4" />
 
@@ -125,8 +129,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
-                    android:textSize="20dp"
-                    android:text="  카페24 숑숑체"
+                    android:textColor="@color/font"
+                    android:textSize="18dp"
+                    android:text="  꼬마나비체"
                     android:fontFamily="@font/font5" />
 
             </RadioGroup>
@@ -135,8 +140,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp"
+            android:layout_height="80dp"
+            android:padding="5dp"
             android:gravity="center">
 
             <androidx.appcompat.widget.AppCompatButton
@@ -147,6 +152,7 @@
                 android:background="@drawable/button"
                 android:text="저장"
                 android:textColor="@color/white"
+                android:textStyle="bold"
                 android:textSize="15dp"
                 app:backgroundTint="@color/cardview_shadow_end_color"
                 app:backgroundTintMode="add" />
@@ -158,6 +164,7 @@
                 android:layout_toRightOf="@+id/okButton"
                 android:background="@drawable/button"
                 android:text="취소"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="15dp"
                 app:backgroundTint="@color/cardview_shadow_end_color"

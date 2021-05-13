@@ -1,5 +1,7 @@
 package org.techtown.diary;
 
+import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -7,10 +9,13 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
+
+import java.util.Calendar;
 
 public class AlarmReceiver extends BroadcastReceiver {
     public static final String CHANNEL_ID = "alarm_id";
@@ -21,7 +26,19 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         alarmHelper = new AlarmHelper(context);
-        //Toast.makeText(context, "알림입니다!!", Toast.LENGTH_LONG).show();
+
+        if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {     // 부팅 : 알람매니저 재등록 (SharedPreference 에 저장된 데이터 활용)
+            setBootData(context);
+        } else if((Intent.ACTION_MY_PACKAGE_REPLACED).equals(intent.getAction())) { // 앱 업데이트 이후 : 알람매니저 재등록
+            Log.d("LOG", "앱 업데이트 실행됨");
+            setBootData(context);
+        }
+        else {                                                                      // 일반적인 경우 : Notification 등록 및 알람 반복을 위해 알람매니저 재등록
+            startNotification(context);
+        }
+    }
+
+    private void startNotification(Context context) {
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder builder = null;
 
@@ -56,5 +73,38 @@ public class AlarmReceiver extends BroadcastReceiver {
         notificationManager.notify(1, notification);
 
         alarmHelper.startAlarm(true);
+    }
+
+    private void setBootData(Context context){
+        SharedPreferences pref = context.getSharedPreferences(AlarmActivity.SHARED_PREFERENCES_NAME2, Activity.MODE_PRIVATE);
+
+        if(pref != null) {
+            if (pref.getBoolean(AlarmActivity.IS_ALARM_KEY, false)) {
+                int hour = pref.getInt(AlarmActivity.HOUR_KEY, 22);
+                int minute = pref.getInt(AlarmActivity.MINUTE_KEY, 0);
+
+                Calendar cal = Calendar.getInstance();
+
+                cal = Calendar.getInstance();
+                cal.set(Calendar.HOUR_OF_DAY, hour);
+                cal.set(Calendar.MINUTE, minute);
+                cal.set(Calendar.SECOND, 0);
+
+                if(Calendar.getInstance().getTimeInMillis() > cal.getTimeInMillis()) {
+                    cal.add(Calendar.DATE, 1);;
+                }
+
+                AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+                Intent rIntent = new Intent(context, AlarmReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, rIntent, 0);
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    alarmManager.setAlarmClock(new AlarmManager.AlarmClockInfo(cal.getTimeInMillis(), pendingIntent), pendingIntent);
+                } else {
+                    alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pendingIntent);
+                }
+
+            }
+        }
     }
 }

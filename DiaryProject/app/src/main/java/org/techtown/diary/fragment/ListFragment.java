@@ -1,7 +1,6 @@
 package org.techtown.diary.fragment;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,12 +14,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,7 +26,9 @@ import org.techtown.diary.MainActivity;
 import org.techtown.diary.custom.CustomAlignDialog;
 import org.techtown.diary.R;
 import org.techtown.diary.custom.CustomUpdateDialog;
+import org.techtown.diary.helper.OnNoteItemClickListener;
 import org.techtown.diary.helper.OnNoteItemLongClickListener;
+import org.techtown.diary.helper.OnRequestListener;
 import org.techtown.diary.note.NoteAdapter;
 import org.techtown.diary.note.NoteDatabaseCallback;
 import org.techtown.diary.note.NoteViewHolder;
@@ -48,16 +47,15 @@ public class ListFragment extends Fragment {
     private LinearLayout showDiaryStateView;           // DB 조회시 일기가 없는 경우에 나타나는 상태 뷰 (일기없음)
     private RecyclerView listRecyclerView;             // 일기를 보여주는 리사이클러 뷰
     private TextView selectedDateTextView;             // 일기 기간별 정렬에 따라 나타나는 텍스트 (ex) 전체보기)
-    private RadioGroup radioGroup;                     // 커스텀 라디오버튼을 담은 라디오그룹
-    private AppCompatRadioButton radioButtonL;         // 커스텀 라디오버튼중 왼쪽(내용)
-    private AppCompatRadioButton radioButtonR;         // 커스텀 라디오버튼중 오른쪽(사진)
     private CustomAlignDialog alignDialog;             // 일기 기간별 정렬 다이얼로그
     private CustomUpdateDialog deleteDialog;           // 일기 삭제(수정) 다이얼로그
+    private ImageButton photoButton;                   // 내용, 사진레이아웃을 선택하는 버튼
 
     // Helper
     private NoteAdapter adapter;                       // 일기 목록을 담은 리사이클러 뷰의 어뎁터
     private OnTabItemSelectedListener tabListener;     // 메인 액티비티 하단 탭의 탭선택 콜백함수를 호출 해주는 리스너
     private NoteDatabaseCallback callback;             // DB 콜백 인터페이스
+    private OnRequestListener requestListener;         // MainActivity 에 특정 이벤트를 요청하는 리스너
     private MyArrayAdapter yearAdapter;                // 일기 기간별 정렬시 년도 스피너의 어뎁터
     private MyArrayAdapter monthAdapter;               // 일기 기간별 정렬시 월 스피너의 어뎁터
     private GestureDetector detector;                  // 일기 목록을 길게 눌렀을 때의 이벤트를 위한 제스처 객체
@@ -75,6 +73,7 @@ public class ListFragment extends Fragment {
     private int selectedMonthPos;                      // 이전에 선택한 월 스피너 position
     private Note selectedItem;                         // 일기목록을 길게 눌렀을 때 선택되는 일기의 Note 객체
     private boolean isAligned = false;                 // 사용자가 일기 기간별 정렬했는지 여부
+    private boolean isPhoto = false;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -82,6 +81,9 @@ public class ListFragment extends Fragment {
 
         if(context instanceof OnTabItemSelectedListener) {
             tabListener = (OnTabItemSelectedListener)context;
+        }
+        if(context instanceof OnRequestListener) {
+            requestListener = (OnRequestListener)context;
         }
         if(context instanceof NoteDatabaseCallback) {
             callback = (NoteDatabaseCallback)context;
@@ -94,6 +96,9 @@ public class ListFragment extends Fragment {
 
         if(tabListener != null) {
             tabListener = null;
+        }
+        if(requestListener != null) {
+            requestListener = null;
         }
         if(callback != null) {
             callback = null;
@@ -111,60 +116,34 @@ public class ListFragment extends Fragment {
 
         gestureListener = new GestureListener();        // GestureDetector.OnGestureListener 를 상속받은 객체
         detector = new GestureDetector(getContext(), gestureListener);
-        selectedDateTextView = (TextView)rootView.findViewById(R.id.selectedDateTextView);
         showDiaryStateView = (LinearLayout)rootView.findViewById(R.id.showDiaryStateView);
 
-        initRecyclerView(rootView);     // 리사이클러 뷰에 관한 초기설정
-        setShowDiaryStateView();        // 일기목록이 비어있는 확인
-
-        ImageButton alignButton = (ImageButton)rootView.findViewById(R.id.alignButton);
-        alignButton.setOnClickListener(new View.OnClickListener() {
+        selectedDateTextView = (TextView)rootView.findViewById(R.id.selectedDateTextView);
+        selectedDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setAlignDialog();
             }
         });
 
-        radioGroup = (RadioGroup)rootView.findViewById(R.id.radioGroup);
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        initRecyclerView(rootView);     // 리사이클러 뷰에 관한 초기설정
+        setShowDiaryStateView();        // 일기목록이 비어있는 확인
+
+        photoButton = (ImageButton)rootView.findViewById(R.id.photoButton);
+        photoButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(checkedId == R.id.radioButtonL) {
-                    adapter.setLayoutType(0);
-                    adapter.notifyDataSetChanged();
-                } else if(checkedId == R.id.radioButtonR) {
+            public void onClick(View v) {
+                if(!isPhoto) {
+                    photoButton.setImageDrawable(getResources().getDrawable(R.drawable.photo_clicked_icon));
                     adapter.setLayoutType(1);
                     adapter.notifyDataSetChanged();
+                } else {
+                    photoButton.setImageDrawable(getResources().getDrawable(R.drawable.photo_icon));
+                    adapter.setLayoutType(0);
+                    adapter.notifyDataSetChanged();
                 }
-            }
-        });
 
-        radioButtonL = (AppCompatRadioButton)rootView.findViewById(R.id.radioButtonL);
-        radioButtonR = (AppCompatRadioButton)rootView.findViewById(R.id.radioButtonR);
-
-        radioButtonL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                radioButtonL.setTextColor(Color.WHITE);
-                radioButtonR.setTextColor(getResources().getColor(R.color.pastel_500));
-            }
-        });
-
-        radioButtonR.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                radioButtonL.setTextColor(getResources().getColor(R.color.pastel_500));
-                radioButtonR.setTextColor(Color.WHITE);
-            }
-        });
-
-        ImageButton writeButton = (ImageButton)rootView.findViewById(R.id.writeButton);           // 작성 프래그먼트로 이동(메인액티비티를 거침)
-        writeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(tabListener != null) {
-                    tabListener.onTabSelected(2);
-                }
+                isPhoto = !isPhoto;
             }
         });
 
@@ -199,6 +178,15 @@ public class ListFragment extends Fragment {
             adapter.setItems(callback.selectPart(selectedYear, selectedMonth));
             selectedDateTextView.setText(selectedYear + "년 " + selectedMonth + "월");
         }
+
+        adapter.setOnItemClickListener(new OnNoteItemClickListener() {
+            @Override
+            public void onItemClick(NoteViewHolder holder, View view, int position) {
+                Note item = adapter.getItem(position);
+
+                requestListener.onRequestDetailActivity(item);
+            }
+        });
 
         adapter.setOnItemLongClickListener(new OnNoteItemLongClickListener() {
             @Override
@@ -385,16 +373,29 @@ public class ListFragment extends Fragment {
         years = yearsArray.toArray(new String[yearDiff + 1]);
     }
 
+    public void update() {
+        if(!isAligned) {                // 전체보기 상태
+            adapter.setItems(callback.selectAllDB());
+        } else {                        // 기간별 보기 상태
+            adapter.setItems(callback.selectPart(selectedYear, selectedMonth));
+        }
+
+        adapter.notifyDataSetChanged();
+        setShowDiaryStateView();
+    }
+
     @Override
     public void onResume() {
         super.onResume();
 
-        if(radioButtonL.isChecked()) {
-            radioButtonL.setTextColor(Color.WHITE);
-            radioButtonR.setTextColor(getResources().getColor(R.color.pastel_500));
+        if(isPhoto) {
+            photoButton.setImageDrawable(getResources().getDrawable(R.drawable.photo_clicked_icon));
+            adapter.setLayoutType(1);
+            adapter.notifyDataSetChanged();
         } else {
-            radioButtonL.setTextColor(getResources().getColor(R.color.pastel_500));
-            radioButtonR.setTextColor(Color.WHITE);
+            photoButton.setImageDrawable(getResources().getDrawable(R.drawable.photo_icon));
+            adapter.setLayoutType(0);
+            adapter.notifyDataSetChanged();
         }
     }
 

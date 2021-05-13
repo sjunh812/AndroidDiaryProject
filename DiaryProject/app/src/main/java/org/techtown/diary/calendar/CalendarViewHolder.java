@@ -2,29 +2,45 @@ package org.techtown.diary.calendar;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.techtown.diary.R;
+import org.techtown.diary.helper.OnCalItemClickListener;
 import org.techtown.diary.note.Note;
 
 public class CalendarViewHolder extends RecyclerView.ViewHolder {
+    private LinearLayout _itemView;
     private ImageView moodImageView;
     private ImageView weatherImageView;
     private TextView locationTextView;
     private TextView timeTextView;
     private TextView contentsTextView;
 
+    private OnCalItemClickListener clickListener;
+
     public CalendarViewHolder(@NonNull View itemView) {
         super(itemView);
 
+        _itemView = (LinearLayout)itemView.findViewById(R.id.itemView);
         moodImageView = (ImageView)itemView.findViewById(R.id.moodImageView);
         weatherImageView = (ImageView)itemView.findViewById(R.id.weatherImageView);
         locationTextView = (TextView)itemView.findViewById(R.id.locationTextView);
         timeTextView = (TextView)itemView.findViewById(R.id.timeTextView);
         contentsTextView = (TextView)itemView.findViewById(R.id.contentsTextView);
+
+        _itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = getAdapterPosition();
+                if(clickListener != null) {
+                    clickListener.onItemClick(CalendarViewHolder.this, v, position);
+                }
+            }
+        });
     }
 
     public void setItem(Note item) {
@@ -97,5 +113,9 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder {
                 weatherImageView.setImageResource(R.drawable.weather_icon_1);
                 break;
         }
+    }
+
+    public void setClickListener(OnCalItemClickListener listener) {
+        clickListener = listener;
     }
 }

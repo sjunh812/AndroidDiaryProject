@@ -31,15 +31,13 @@ public class AlarmHelper {
                 int hour = pref.getInt(AlarmActivity.HOUR_KEY, 22);
                 int minute = pref.getInt(AlarmActivity.MINUTE_KEY, 0);
 
+                cal = Calendar.getInstance();
                 cal.set(Calendar.HOUR_OF_DAY, hour);
                 cal.set(Calendar.MINUTE, minute);
                 cal.set(Calendar.SECOND, 0);
-                if(isRepeat) {
-                    cal.add(Calendar.DATE, 1);
-                }
 
-                if(Calendar.getInstance().getTimeInMillis() > cal.getTimeInMillis()) {
-                    return;
+                if(isRepeat || Calendar.getInstance().getTimeInMillis() > cal.getTimeInMillis()) {
+                    cal.add(Calendar.DATE, 1);;
                 }
 
                 Log.d(LOG, "HOUR : " + hour + ",  MINUTE : " + minute);

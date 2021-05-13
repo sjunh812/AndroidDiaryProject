@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">1일 1일기</string>
-
+    <string name="write"><u>작성하기</u></string>
 </resources>

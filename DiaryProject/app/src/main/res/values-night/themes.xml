@@ -1,13 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Font Activity 스타일 -->
-    <style name="Theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+    <style name="Theme.PopupOverlay" parent="ThemeOverlay.AppCompat.DayNight">
         <item name="colorPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/azure</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="toolbarStyle">@style/ToolbarStyle</item>
-        <item name="android:forceDarkAllowed">false</item>
     </style>
+
     <!--Toolbar 스타일-->
     <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
         <item name="titleTextAppearance">@style/ToolbarTitleStyle</item> <!-- Toolbar의 타이틀 텍스트-->
@@ -27,10 +27,10 @@
     <!-- -->
     <!-- 카페24 고운밤 폰트 테마(NoActionBar) -->
     <!-- -->
-    <style name="Theme.DiaryProject" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.DiaryProject" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/pastel_200</item>
+        <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -39,7 +39,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- API 23 이상부터 가능(상태바 위의 상태표시줄 색상) -->
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
         <!-- Customize your theme here. -->
         <item name="toolbarStyle">@style/ToolbarStyle</item>
         <!--custom font-family 적용-->
@@ -87,13 +87,14 @@
         <item name="android:fontFamily">@font/font1</item>
     </style>
 
+
     <!-- -->
     <!-- 교보손글씨 폰트 테마(NoActionBar) -->
     <!-- -->
-    <style name="Theme.DiaryProject2" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.DiaryProject2" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/pastel_200</item>
+        <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -102,7 +103,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- API 23 이상부터 가능(상태바 위의 상태표시줄 색상) -->
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
         <!-- Customize your theme here. -->
         <!--custom font-family 적용-->
         <item name="android:textViewStyle">@style/customTextViewFontStyle2</item>
@@ -153,10 +154,10 @@
     <!-- -->
     <!-- 어비 푸딩체 폰트테마(NoActionBar) -->
     <!-- -->
-    <style name="Theme.DiaryProject3" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.DiaryProject3" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/pastel_200</item>
+        <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -165,7 +166,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- API 23 이상부터 가능(상태바 위의 상태표시줄 색상) -->
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
         <!-- Customize your theme here. -->
         <!--custom font-family 적용-->
         <item name="android:textViewStyle">@style/customTextViewFontStyle3</item>
@@ -216,10 +217,10 @@
     <!-- -->
     <!-- 할아버지의 나눔 폰트테마(NoActionBar) -->
     <!-- -->
-    <style name="Theme.DiaryProject4" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.DiaryProject4" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/pastel_200</item>
+        <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -228,7 +229,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- API 23 이상부터 가능(상태바 위의 상태표시줄 색상) -->
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
         <!-- Customize your theme here. -->
         <!--custom font-family 적용-->
         <item name="android:textViewStyle">@style/customTextViewFontStyle4</item>
@@ -280,10 +281,10 @@
     <!-- -->
     <!-- 카페24 숑숑체 폰트테마(NoActionBar) -->
     <!-- -->
-    <style name="Theme.DiaryProject5" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.DiaryProject5" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/pastel_200</item>
+        <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -292,7 +293,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- API 23 이상부터 가능(상태바 위의 상태표시줄 색상) -->
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
         <!-- Customize your theme here. -->
         <!--custom font-family 적용-->
         <item name="bottomNavigationStyle">@style/Widget.BottomNavigationView5</item>

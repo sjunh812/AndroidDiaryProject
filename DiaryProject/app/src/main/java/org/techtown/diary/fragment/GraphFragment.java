@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -59,16 +61,16 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class GraphFragment extends Fragment {
-    // 상수
+    /* 상수 */
     private static final String LOG = "GraphFragment";
 
-    // Radio Button UI
+    /* Radio Button UI */
     private RadioGroup radioGroup;
     private MyRadioButton allButton;
     private MyRadioButton yearButton;
     private MyRadioButton monthButton;
 
-    // 기분별 통계 UI
+    /* 기분별 통계 UI */
     private TextView moodTitleTextView;
     private TextView moodTotalCountTextView;
     private TextView angryCount;
@@ -80,6 +82,15 @@ public class GraphFragment extends Fragment {
     private TextView sadCount;
     private TextView smileCount;
     private TextView yawnCount;
+    private ImageView angryImageView;
+    private ImageView coolImageView;
+    private ImageView cryingImageView;
+    private ImageView illImageView;
+    private ImageView laughImageView;
+    private ImageView mehImageView;
+    private ImageView sadImageView;
+    private ImageView smileImageView;
+    private ImageView yawnImageView;
     private ImageView crown;
     private ImageView crown2;
     private ImageView crown3;
@@ -90,21 +101,18 @@ public class GraphFragment extends Fragment {
     private ImageView crown8;
     private ImageView crown9;
 
-
-    // 차트 라이브러리 객체
+    /* 차트 라이브러리 객체 */
     private PieChart chart1;              // 원형 그래프
-    //private BarChart chart2;            // 막대 그래프
-    //private LineChart chart3;           // 선 그래프
 
-    // Helper
+    /* Helper */
     private NoteDatabaseCallback callback;
 
-    // 데이터
-    private Context context;
-    private ArrayList<Integer> colors = new ArrayList<>();      // 색깔 정보를 담은 ArrayList<Integer>
+    /*  Data */
     int[] moodIconRes = {R.drawable.mood_angry_color, R.drawable.mood_cool_color,  R.drawable.mood_crying_color,
             R.drawable.mood_ill_color, R.drawable.mood_laugh_color, R.drawable.mood_meh_color,
             R.drawable.mood_sad, R.drawable.mood_smile_color, R.drawable.mood_yawn_color};
+    private Context context;
+    private ArrayList<Integer> colors = new ArrayList<>();      // 색깔 정보를 담은 ArrayList<Integer>
     private int curFontIndex = -1;                              // 현재 사용중인 폰트 종류
     private int selectRadioIndex = 0;                           // 전체보기 : 0, 올해 : 1, 이번달 : 2(default : 전체보기)
     private int maxMoodIndex = -1;                              // 제일 많은 개수를 가진 기분 종류
@@ -134,37 +142,16 @@ public class GraphFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_graph, container, false);
 
-        // 휴대폰 내 저장되어있는 폰트 정보를 가져옴(SharedPreferences 이용)
+        /* 휴대폰 내 저장되어있는 폰트 정보를 가져옴(SharedPreferences 이용) */
         SharedPreferences pref = getContext().getSharedPreferences(MyTheme.SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         if(pref != null) {
             curFontIndex = pref.getInt(MyTheme.FONT_KEY, 0);
         }
 
         initChartUI(rootView);       // 차트 초기화
+        initUI(rootView);            // UI 초기화
 
-        // 기분별 통계 UI
-        moodTotalCountTextView = (TextView)rootView.findViewById(R.id.moodTotalCountTextView);
-        moodTitleTextView = (TextView)rootView.findViewById(R.id.moodTitleTextView);
-        angryCount = (TextView)rootView.findViewById(R.id.angryCount);
-        coolCount = (TextView)rootView.findViewById(R.id.coolCount);
-        cryingCount = (TextView)rootView.findViewById(R.id.cryingCount);
-        illCount = (TextView)rootView.findViewById(R.id.illCount);
-        laughCount = (TextView)rootView.findViewById(R.id.laughCount);
-        mehCount = (TextView)rootView.findViewById(R.id.mehCount);
-        sadCount = (TextView)rootView.findViewById(R.id.sadCount);
-        smileCount = (TextView)rootView.findViewById(R.id.smileCount);
-        yawnCount = (TextView)rootView.findViewById(R.id.yawnCount);
-        crown = (ImageView)rootView.findViewById(R.id.crown);
-        crown2 = (ImageView)rootView.findViewById(R.id.crown2);
-        crown3 = (ImageView)rootView.findViewById(R.id.crown3);
-        crown4 = (ImageView)rootView.findViewById(R.id.crown4);
-        crown5 = (ImageView)rootView.findViewById(R.id.crown5);
-        crown6 = (ImageView)rootView.findViewById(R.id.crown6);
-        crown7 = (ImageView)rootView.findViewById(R.id.crown7);
-        crown8 = (ImageView)rootView.findViewById(R.id.crown8);
-        crown9 = (ImageView)rootView.findViewById(R.id.crown9);
-
-        // Radio Button 관련
+        /* Radio Button 초기화 */
         allButton = (MyRadioButton)rootView.findViewById(R.id.allButton);
         yearButton = (MyRadioButton)rootView.findViewById(R.id.yearButton);
         monthButton = (MyRadioButton)rootView.findViewById(R.id.monthButton);
@@ -204,12 +191,43 @@ public class GraphFragment extends Fragment {
         return rootView;
     }
 
-    private void initChartUI(View rootView) {
-        chart1 = (PieChart)rootView.findViewById(R.id.chart1);
-        //chart2 = (BarChart)rootView.findViewById(R.id.chart2);
-        //chart3 = (LineChart)rootView.findViewById(R.id.chart3);
+    private void initUI(View rootView) {
+        /* 기분별 통계 UI */
+        moodTotalCountTextView = (TextView)rootView.findViewById(R.id.moodTotalCountTextView);
+        moodTitleTextView = (TextView)rootView.findViewById(R.id.moodTitleTextView);
+        angryCount = (TextView)rootView.findViewById(R.id.angryCount);
+        coolCount = (TextView)rootView.findViewById(R.id.coolCount);
+        cryingCount = (TextView)rootView.findViewById(R.id.cryingCount);
+        illCount = (TextView)rootView.findViewById(R.id.illCount);
+        laughCount = (TextView)rootView.findViewById(R.id.laughCount);
+        mehCount = (TextView)rootView.findViewById(R.id.mehCount);
+        sadCount = (TextView)rootView.findViewById(R.id.sadCount);
+        smileCount = (TextView)rootView.findViewById(R.id.smileCount);
+        yawnCount = (TextView)rootView.findViewById(R.id.yawnCount);
+        crown = (ImageView)rootView.findViewById(R.id.crown);
+        crown2 = (ImageView)rootView.findViewById(R.id.crown2);
+        crown3 = (ImageView)rootView.findViewById(R.id.crown3);
+        crown4 = (ImageView)rootView.findViewById(R.id.crown4);
+        crown5 = (ImageView)rootView.findViewById(R.id.crown5);
+        crown6 = (ImageView)rootView.findViewById(R.id.crown6);
+        crown7 = (ImageView)rootView.findViewById(R.id.crown7);
+        crown8 = (ImageView)rootView.findViewById(R.id.crown8);
+        crown9 = (ImageView)rootView.findViewById(R.id.crown9);
+        angryImageView = (ImageView)rootView.findViewById(R.id.angryImageView);
+        coolImageView = (ImageView)rootView.findViewById(R.id.coolImageView);
+        cryingImageView = (ImageView)rootView.findViewById(R.id.cryingImageView);
+        illImageView = (ImageView)rootView.findViewById(R.id.illImageView);
+        laughImageView = (ImageView)rootView.findViewById(R.id.laughImageView);
+        mehImageView = (ImageView)rootView.findViewById(R.id.mehImageView);
+        sadImageView = (ImageView)rootView.findViewById(R.id.sadImageView);
+        smileImageView = (ImageView)rootView.findViewById(R.id.smileImageView);
+        yawnImageView = (ImageView)rootView.findViewById(R.id.yawnImageView);
+    }
 
-        // 원형 그래프(기분별)
+    private void initChartUI(View rootView) {
+        /* 원형 그래프(기분별) */
+        chart1 = (PieChart)rootView.findViewById(R.id.chart1);
+
         chart1.setUsePercentValues(true);
         chart1.getDescription().setEnabled(false);       // 추가 설명란 false
         chart1.setDrawHoleEnabled(false);
@@ -227,64 +245,6 @@ public class GraphFragment extends Fragment {
         chart1.setEntryLabelColor(Color.WHITE);          // entry label 색상
         //chart1.setEntryLabelTextSize(12f);               // entry 구성요소 label 크기
         chart1.animateXY(1200, 1200);
-
-        /*// 막대 그래프(요일별)
-        chart2.setDrawValueAboveBar(true);              // 그래프에 특정 값 표기시에 막대그래프 위에 표기 true
-        chart2.getDescription().setEnabled(false);      // 추가 설명란 false
-        chart2.setDrawGridBackground(false);            // 그래프 격자 배경 그릴지 여부 false
-
-        XAxis xAxis = chart2.getXAxis();                // x축 설정
-        xAxis.setEnabled(false);                        // x축 요소들 선 표시(세로줄) false
-        YAxis leftAxis = chart2.getAxisLeft();          // 왼쪽 y축
-        leftAxis.setLabelCount(6, false);   // 왼쪽 y축에 표시할 label 개수
-        leftAxis.setAxisMinimum(0f);                    // y축 최소값 0으로
-        leftAxis.setGranularityEnabled(true);
-        leftAxis.setGranularity(1f);
-        YAxis rightAxis = chart2.getAxisRight();        // 오른쪽 y축
-        rightAxis.setEnabled(false);                    // 오른쪽 y축 사용 x
-        Legend legend2 = chart2.getLegend();            // 그래프의 구성요소들을 추가로 명시하는지 여부
-        legend2.setEnabled(false);                      // 추가 구성요소 명시 false
-        chart2.animateXY(1500, 1500);   // 애니메이션 설정
-        setData2();
-
-        // 선 그래프(기분 변화)
-        chart3.getDescription().setEnabled(false);                  // 추가 설명란 false
-        chart3.setDrawGridBackground(false);                        // 그래프 격자 배경 그릴지 여부 false
-        //chart3.setBackgroundColor(Color.WHITE);                   // 배경색 지정(흰색)
-        chart3.setExtraOffsets(22, 22,22,22); // 그래프 추가 offset
-        Legend legend3 = chart3.getLegend();                        // 그래프의 구성요소들을 추가로 명시하는지 여부
-        legend3.setEnabled(false);                                  // 추가 구성요소 명시 false
-
-        XAxis xAxis3 = chart3.getXAxis();                           // x축 설정
-        xAxis3.setPosition(XAxis.XAxisPosition.BOTTOM);             // x축 label 위치 설정
-        xAxis3.setTextSize(10f);                                    // x축 label 크기
-        xAxis3.setTextColor(Color.BLACK);                           // x축 label 색상
-        xAxis3.setDrawGridLines(false);                             // x축 격자선 표시 여부 false
-        xAxis3.setCenterAxisLabels(true);                           // x축 각 label 들을 각 칸 중간에 표기 할지 여부 true
-        xAxis3.setGranularityEnabled(true);
-        xAxis3.setGranularity(1f);
-        xAxis3.setValueFormatter(new ValueFormatter() {             // x축을 구성할 요소의 포멧을 정의
-            private final SimpleDateFormat mFormat = new SimpleDateFormat("MM-DD", Locale.KOREA);       // 월일 포멧 ex) 04-12
-
-            @Override
-            public String getFormattedValue(float value) {
-                long millis = TimeUnit.HOURS.toMillis((long) value);
-                return mFormat.format(new Date(millis));
-            }
-        });
-
-        YAxis leftAxis3 = chart3.getAxisLeft();                         // y축 설정
-        leftAxis3.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);  // y축 label 위치 설정(그래프 밖)
-        leftAxis3.setTextSize(10f);                                     // y축 label 크기
-        leftAxis3.setTextColor(Color.BLACK);                            // y축 label 색상
-        leftAxis3.setDrawGridLines(true);                               // y축 격자선 표시 여부 true
-        leftAxis3.setGranularityEnabled(true);
-        leftAxis3.setAxisMinimum(0f);                                   // y축 최소값 0
-        leftAxis3.setAxisMaximum(170f);                                 // y축 최대값 170
-        leftAxis3.setYOffset(-9f);                                      // y축 label offset
-        YAxis rightAxis3 = chart3.getAxisRight();
-        rightAxis3.setEnabled(false);
-        setData3();*/
     }
 
     private void setData1(HashMap<Integer, Integer> hashMap) {
@@ -334,56 +294,6 @@ public class GraphFragment extends Fragment {
         chart1.setData(data);
         chart1.invalidate();
     }
-
-/*    private void setData2() {
-        ArrayList<BarEntry> entries = new ArrayList<>();
-
-        BitmapDrawable angryDrawable = (BitmapDrawable)getResources().getDrawable(R.drawable.mood_angry_color);
-        Bitmap angryBitmap = angryDrawable.getBitmap();
-        Bitmap angryNewBitmap = Bitmap.createScaledBitmap(angryBitmap, 55, 55, true);
-        Drawable angryNewDrawable = new BitmapDrawable(angryNewBitmap);
-
-        entries.add(new BarEntry(1f, 20f, angryNewDrawable));
-
-        BarDataSet dataSet2 = new BarDataSet(entries, "요일별 기분");
-        dataSet2.setIconsOffset(new MPPointF(0, -10));
-        dataSet2.setColors(colors);
-
-        BarData data = new BarData(dataSet2);
-        data.setValueTextSize(12f);             // 표기 할 구성요소 별 y축 값 text 크기
-        data.setDrawValues(false);              // 구성요소 별 y축 값 표기 여부 false
-        data.setBarWidth(0.8f);                 // 막대의 너비
-
-        chart2.setData(data);
-        chart2.invalidate();
-    }
-
-    private void setData3() {
-        ArrayList<Entry> values = new ArrayList<>();
-
-
-        LineDataSet dataSet = new LineDataSet(values, "기분 변화");
-        dataSet.setIconsOffset(new MPPointF(0, -17));
-        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        dataSet.setColor(ColorTemplate.getHoloBlue());             // 선 색상
-        dataSet.setValueTextColor(ColorTemplate.getHoloBlue());    // 선에 표기 할 text 색상
-        dataSet.setLineWidth(1.5f);                                // 선 두께
-        dataSet.setDrawCircles(true);                              // 선 그래프에서 원 모양 사용여부 true
-        dataSet.setDrawValues(false);                              // 구성요소 별 y축 값 표기 여부 false
-        dataSet.setFillAlpha(65);
-        dataSet.setFillColor(ColorTemplate.getHoloBlue());
-        dataSet.setHighLightColor(Color.rgb(244, 117, 117));       // 구성 요소 선택시 생기는 효과 색상
-        dataSet.setDrawCircleHole(false);                          // 선 그래프에서 그릴 원 모양 안에 흰색 원 추가 여부
-
-        // create a data object with the data sets
-        LineData data = new LineData(dataSet);
-        data.setValueTextColor(Color.BLUE);
-        data.setValueTextSize(9f);
-
-        // set data
-        chart3.setData(data);
-        chart3.invalidate();
-    }*/
 
     private void setSelectedRadioButton() {
         switch(selectRadioIndex) {
@@ -439,6 +349,9 @@ public class GraphFragment extends Fragment {
     }
 
     private void setCrownImage() {
+        Animation moodAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.mood_icon_animation);
+        Animation crownAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.crown_icon_animation);
+
         crown.setVisibility(View.INVISIBLE);
         crown2.setVisibility(View.INVISIBLE);
         crown3.setVisibility(View.INVISIBLE);
@@ -449,33 +362,71 @@ public class GraphFragment extends Fragment {
         crown8.setVisibility(View.INVISIBLE);
         crown9.setVisibility(View.INVISIBLE);
 
+        crown.clearAnimation();
+        crown2.clearAnimation();
+        crown3.clearAnimation();
+        crown4.clearAnimation();
+        crown5.clearAnimation();
+        crown6.clearAnimation();
+        crown7.clearAnimation();
+        crown8.clearAnimation();
+        crown9.clearAnimation();
+
+        angryImageView.clearAnimation();
+        coolImageView.clearAnimation();
+        cryingImageView.clearAnimation();
+        illImageView.clearAnimation();
+        laughImageView.clearAnimation();
+        mehImageView.clearAnimation();
+        sadImageView.clearAnimation();
+        smileImageView.clearAnimation();
+        yawnImageView.clearAnimation();
+
         switch(maxMoodIndex) {
             case 0:
                 crown.setVisibility(View.VISIBLE);
+                angryImageView.startAnimation(moodAnimation);
+                crown.startAnimation(crownAnimation);
                 break;
             case 1:
                 crown2.setVisibility(View.VISIBLE);
+                coolImageView.startAnimation(moodAnimation);
+                crown2.startAnimation(crownAnimation);
                 break;
             case 2:
                 crown3.setVisibility(View.VISIBLE);
+                cryingImageView.startAnimation(moodAnimation);
+                crown3.startAnimation(crownAnimation);
                 break;
             case 3:
                 crown4.setVisibility(View.VISIBLE);
+                illImageView.startAnimation(moodAnimation);
+                crown4.startAnimation(crownAnimation);
                 break;
             case 4:
                 crown5.setVisibility(View.VISIBLE);
+                laughImageView.startAnimation(moodAnimation);
+                crown5.startAnimation(crownAnimation);
                 break;
             case 5:
                 crown6.setVisibility(View.VISIBLE);
+                mehImageView.startAnimation(moodAnimation);
+                crown6.startAnimation(crownAnimation);
                 break;
             case 6:
                 crown7.setVisibility(View.VISIBLE);
+                sadImageView.startAnimation(moodAnimation);
+                crown7.startAnimation(crownAnimation);
                 break;
             case 7:
                 crown8.setVisibility(View.VISIBLE);
+                smileImageView.startAnimation(moodAnimation);
+                crown8.startAnimation(crownAnimation);
                 break;
             case 8:
                 crown9.setVisibility(View.VISIBLE);
+                yawnImageView.startAnimation(moodAnimation);
+                crown9.startAnimation(crownAnimation);
                 break;
         }
     }
@@ -532,7 +483,7 @@ public class GraphFragment extends Fragment {
                 typeface = Typeface.createFromAsset(context.getAssets(), "font5.ttf");
                 break;
             default:
-                typeface = Typeface.createFromAsset(context.getAssets(), "font1.otf");
+                typeface = Typeface.createFromAsset(context.getAssets(), "font1.ttf");
                 break;
         }
 

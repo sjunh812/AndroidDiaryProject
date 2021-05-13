@@ -23,13 +23,20 @@
         <item name="android:textSize">15dp</item>
     </style>
 
+    <style name="DatePickerDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="colorAccent">@font/font1</item>
+        <item name="android:fontFamily">@font/font1</item>
+        <item name="android:datePickerStyle">@font/font1</item>
+    </style>
+
     <!-- -->
-    <!-- 카페24 고운밤 폰트 테마(NoActionBar) -->
+    <!-- 카페24 고운밤 폰트 테마(NoActionBar) x -->
+    <!-- 일단 고딕체 폰트 테마 -->
     <!-- -->
     <style name="Theme.DiaryProject" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/pastel_200</item>
+        <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

@@ -48,10 +48,8 @@ public class FontActivity extends AppCompatActivity {
             curFontIndex = pref.getInt(MyTheme.FONT_KEY, 0);
         }
 
-        // UI 초기화
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setTitle("폰트 설정");
-        toolbar.setTitleTextColor(getResources().getColor(R.color.black));
+        toolbar.setTitle("폰트설정");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);          // 툴바의 왼쪽 돌아가기버튼 사용을 위한 코드
 
@@ -71,29 +69,28 @@ public class FontActivity extends AppCompatActivity {
                 switch(checkedId) {
                     case R.id.fontButton:
                         font = Typeface.createFromAsset(getAssets(), "font1.ttf");
-                        exampleTextView.setTypeface(font);
                         selectedFontIndex = 0;
                         break;
                     case R.id.fontButton2:
                         font = Typeface.createFromAsset(getAssets(), "font2.ttf");
-                        exampleTextView.setTypeface(font);
                         selectedFontIndex = 1;
                         break;
                     case R.id.fontButton3:
                         font = Typeface.createFromAsset(getAssets(), "font3.ttf");
-                        exampleTextView.setTypeface(font);
                         selectedFontIndex = 2;
                         break;
                     case R.id.fontButton4:
                         font = Typeface.createFromAsset(getAssets(), "font4.ttf");
-                        exampleTextView.setTypeface(font);
                         selectedFontIndex = 3;
                         break;
                     case R.id.fontButton5:
                         font = Typeface.createFromAsset(getAssets(), "font5.ttf");
-                        exampleTextView.setTypeface(font);
                         selectedFontIndex = 4;
                         break;
+                }
+
+                if(font != null) {
+                    exampleTextView.setTypeface(font);
                 }
             }
         });
@@ -105,6 +102,7 @@ public class FontActivity extends AppCompatActivity {
                 MyTheme.applyTheme(getApplicationContext(), selectedFontIndex);
                 intent = getIntent();
                 setResult(RESULT_OK, intent);
+
                 finish();
             }
         });

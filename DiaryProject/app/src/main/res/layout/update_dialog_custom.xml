@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/pastel_500"
+        android:background="@color/background_button"
         android:padding="10dp">
 
         <TextView
@@ -46,24 +46,25 @@
         android:layout_marginTop="25dp"
         android:text="일기를 삭제 또는 수정하시겠습니까?"
         android:textSize="18dp"
-        android:textColor="@color/black" />
+        android:textColor="@color/font" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp">
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/deleteButton"
-            android:layout_width="70dp"
-            android:layout_height="35dp"
+            android:layout_width="75dp"
+            android:layout_height="37dp"
             android:layout_gravity="center"
             android:layout_marginRight="30dp"
             android:background="@drawable/button"
             android:text="삭제"
+            android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="15dp"
             app:backgroundTint="@color/cardview_shadow_end_color"
@@ -71,11 +72,12 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/updateButton"
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
+            android:layout_width="75dp"
+            android:layout_height="37dp"
             android:layout_gravity="center"
             android:background="@drawable/button"
             android:text="수정"
+            android:textStyle="bold"
             android:textColor="@color/white"
             android:textSize="15dp"
             app:backgroundTint="@color/cardview_shadow_end_color"
