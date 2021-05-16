@@ -65,10 +65,19 @@
                     android:id="@+id/weekTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:textColor="@color/pastel_700"
                     android:textSize="18dp"
                     android:textStyle="bold"
                     android:text="월" />
+
+                <ImageView
+                    android:id="@+id/starImageView"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/star" />
 
             </LinearLayout>
 
@@ -123,7 +132,6 @@
                     android:src="@drawable/weather_icon_7" />
 
             </RelativeLayout>
-
         </LinearLayout>
     </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

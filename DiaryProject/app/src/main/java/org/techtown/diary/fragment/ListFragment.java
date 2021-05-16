@@ -40,18 +40,20 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ListFragment extends Fragment {
-    // 상수
+    /* 상수 */
     private static final String LOG = "ListFragment";
 
-    // UI
+    /* UI */
+    private TextView titleTextView;                    // 타이틀 텍스트 (default : 일기목록)
     private LinearLayout showDiaryStateView;           // DB 조회시 일기가 없는 경우에 나타나는 상태 뷰 (일기없음)
     private RecyclerView listRecyclerView;             // 일기를 보여주는 리사이클러 뷰
     private TextView selectedDateTextView;             // 일기 기간별 정렬에 따라 나타나는 텍스트 (ex) 전체보기)
     private CustomAlignDialog alignDialog;             // 일기 기간별 정렬 다이얼로그
     private CustomUpdateDialog deleteDialog;           // 일기 삭제(수정) 다이얼로그
     private ImageButton photoButton;                   // 내용, 사진레이아웃을 선택하는 버튼
+    private ImageButton starButton;                    // 즐겨찾기 정렬 여부를 선택하는 버튼
 
-    // Helper
+    /* Helper */
     private NoteAdapter adapter;                       // 일기 목록을 담은 리사이클러 뷰의 어뎁터
     private OnTabItemSelectedListener tabListener;     // 메인 액티비티 하단 탭의 탭선택 콜백함수를 호출 해주는 리스너
     private NoteDatabaseCallback callback;             // DB 콜백 인터페이스
@@ -61,7 +63,7 @@ public class ListFragment extends Fragment {
     private GestureDetector detector;                  // 일기 목록을 길게 눌렀을 때의 이벤트를 위한 제스처 객체
     private GestureListener gestureListener;           // 제스처 객체에 필요한 리스너
 
-    // Data
+    /* Data */
     private int curYear;                               // 현재 년도 (ex)2021)
     private int lastYear;                              // 마지막 년도 (DB 안에 있는)
     private int layoutType = 0;                        // 0 : 내용 레이아웃, 1 : 사진 레이아웃
@@ -73,7 +75,8 @@ public class ListFragment extends Fragment {
     private int selectedMonthPos;                      // 이전에 선택한 월 스피너 position
     private Note selectedItem;                         // 일기목록을 길게 눌렀을 때 선택되는 일기의 Note 객체
     private boolean isAligned = false;                 // 사용자가 일기 기간별 정렬했는지 여부
-    private boolean isPhoto = false;
+    private boolean isPhoto = false;                   // 사진보기 여부
+    private boolean isStar = false;                    // 즐겨찾기 여부
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -116,6 +119,7 @@ public class ListFragment extends Fragment {
 
         gestureListener = new GestureListener();        // GestureDetector.OnGestureListener 를 상속받은 객체
         detector = new GestureDetector(getContext(), gestureListener);
+        titleTextView = (TextView)rootView.findViewById(R.id.titleTextView);
         showDiaryStateView = (LinearLayout)rootView.findViewById(R.id.showDiaryStateView);
 
         selectedDateTextView = (TextView)rootView.findViewById(R.id.selectedDateTextView);
@@ -144,6 +148,22 @@ public class ListFragment extends Fragment {
                 }
 
                 isPhoto = !isPhoto;
+            }
+        });
+
+        starButton = (ImageButton)rootView.findViewById(R.id.starButton);
+        starButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!isStar) {
+                    starButton.setImageDrawable(getResources().getDrawable(R.drawable.star_icon_color));
+                    titleTextView.setText("즐겨찾기");
+                } else {
+                    starButton.setImageDrawable(getResources().getDrawable(R.drawable.star_icon));
+                    titleTextView.setText("일기목록");
+                }
+
+                isStar = !isStar;
             }
         });
 
@@ -396,6 +416,14 @@ public class ListFragment extends Fragment {
             photoButton.setImageDrawable(getResources().getDrawable(R.drawable.photo_icon));
             adapter.setLayoutType(0);
             adapter.notifyDataSetChanged();
+        }
+
+        if(isStar) {
+            starButton.setImageDrawable(getResources().getDrawable(R.drawable.star_icon_color));
+            titleTextView.setText("즐겨찾기");
+        } else {
+            starButton.setImageDrawable(getResources().getDrawable(R.drawable.star_icon));
+            titleTextView.setText("일기목록");
         }
     }
 

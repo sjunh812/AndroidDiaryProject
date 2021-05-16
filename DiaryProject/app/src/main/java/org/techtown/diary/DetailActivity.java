@@ -42,6 +42,7 @@ public class DetailActivity extends AppCompatActivity {
     private ImageView weatherImageView;
     private TextView locationTextView;
     private CustomDeleteDialog deleteDialog;
+    private ImageView starImageView;
 
     /* Data */
     private Intent intent;
@@ -90,6 +91,7 @@ public class DetailActivity extends AppCompatActivity {
         contentsTextView = (TextView)findViewById(R.id.contentsTextView);
         weatherImageView = (ImageView)findViewById(R.id.weatherImageView);
         locationTextView = (TextView)findViewById(R.id.locationTextView);
+        starImageView = (ImageView)findViewById(R.id.starImageView);
     }
 
     private void processIntent() {
@@ -97,6 +99,7 @@ public class DetailActivity extends AppCompatActivity {
             item = (Note)intent.getSerializableExtra("item");
             int moodIndex = item.getMood();
             int weatherIndex = item.getWeather();
+            int starIndex = item.getStarIndex();
             String date = item.getCreateDateStr();
             String week = item.getDayOfWeek();
             String time = item.getTime();
@@ -105,6 +108,7 @@ public class DetailActivity extends AppCompatActivity {
 
             setMoodImage(moodIndex);
             setWeatherImage(weatherIndex);
+            setStarImage(starIndex);
             dateTextView.setText(date);
             weekTextView.setText(week);
             timeTextView.setText(time);
@@ -181,6 +185,14 @@ public class DetailActivity extends AppCompatActivity {
             default:
                 weatherImageView.setImageResource(R.drawable.weather_icon_1);
                 break;
+        }
+    }
+
+    private void setStarImage(int index) {
+        if(index == 0) {
+            starImageView.setVisibility(View.GONE);
+        } else {
+            starImageView.setVisibility(View.VISIBLE);
         }
     }
 

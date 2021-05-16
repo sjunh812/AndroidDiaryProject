@@ -16,6 +16,7 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder {
     private LinearLayout _itemView;
     private ImageView moodImageView;
     private ImageView weatherImageView;
+    private ImageView starImageView;
     private TextView locationTextView;
     private TextView timeTextView;
     private TextView contentsTextView;
@@ -28,6 +29,7 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder {
         _itemView = (LinearLayout)itemView.findViewById(R.id.itemView);
         moodImageView = (ImageView)itemView.findViewById(R.id.moodImageView);
         weatherImageView = (ImageView)itemView.findViewById(R.id.weatherImageView);
+        starImageView = (ImageView)itemView.findViewById(R.id.starImageView);
         locationTextView = (TextView)itemView.findViewById(R.id.locationTextView);
         timeTextView = (TextView)itemView.findViewById(R.id.timeTextView);
         contentsTextView = (TextView)itemView.findViewById(R.id.contentsTextView);
@@ -46,6 +48,7 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder {
     public void setItem(Note item) {
         setMoodImage(item.getMood());                   // 기분 이미지 설정
         setWeatherImage(item.getWeather());             // 날씨 이미지 설정
+        setStarImage(item.getStarIndex());              // 즐겨찾기 설정
         locationTextView.setText(item.getAddress());    // 위치 설정
         timeTextView.setText(item.getTime());           // 시간 설정
         contentsTextView.setText(item.getContents());   // 내용 설정
@@ -112,6 +115,14 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder {
             default:
                 weatherImageView.setImageResource(R.drawable.weather_icon_1);
                 break;
+        }
+    }
+
+    private void setStarImage(int index) {
+        if(index == 0) {
+            starImageView.setVisibility(View.GONE);
+        } else {
+            starImageView.setVisibility(View.VISIBLE);
         }
     }
 

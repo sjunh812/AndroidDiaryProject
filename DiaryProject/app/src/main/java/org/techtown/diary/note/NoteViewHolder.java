@@ -2,6 +2,7 @@ package org.techtown.diary.note;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +37,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
     private TextView dateTextView;
     private TextView timeTextView;
     private TextView weekTextView;
+    private ImageView starImageView;
 
     // 사진버튼 선택시 보일 뷰 UI
     private LinearLayout photoLayout;
@@ -48,6 +50,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
     private TextView timeTextView2;
     private TextView weekTextView2;
     private LinearLayout showPhotoStateView;
+    private ImageView starImageView2;
 
     private OnNoteItemClickListener clickListener;
     private OnNoteItemTouchListener touchListener;
@@ -72,6 +75,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         dateTextView = (TextView)itemView.findViewById(R.id.dateTextView);
         timeTextView = (TextView)itemView.findViewById(R.id.timeTextView);
         weekTextView = (TextView)itemView.findViewById(R.id.weekTextView);
+        starImageView = (ImageView)itemView.findViewById(R.id.starImageView);
 
         photoLayout = (LinearLayout)itemView.findViewById(R.id.photoLayout);
         moodImageView2 = (ImageView)itemView.findViewById(R.id.moodImageView2);
@@ -83,6 +87,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         timeTextView2 = (TextView)itemView.findViewById(R.id.timeTextView2);
         weekTextView2 = (TextView)itemView.findViewById(R.id.weekTextView2);
         showPhotoStateView = (LinearLayout)itemView.findViewById(R.id.showPhotoStateView);
+        starImageView2 = (ImageView)itemView.findViewById(R.id.starImageView2);
 
         contentsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,6 +211,10 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         String dayOfWeek = item.getDayOfWeek();
         weekTextView.setText(dayOfWeek);
         weekTextView2.setText(dayOfWeek);
+
+        // 즐겨찾기 설정
+        int starIndex = item.getStarIndex();
+        setStarImage(starIndex);
     }
 
     private void setMoodImage(int index) {
@@ -307,6 +316,16 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
                 weatherImageView.setImageResource(R.drawable.weather_icon_1);
                 weatherImageView2.setImageResource(R.drawable.weather_icon_1);
                 break;
+        }
+    }
+
+    private void setStarImage(int index) {
+        if(index == 0) {
+            starImageView.setVisibility(View.GONE);
+            starImageView2.setVisibility(View.GONE);
+        } else {
+            starImageView.setVisibility(View.VISIBLE);
+            starImageView2.setVisibility(View.VISIBLE);
         }
     }
 

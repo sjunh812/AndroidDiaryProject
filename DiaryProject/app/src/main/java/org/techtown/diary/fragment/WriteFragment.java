@@ -84,6 +84,7 @@ public class WriteFragment extends Fragment {
     private CustomDeleteDialog deleteDialog;            // 사진 삭제시 띄워지는 커스텀 다이얼로그
     private CustomDeleteDialog deleteNoteDialog;        // 일기 삭제시 띄워지는 커스텀 다이얼로그
     private CustomDatePickerDialog pickerDialog;
+    private ImageButton starButton;                     // 즐겨찾기 버튼
 
     /* Helper */
     private OnTabItemSelectedListener tabListener;      // 메인 액티비티에서 관리하는 하단 탭 선택 리스터
@@ -110,6 +111,7 @@ public class WriteFragment extends Fragment {
     private int curDay;
     private boolean deleteRecentFilePath = false;       // 수정하기 시 사용자가 기존 사진을 삭제한지 여부
     private Animation moodAnim;
+    private int starIndex = 0;                          // 0 = 즐겨찾기 x, 1 = 즐겨찾기
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -223,6 +225,20 @@ public class WriteFragment extends Fragment {
         button8.setOnClickListener(moodButtonListener);
         button9.setOnClickListener(moodButtonListener);
 
+        starButton = (ImageButton)rootView.findViewById(R.id.starButton);
+        starButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(starIndex == 0) {
+                    starButton.setImageDrawable(getResources().getDrawable(R.drawable.star_icon_color));
+                    starIndex = 1;
+                } else {
+                    starButton.setImageDrawable(getResources().getDrawable(R.drawable.star_icon));
+                    starIndex = 0;
+                }
+            }
+        });
+
         saveButton = (ImageButton)rootView.findViewById(R.id.saveButton);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,15 +255,15 @@ public class WriteFragment extends Fragment {
                     if(updateItem == null) {                    // 새 일기 작성
                         if(dateText != null) {                  // 사용자가 날짜를 바꾼 경우
                             String date = dateText + " " + MainActivity.timeFormat2.format(new Date());
-                            objs = new Object[]{weatherIndex, address, "", "", contents, moodIndex, filePath, curYear, curMonth, date};
+                            objs = new Object[]{weatherIndex, address, "", "", contents, moodIndex, filePath, curYear, curMonth, date, starIndex};
                             callback.insertDB2(objs);
                         } else {                                // 일기 작성시에 자동으로 측정된 오늘 날짜로 작성한 경우
                             if(calDate != null) {
                                 String date = MainActivity.dateFormat2.format(calDate) + " " + MainActivity.timeFormat2.format(new Date());
-                                objs = new Object[]{weatherIndex, address, "", "", contents, moodIndex, filePath, curYear, curMonth, date};
+                                objs = new Object[]{weatherIndex, address, "", "", contents, moodIndex, filePath, curYear, curMonth, date, starIndex};
                                 callback.insertDB2(objs);
                             } else {
-                                objs = new Object[]{weatherIndex, address, "", "", contents, moodIndex, filePath, curYear, curMonth};
+                                objs = new Object[]{weatherIndex, address, "", "", contents, moodIndex, filePath, curYear, curMonth, starIndex};
                                 callback.insertDB(objs);
                             }
                         }
@@ -276,6 +292,7 @@ public class WriteFragment extends Fragment {
 
                         updateItem.setContents(contents);
                         updateItem.setMood(moodIndex);
+                        updateItem.setStarIndex(starIndex);
 
                         if(dateText != null) {
                             String date = dateText + " " + MainActivity.timeFormat2.format(new Date());
@@ -309,16 +326,6 @@ public class WriteFragment extends Fragment {
                 }
             }
         });
-
-/*        closeButton = (Button)rootView.findViewById(R.id.closeButton);
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(tabListener != null) {
-                    tabListener.onTabSelected(0);
-                }
-            }
-        });*/
 
         if(requestListener != null && updateItem == null) {
             if(calDate == null) {
@@ -664,9 +671,6 @@ public class WriteFragment extends Fragment {
     }
 
     public void setUpdateItem() {
-        //saveButton.setText("수정");
-        //closeButton.setText("취소");
-
         int weatherIndex = updateItem.getWeather();
         String date = updateItem.getCreateDateStr();
         String address = updateItem.getAddress();
@@ -674,6 +678,8 @@ public class WriteFragment extends Fragment {
         String contents = updateItem.getContents();
         int moodIndex = updateItem.getMood();
         String date2Str = updateItem.getCreateDateStr2();
+        int starIndex = updateItem.getStarIndex();
+
         try {
             Date date2 = MainActivity.dateFormat2.parse(date2Str);
             curYear = date2.getYear() + 1900;
@@ -683,6 +689,7 @@ public class WriteFragment extends Fragment {
             e.printStackTrace();
         }
 
+        checkStarButton(starIndex);
         setWeatherImageView2(weatherIndex);
         setDateTextView(date);
         setLocationTextView(address);
@@ -701,6 +708,16 @@ public class WriteFragment extends Fragment {
 
         contentsEditText.setText(contents);
         setMoodButton(moodIndex);
+    }
+
+    private void checkStarButton(int index) {
+        if(index == 0) {
+            starIndex = 0;
+            starButton.setImageDrawable(getResources().getDrawable(R.drawable.star_icon));
+        } else {
+            starIndex = 1;
+            starButton.setImageDrawable(getResources().getDrawable(R.drawable.star_icon_color));
+        }
     }
 
     public void deleteFileCache() {

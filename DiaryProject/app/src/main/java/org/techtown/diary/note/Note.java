@@ -17,9 +17,10 @@ public class Note implements Serializable {
     private String dayOfWeek;       // 일기 작성 요일(화)
     private int year;               // 날짜 정렬을 위한 int형 년도
     private int day;                // 날짜 정렬을 위한 int형 월
+    private int starIndex;          // 즐겨찾기 여부 (0 = 즐찾x, 1 = 즐찾)
 
     public Note(int _id, int weather, String address, String locationX, String locationY, String contents,
-                int mood, String picture, String createDateStr, String time, String dayOfWeek, int year, int day) {
+                int mood, String picture, String createDateStr, String time, String dayOfWeek, int year, int day, int starIndex) {
         this._id = _id;
         this.weather = weather;
         this.address = address;
@@ -33,6 +34,7 @@ public class Note implements Serializable {
         this.dayOfWeek = dayOfWeek;
         this.year = year;
         this.day = day;
+        this.starIndex = starIndex;
     }
 
     public int get_id() {
@@ -145,5 +147,13 @@ public class Note implements Serializable {
 
     public void setCreateDateStr2(String createDateStr2) {
         this.createDateStr2 = createDateStr2;
+    }
+
+    public int getStarIndex() {
+        return starIndex;
+    }
+
+    public void setStarIndex(int starIndex) {
+        this.starIndex = starIndex;
     }
 }

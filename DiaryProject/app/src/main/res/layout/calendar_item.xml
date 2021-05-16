@@ -30,6 +30,15 @@
             android:layout_marginLeft="20dp"
             android:src="@drawable/weather_icon_1" />
 
+        <ImageView
+            android:id="@+id/starImageView"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/weatherImageView"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/star" />
+
         <TextView
             android:id="@+id/timeTextView"
             android:layout_width="wrap_content"

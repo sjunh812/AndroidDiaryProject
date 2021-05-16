@@ -21,19 +21,19 @@ import java.util.Map;
 import java.util.Objects;
 
 public class NoteDatabase {
-    // 상수
+    /* 상수 */
     private static final String LOG = "NoteDatabase";
-    public static final int DB_VERSION = 1;
+    public static final int DB_VERSION = 2;
     public static final String DB_NAME = "note.db";             // db 이름
     public static final String NOTE_TABLE = "Note";             // table 이름(일기목록을 위한 테이블)
-    public static final String NOTE_INDEX = "Note_Index";       //
+    public static final String NOTE_INDEX = "Note_Index";
 
-    // Column
+    /* Column */
     public static final String NOTE_ID = "_id";                 // id(기본키)
     public static final String NOTE_WEATHER = "weather";        // 날씨
     public static final String NOTE_ADDRESS = "address";        // 주소
-    public static final String NOTE_LOCATION_X = "location_x";   //
-    public static final String NOTE_LOCATION_Y = "location_y";   //
+    public static final String NOTE_LOCATION_X = "location_x";
+    public static final String NOTE_LOCATION_Y = "location_y";
     public static final String NOTE_CONTENTS = "contents";      // 일기 내용
     public static final String NOTE_MOOD = "mood";              // 기분
     public static final String NOTE_PICTURE = "picture";        // 사진 경로
@@ -41,8 +41,9 @@ public class NoteDatabase {
     public static final String NOTE_MODIFY_DATE = "modify_date";// 일기 수정일
     public static final String NOTE_YEAR  = "year";
     public static final String NOTE_MONTH = "month";
+    public static final String NOTE_STAR = "star";              // 즐겨찾기
 
-    // SQL
+    /* SQL */
     private static final String dropNoteTableSQL = "DROP TABLE IF EXISTS " + NOTE_TABLE + ";";
     private static final String createNoteTableSQL = "CREATE TABLE IF NOT EXISTS " + NOTE_TABLE + " ("
             + NOTE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -56,25 +57,27 @@ public class NoteDatabase {
             + NOTE_CREATE_DATE + " TIMESTAMP DEFAULT (datetime('now','localtime')), "
             + NOTE_MODIFY_DATE + " TIMESTAMP DEFAULT (datetime('now','localtime')), "
             + NOTE_YEAR + " INTEGER DEFAULT 1900, "
-            + NOTE_MONTH + " INTEGER DEFAULT 1"
+            + NOTE_MONTH + " INTEGER DEFAULT 1,"
+            + NOTE_STAR + " INTEGER DEFAULT 0"
             + ");";
     private static final String createNoteIndexCreateDateSQL = "CREATE UNIQUE INDEX IF NOT EXISTS " + NOTE_INDEX + " ON " +
             NOTE_TABLE + "(" + NOTE_CREATE_DATE + ");";
     private static final String insertNoteSQL = "INSERT INTO " + NOTE_TABLE + "("
             + NOTE_WEATHER + ", " + NOTE_ADDRESS + ", " + NOTE_LOCATION_X + ", " + NOTE_LOCATION_Y + ", " + NOTE_CONTENTS + ", "
-            + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_YEAR + ", " + NOTE_MONTH
-            + ") VALUES(?,?,?,?,?,?,?,?,?);";
+            + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_YEAR + ", " + NOTE_MONTH + ", " + NOTE_STAR
+            + ") VALUES(?,?,?,?,?,?,?,?,?,?);";
     private static final String insertNoteSQL2 = "INSERT INTO " + NOTE_TABLE + "("
             + NOTE_WEATHER + ", " + NOTE_ADDRESS + ", " + NOTE_LOCATION_X + ", " + NOTE_LOCATION_Y + ", " + NOTE_CONTENTS + ", "
-            + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_YEAR + ", " + NOTE_MONTH + ", " + NOTE_CREATE_DATE
-            + ") VALUES(?,?,?,?,?,?,?,?,?,?);";
+            + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_YEAR + ", " + NOTE_MONTH + ", " + NOTE_CREATE_DATE + ", " + NOTE_STAR
+            + ") VALUES(?,?,?,?,?,?,?,?,?,?,?);";
     private static final String updateNoteSQL = "UPDATE " + NOTE_TABLE + " SET "
             + NOTE_CONTENTS + "=?, "
             + NOTE_MOOD + "=?, "
             + NOTE_LOCATION_X + "='" + "', "
             + NOTE_LOCATION_Y + "='" + "', "
             + NOTE_PICTURE + "=?, "
-            + NOTE_MODIFY_DATE + "=" + "(datetime('now','localtime'))"
+            + NOTE_MODIFY_DATE + "=" + "(datetime('now','localtime')),"
+            + NOTE_STAR + "=?"
             + "WHERE " + NOTE_ID + "=?;";
     private static final String updateNoteSQL2 = "UPDATE " + NOTE_TABLE + " SET "
             + NOTE_CONTENTS + "=?, "
@@ -85,10 +88,11 @@ public class NoteDatabase {
             + NOTE_CREATE_DATE + "=?, "
             + NOTE_YEAR + "=?, "
             + NOTE_MONTH + "=?, "
-            + NOTE_MODIFY_DATE + "=" + "(datetime('now','localtime'))"
+            + NOTE_MODIFY_DATE + "=" + "(datetime('now','localtime')),"
+            + NOTE_STAR + "=?"
             + "WHERE " + NOTE_ID + "=?;";
     private static final String selectNoteSQL = "SELECT " + NOTE_ID + ", " + NOTE_WEATHER + ", " + NOTE_ADDRESS + ", " + NOTE_LOCATION_X + ", " + NOTE_LOCATION_Y + ", "
-            + NOTE_CONTENTS + ", " + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_CREATE_DATE + ", " + NOTE_YEAR + ", " + NOTE_MONTH
+            + NOTE_CONTENTS + ", " + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_CREATE_DATE + ", " + NOTE_YEAR + ", " + NOTE_MONTH + ", " + NOTE_STAR
             + " FROM " + NOTE_TABLE + " ORDER BY " + NOTE_CREATE_DATE + " DESC;";      // 일기 생성일 내림차순 = 최신 일기가 제일 위
     private static final String selectNoteLastYear = "SELECT " + NOTE_YEAR + " FROM " + NOTE_TABLE + " ORDER BY " + NOTE_YEAR + " LIMIT 1;";
 
@@ -163,8 +167,9 @@ public class NoteDatabase {
                 String contents = item.getContents();
                 int moodIndex = item.getMood();
                 String path = item.getPicture();
+                int starIndex = item.getStarIndex();
 
-                Object[] objs = { contents, moodIndex, path, id };
+                Object[] objs = { contents, moodIndex, path, starIndex, id };
 
                 db.execSQL(updateNoteSQL, objs);
                 Log.d(LOG, "Note 테이블 데이터 수정성공 : " + id);
@@ -184,8 +189,9 @@ public class NoteDatabase {
                 String date = item.getCreateDateStr2();
                 int year = item.getYear();
                 int month = item.getDay();
+                int starIndex = item.getStarIndex();
 
-                Object[] objs = { contents, moodIndex, path, date, year, month, id };
+                Object[] objs = { contents, moodIndex, path, date, year, month, starIndex, id };
 
                 db.execSQL(updateNoteSQL2, objs);
                 Log.d(LOG, "Note 테이블 데이터 수정성공 : " + id);
@@ -215,6 +221,7 @@ public class NoteDatabase {
                     String _createDate = cursor.getString(8);
                     int _year = cursor.getInt(9);
                     int _month = cursor.getInt(10);
+                    int _starIndex = cursor.getInt(11);
 
                     String createDateStr = null;
                     String createDateStr2 = null;
@@ -235,7 +242,7 @@ public class NoteDatabase {
                         createDateStr = "";
                     }
 
-                    item = new Note(_id, _weather, _address, _locationX, _locationY, _contents, _mood, _picture, createDateStr, time, dayOfWeek, _year, _month);
+                    item = new Note(_id, _weather, _address, _locationX, _locationY, _contents, _mood, _picture, createDateStr, time, dayOfWeek, _year, _month, _starIndex);
                     item.setCreateDateStr2(createDateStr2);
                     items.add(item);
                 }
@@ -257,7 +264,7 @@ public class NoteDatabase {
                 Note item = null;
 
                 String sql = "SELECT " + NOTE_ID + ", " + NOTE_WEATHER + ", " + NOTE_ADDRESS + ", " + NOTE_LOCATION_X + ", " + NOTE_LOCATION_Y + ", "
-                        + NOTE_CONTENTS + ", " + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_CREATE_DATE + ", " + NOTE_YEAR + ", " + NOTE_MONTH
+                        + NOTE_CONTENTS + ", " + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_CREATE_DATE + ", " + NOTE_YEAR + ", " + NOTE_MONTH + ", " + NOTE_STAR
                         + " FROM " + NOTE_TABLE + " WHERE " + NOTE_YEAR + "=" + year + " AND " + NOTE_MONTH + "=" + month
                         + " ORDER BY " + NOTE_CREATE_DATE + " DESC;";
                 Cursor cursor = db.rawQuery(sql, null);
@@ -274,6 +281,7 @@ public class NoteDatabase {
                     String _createDate = cursor.getString(8);
                     int _year = cursor.getInt(9);
                     int _month = cursor.getInt(10);
+                    int _starIndex = cursor.getInt(11);
                     String createDateStr = null;
                     String time = null;
                     String dayOfWeek = null;
@@ -291,7 +299,7 @@ public class NoteDatabase {
                         createDateStr = "";
                     }
 
-                    item = new Note(_id, _weather, _address, _locationX, _locationY, _contents, _mood, _picture, createDateStr, time, dayOfWeek, _year, _month);
+                    item = new Note(_id, _weather, _address, _locationX, _locationY, _contents, _mood, _picture, createDateStr, time, dayOfWeek, _year, _month, _starIndex);
                     items.add(item);
                 }
 
@@ -405,7 +413,10 @@ public class NoteDatabase {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+            if(oldVersion == 1) {
+                String sql = "ALTER TABLE " + NOTE_TABLE + " ADD COLUMN " + NOTE_STAR + " INTAGER;";
+                db.execSQL(sql);
+            }
         }
     }
 
