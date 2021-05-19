@@ -4,21 +4,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.graphics.Paint;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import org.techtown.diary.MainActivity;
-import org.techtown.diary.fragment.ListFragment;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 public class NoteDatabase {
     /* 상수 */
@@ -71,6 +67,8 @@ public class NoteDatabase {
             + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_YEAR + ", " + NOTE_MONTH + ", " + NOTE_CREATE_DATE + ", " + NOTE_STAR
             + ") VALUES(?,?,?,?,?,?,?,?,?,?,?);";
     private static final String updateNoteSQL = "UPDATE " + NOTE_TABLE + " SET "
+            + NOTE_WEATHER + "=?, "
+            + NOTE_ADDRESS + "=?, "
             + NOTE_CONTENTS + "=?, "
             + NOTE_MOOD + "=?, "
             + NOTE_LOCATION_X + "='" + "', "
@@ -80,6 +78,8 @@ public class NoteDatabase {
             + NOTE_STAR + "=?"
             + "WHERE " + NOTE_ID + "=?;";
     private static final String updateNoteSQL2 = "UPDATE " + NOTE_TABLE + " SET "
+            + NOTE_WEATHER + "=?, "
+            + NOTE_ADDRESS + "=?, "
             + NOTE_CONTENTS + "=?, "
             + NOTE_MOOD + "=?, "
             + NOTE_LOCATION_X + "='" + "', "
@@ -101,7 +101,6 @@ public class NoteDatabase {
     private SQLiteDatabase db;
     private SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    // 생성자
     public NoteDatabase(Context context) {
         this.context = context;
     }
@@ -163,13 +162,15 @@ public class NoteDatabase {
     public void update(String tableName, Note item) {
         if(db != null) {
             if(tableName.equals(NOTE_TABLE)) {
+                int weather = item.getWeather();
+                String address = item.getAddress();
                 int id = item.get_id();
                 String contents = item.getContents();
                 int moodIndex = item.getMood();
                 String path = item.getPicture();
                 int starIndex = item.getStarIndex();
 
-                Object[] objs = { contents, moodIndex, path, starIndex, id };
+                Object[] objs = { weather, address, contents, moodIndex, path, starIndex, id };
 
                 db.execSQL(updateNoteSQL, objs);
                 Log.d(LOG, "Note 테이블 데이터 수정성공 : " + id);
@@ -182,6 +183,8 @@ public class NoteDatabase {
     public void update2(String tableName, Note item) {
         if(db != null) {
             if(tableName.equals(NOTE_TABLE)) {
+                int weather = item.getWeather();
+                String address = item.getAddress();
                 int id = item.get_id();
                 String contents = item.getContents();
                 int moodIndex = item.getMood();
@@ -191,7 +194,7 @@ public class NoteDatabase {
                 int month = item.getDay();
                 int starIndex = item.getStarIndex();
 
-                Object[] objs = { contents, moodIndex, path, date, year, month, starIndex, id };
+                Object[] objs = { weather, address, contents, moodIndex, path, date, year, month, starIndex, id };
 
                 db.execSQL(updateNoteSQL2, objs);
                 Log.d(LOG, "Note 테이블 데이터 수정성공 : " + id);
@@ -395,7 +398,7 @@ public class NoteDatabase {
         } else {
             Log.d(LOG, "db를 먼저 오픈해주세요");
         }
-        Log.d(LOG, "last year : " + year);
+
         return year;
     }
 
@@ -408,7 +411,7 @@ public class NoteDatabase {
         @Override
         public void onCreate(SQLiteDatabase db) {
             //db.execSQL(dropNoteTableSQL);
-            Log.d(LOG, "Note 테이블 삭제 완료");
+            //Log.d(LOG, "Note 테이블 삭제 완료");
         }
 
         @Override

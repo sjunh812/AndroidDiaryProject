@@ -11,7 +11,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:text="더보기"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:textStyle="bold"
         android:textColor="@color/font"
         android:layout_marginTop="12dp"
@@ -32,7 +32,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="20dp"
             android:textColor="@color/gray"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:text="시스템 설정" />
 
         <RelativeLayout
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="폰트"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textColor="@color/font"/>
 
             <TextView
@@ -64,7 +64,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="폰트"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textColor="@color/pastel_700"/>
 
             <ImageView
@@ -75,6 +75,13 @@
                 android:src="@drawable/navigate_next" />
 
         </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/background" />
 
         <RelativeLayout
             android:id="@+id/noticeLayout"
@@ -95,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:text="알림"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textColor="@color/font"/>
 
             <ImageView
@@ -106,6 +113,13 @@
                 android:src="@drawable/navigate_next" />
 
         </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/background" />
 
         <RelativeLayout
             android:id="@+id/darkmodeLayout"
@@ -125,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:text="다크모드"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textColor="@color/font"/>
 
             <ImageView
@@ -144,7 +158,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="20dp"
             android:textColor="@color/gray"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:text="피드백" />
 
         <RelativeLayout
@@ -166,7 +180,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="리뷰하기"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textColor="@color/font"/>
 
             <ImageView
@@ -177,6 +191,13 @@
                 android:src="@drawable/navigate_next" />
 
         </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/background" />
 
         <RelativeLayout
             android:id="@+id/ideaLayout"
@@ -196,7 +217,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:text="의견 보내기"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textColor="@color/font"/>
 
             <ImageView

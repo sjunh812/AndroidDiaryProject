@@ -7,10 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -22,6 +19,7 @@ import android.widget.TextView;
 
 
 import org.techtown.diary.custom.CustomTimePickerDialog;
+import org.techtown.diary.helper.AlarmHelper;
 import org.techtown.diary.helper.MyTheme;
 
 import java.util.Calendar;

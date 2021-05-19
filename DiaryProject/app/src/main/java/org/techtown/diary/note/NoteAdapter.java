@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,6 +26,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> implements
 
     private int layoutType = 0;
     private long duration = 1000;
+    private boolean isStar = false;
 
     public NoteAdapter(Context context) {
         this.context = context;
@@ -47,12 +46,30 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteViewHolder> implements
         }
     }
 
+    public ArrayList<Note> getItems() {
+        return items;
+    }
+
     public void setItems(ArrayList<Note> items) {
         this.items = items;
     }
 
     public void setLayoutType(int layoutType) {
         this.layoutType = layoutType;
+    }
+
+    public void setStar() {
+        for(int i = 0; i < items.size(); i++) {
+            Note item = items.get(i);
+            if(item.getStarIndex() == 0) {
+                items.remove(i);
+                i--;
+            }
+        }
+    }
+
+    public void setIsStar(boolean isStar) {
+        this.isStar = isStar;
     }
 
     @NonNull

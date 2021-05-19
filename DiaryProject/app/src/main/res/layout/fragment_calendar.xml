@@ -12,7 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:text="기분달력"
-        android:textSize="25dp"
+        android:textSize="25sp"
         android:textStyle="bold"
         android:textColor="@color/font"
         android:layout_marginTop="12dp"
@@ -40,10 +40,10 @@
             android:id="@+id/dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17dp"
+            android:textSize="15sp"
             android:text="2021년 4월 28일"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/font" />
 
         <FrameLayout
@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:textSize="17dp"
+                    android:textSize="17sp"
                     android:textColor="@color/gray"
                     android:text="일기가 없습니다.." />
 

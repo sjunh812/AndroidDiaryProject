@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="일기작성"
-            android:textSize="25dp"
+            android:textSize="25sp"
             android:textStyle="bold"
             android:textColor="@color/font"
             android:layout_marginTop="12dp"
@@ -73,9 +73,19 @@
             android:id="@+id/weatherImageView"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentLeft="true" />
+
+        <ImageView
+            android:id="@+id/weatherAddImageView"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_toRightOf="@id/weatherImageView"
+            android:paddingLeft="7dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:layout_centerVertical="true"
-            android:layout_marginRight="50dp" />
+            android:src="@drawable/navigate_down" />
 
         <TextView
             android:id="@+id/dateTextView"
@@ -99,17 +109,115 @@
             android:layout_centerVertical="true"
             android:src="@drawable/navigate_down" />
 
-        <TextView
+        <EditText
             android:id="@+id/locationTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="위치정보 없음"
+            android:background="@color/background"
+            android:hint="위치정보 입력"
+            android:textColorHint="@color/pastel_700"
             android:textSize="12dp"
+            android:maxLines="1"
             android:textColor="@color/pastel_700" />
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/weatherView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:background="@color/background_sub"
+        android:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/weatherButton"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/circle_view"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/weather_icon_1" />
+
+        <ImageButton
+            android:id="@+id/weatherButton2"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/circle_view"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/weather_icon_2" />
+
+        <ImageButton
+            android:id="@+id/weatherButton3"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/circle_view"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/weather_icon_3" />
+
+        <ImageButton
+            android:id="@+id/weatherButton4"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/circle_view"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/weather_icon_4" />
+
+        <ImageButton
+            android:id="@+id/weatherButton5"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/circle_view"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/weather_icon_5" />
+
+        <ImageButton
+            android:id="@+id/weatherButton6"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/circle_view"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/weather_icon_6" />
+
+        <ImageButton
+            android:id="@+id/weatherButton7"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/circle_view"
+            android:padding="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/weather_icon_7" />
+
+    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -146,7 +254,7 @@
                         android:text="기분 선택"
                         android:textColor="@color/font"
                         android:textStyle="bold"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -170,8 +278,9 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
-                                android:layout_width="55dp"
-                                android:layout_height="80dp"
+                                android:id="@+id/angryView"
+                                android:layout_width="60dp"
+                                android:layout_height="78dp"
                                 android:layout_marginRight="50dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
@@ -180,6 +289,7 @@
                                     android:id="@+id/button1"
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
+                                    android:clickable="false"
                                     android:background="@drawable/mood_angry_color"
                                     app:backgroundTint="@color/cardview_shadow_end_color"
                                     app:backgroundTintMode="add" />
@@ -195,8 +305,9 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:layout_width="55dp"
-                                android:layout_height="80dp"
+                                android:id="@+id/coolView"
+                                android:layout_width="60dp"
+                                android:layout_height="78dp"
                                 android:layout_marginRight="50dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
@@ -205,6 +316,7 @@
                                     android:id="@+id/button2"
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
+                                    android:clickable="false"
                                     android:background="@drawable/mood_cool_color"
                                     app:backgroundTint="@color/cardview_shadow_end_color"
                                     app:backgroundTintMode="add" />
@@ -220,8 +332,9 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:layout_width="55dp"
-                                android:layout_height="80dp"
+                                android:id="@+id/cryingView"
+                                android:layout_width="60dp"
+                                android:layout_height="78dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
 
@@ -229,6 +342,7 @@
                                     android:id="@+id/button3"
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
+                                    android:clickable="false"
                                     android:background="@drawable/mood_crying_color"
                                     app:backgroundTint="@color/cardview_shadow_end_color"
                                     app:backgroundTintMode="add" />
@@ -252,8 +366,9 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
-                                android:layout_width="55dp"
-                                android:layout_height="80dp"
+                                android:id="@+id/illView"
+                                android:layout_width="60dp"
+                                android:layout_height="78dp"
                                 android:layout_marginRight="50dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
@@ -262,6 +377,7 @@
                                     android:id="@+id/button4"
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
+                                    android:clickable="false"
                                     android:background="@drawable/mood_ill_color"
                                     app:backgroundTint="@color/cardview_shadow_end_color"
                                     app:backgroundTintMode="add" />
@@ -277,8 +393,9 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:layout_width="55dp"
-                                android:layout_height="80dp"
+                                android:id="@+id/laughView"
+                                android:layout_width="60dp"
+                                android:layout_height="78dp"
                                 android:layout_marginRight="50dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
@@ -287,6 +404,7 @@
                                     android:id="@+id/button5"
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
+                                    android:clickable="false"
                                     android:background="@drawable/mood_laugh_color"
                                     app:backgroundTint="@color/cardview_shadow_end_color"
                                     app:backgroundTintMode="add" />
@@ -302,8 +420,9 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:layout_width="55dp"
-                                android:layout_height="80dp"
+                                android:id="@+id/mehView"
+                                android:layout_width="60dp"
+                                android:layout_height="78dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
 
@@ -311,6 +430,7 @@
                                     android:id="@+id/button6"
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
+                                    android:clickable="false"
                                     android:background="@drawable/mood_meh_color"
                                     app:backgroundTint="@color/cardview_shadow_end_color"
                                     app:backgroundTintMode="add" />
@@ -335,8 +455,9 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
-                                android:layout_width="55dp"
-                                android:layout_height="80dp"
+                                android:id="@+id/sadView"
+                                android:layout_width="60dp"
+                                android:layout_height="78dp"
                                 android:layout_marginRight="50dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
@@ -346,6 +467,7 @@
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
                                     android:background="@drawable/mood_sad"
+                                    android:clickable="false"
                                     app:backgroundTint="@color/cardview_shadow_end_color"
                                     app:backgroundTintMode="add" />
 
@@ -360,8 +482,9 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:layout_width="55dp"
-                                android:layout_height="80dp"
+                                android:id="@+id/smileView"
+                                android:layout_width="60dp"
+                                android:layout_height="78dp"
                                 android:layout_marginRight="50dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
@@ -370,6 +493,7 @@
                                     android:id="@+id/button8"
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
+                                    android:clickable="false"
                                     android:background="@drawable/mood_smile_color"
                                     app:backgroundTint="@color/cardview_shadow_end_color"
                                     app:backgroundTintMode="add" />
@@ -385,8 +509,9 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:layout_width="55dp"
-                                android:layout_height="80dp"
+                                android:id="@+id/yawnView"
+                                android:layout_width="60dp"
+                                android:layout_height="78dp"
                                 android:gravity="center"
                                 android:orientation="vertical">
 
@@ -394,6 +519,7 @@
                                     android:id="@+id/button9"
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
+                                    android:clickable="false"
                                     android:background="@drawable/mood_yawn_color"
                                     app:backgroundTint="@color/cardview_shadow_end_color"
                                     app:backgroundTintMode="add" />
@@ -435,7 +561,7 @@
                         android:text="일기 입력"
                         android:textStyle="bold"
                         android:textColor="@color/font"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
                     <androidx.core.widget.NestedScrollView
                         android:layout_width="match_parent"
@@ -453,7 +579,7 @@
                             android:padding="10dp"
                             android:textColor="@color/font"
                             android:textColorHint="@color/pastel_700"
-                            android:textSize="18dp" />
+                            android:textSize="18sp" />
 
                     </androidx.core.widget.NestedScrollView>
 
@@ -484,7 +610,7 @@
                         android:text="사진 선택"
                         android:textStyle="bold"
                         android:textColor="@color/font"
-                        android:textSize="20dp" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -493,7 +619,7 @@
                         android:layout_marginBottom="10dp"
                         android:text="탭하여 사진을 추가해주세요.\n(삭제하려면 길게 눌렀다가 떼주세요.)"
                         android:textColor="@color/pastel_700"
-                        android:textSize="18dp" />
+                        android:textSize="18sp" />
 
                     <FrameLayout
                         android:id="@+id/pictureContainer"
@@ -523,55 +649,6 @@
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
-
-           <!-- <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:layout_marginBottom="10dp">
-
-&lt;!&ndash;                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/deleteButton"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="25dp"
-                    android:background="@drawable/button"
-                    app:backgroundTint="@color/cardview_shadow_end_color"
-                    app:backgroundTintMode="add"
-                    android:text="삭제"
-                    android:textSize="16dp"
-                    android:textColor="@color/white" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/saveButton"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/button"
-                    app:backgroundTint="@color/cardview_shadow_end_color"
-                    app:backgroundTintMode="add"
-                    android:text="저장"
-                    android:textSize="16dp"
-                    android:textColor="@color/white" />&ndash;&gt;
-
-&lt;!&ndash;                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/closeButton"
-                    android:layout_width="70dp"
-                    android:layout_height="35dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="25dp"
-                    android:background="@drawable/button"
-                    app:backgroundTint="@color/cardview_shadow_end_color"
-                    app:backgroundTintMode="add"
-                    android:text="닫기"
-                    android:textSize="16dp"
-                    android:textColor="@color/white"/>&ndash;&gt;
-
-            </RelativeLayout>-->
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

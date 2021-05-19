@@ -20,7 +20,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:text="일기목록"
-            android:textSize="25dp"
+            android:textSize="25sp"
             android:textStyle="bold"
             android:textColor="@color/font"
             android:layout_marginTop="12dp"
@@ -42,7 +42,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="전체"
-            android:textSize="13dp"
+            android:textSize="13sp"
             android:textColor="@color/font" />
 
         <ImageButton
@@ -91,7 +91,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="17dp"
+                android:textSize="17sp"
                 android:text="일기가 없습니다.."
                 android:textColor="@color/gray" />
 
@@ -102,10 +102,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/background"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="10dp"
             android:paddingTop="5dp"
-            android:paddingLeft="17dp"
-            android:paddingRight="17dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:visibility="visible" />
 
     </FrameLayout>

@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     private int selectedTabIndex = 0;                   // 현재 선택되어있는 탭 번호 (onSaveInstanceState() 호출시 Bundle 객체로 저장)
     public static MultiTransformation option = new MultiTransformation(new FitCenter(), new RoundedCorners(10));    // Glide 둥근 이미지 뷰
     private Date calDate = null;
+    private long backPressTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -605,7 +606,15 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     @Override
     public void onBackPressed() {
         if(bottomNavigationView.getSelectedItemId() == R.id.tab1) {
-            super.onBackPressed();
+            if(System.currentTimeMillis() > backPressTime + 2000) {
+                backPressTime = System.currentTimeMillis();
+                Toast.makeText(this, "뒤로가기 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if(System.currentTimeMillis() <= backPressTime + 2000) {
+                super.onBackPressed();
+            }
         } else if(bottomNavigationView.getSelectedItemId() == R.id.tab3) {
             showStopWriteDialog();
         } else {
@@ -706,12 +715,16 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
     @Override
     public void onDenied(int i, String[] strings) {
-
+        for(String permission : strings) {
+            if(permission.equals(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                Toast.makeText(getApplicationContext(), "날씨 및 작성 위치를 가져오기 위해 위치정보가 필요합니다.\n" +
+                        "설정->위치->앱 권한에서 허용해주세요.", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override
     public void onGranted(int i, String[] strings) {
-
     }
 
     @Override

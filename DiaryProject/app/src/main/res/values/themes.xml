@@ -14,13 +14,13 @@
     <!-- Toolbar의 타이틀 텍스트-->
     <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">25dp</item>
+        <item name="android:textSize">25sp</item>
     </style>
 
     <!-- Calendar Date의 타이틀 텍스트-->
     <style name="CalendarDateTextStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">15dp</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="DatePickerDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
@@ -30,8 +30,7 @@
     </style>
 
     <!-- -->
-    <!-- 카페24 고운밤 폰트 테마(NoActionBar) x -->
-    <!-- 일단 고딕체 폰트 테마 -->
+    <!-- 교보손글씨체 폰트 테마(NoActionBar) x -->
     <!-- -->
     <style name="Theme.DiaryProject" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
@@ -93,12 +92,12 @@
     </style>
 
     <!-- -->
-    <!-- 교보손글씨 폰트 테마(NoActionBar) -->
+    <!-- 점꼴체 폰트 테마(NoActionBar) -->
     <!-- -->
     <style name="Theme.DiaryProject2" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/pastel_200</item>
+        <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -156,12 +155,12 @@
     </style>
 
     <!-- -->
-    <!-- 어비 푸딩체 폰트테마(NoActionBar) -->
+    <!-- 넥슨배찌체 폰트테마(NoActionBar) -->
     <!-- -->
     <style name="Theme.DiaryProject3" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/pastel_200</item>
+        <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -219,12 +218,12 @@
     </style>
 
     <!-- -->
-    <!-- 할아버지의 나눔 폰트테마(NoActionBar) -->
+    <!-- 미니콩다방체 폰트테마(NoActionBar) -->
     <!-- -->
     <style name="Theme.DiaryProject4" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/pastel_200</item>
+        <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -283,12 +282,12 @@
     </style>
 
     <!-- -->
-    <!-- 카페24 숑숑체 폰트테마(NoActionBar) -->
+    <!-- 꼬마나비체 폰트테마(NoActionBar) -->
     <!-- -->
     <style name="Theme.DiaryProject5" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/pastel_200</item>
+        <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>

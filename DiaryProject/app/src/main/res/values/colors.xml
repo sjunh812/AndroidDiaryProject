@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- 일반모드 -->
-    <color name="background">#FCFCFF</color>
+    <color name="background">#F8F8FF</color>
     <color name="background_sub">#FFFFFFFF</color>
     <color name="border">#DEDEFF</color>
     <color name="font">#FF000000</color>

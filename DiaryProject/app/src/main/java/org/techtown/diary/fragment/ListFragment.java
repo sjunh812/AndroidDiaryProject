@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -77,6 +78,7 @@ public class ListFragment extends Fragment {
     private boolean isAligned = false;                 // 사용자가 일기 기간별 정렬했는지 여부
     private boolean isPhoto = false;                   // 사진보기 여부
     private boolean isStar = false;                    // 즐겨찾기 여부
+    private ArrayList<Note> savedItems = null;           // 즐겨찾기 탐색 이전 adapter 로 돌아가기 위해 저장해둔 adapter
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -140,13 +142,12 @@ public class ListFragment extends Fragment {
                 if(!isPhoto) {
                     photoButton.setImageDrawable(getResources().getDrawable(R.drawable.photo_clicked_icon));
                     adapter.setLayoutType(1);
-                    adapter.notifyDataSetChanged();
                 } else {
                     photoButton.setImageDrawable(getResources().getDrawable(R.drawable.photo_icon));
                     adapter.setLayoutType(0);
-                    adapter.notifyDataSetChanged();
                 }
 
+                adapter.notifyDataSetChanged();
                 isPhoto = !isPhoto;
             }
         });
@@ -157,12 +158,16 @@ public class ListFragment extends Fragment {
             public void onClick(View v) {
                 if(!isStar) {
                     starButton.setImageDrawable(getResources().getDrawable(R.drawable.star_icon_color));
+                    adapter.setStar();
                     titleTextView.setText("즐겨찾기");
                 } else {
                     starButton.setImageDrawable(getResources().getDrawable(R.drawable.star_icon));
+                    backupAdapter();
                     titleTextView.setText("일기목록");
                 }
 
+                adapter.notifyDataSetChanged();
+                setShowDiaryStateView();
                 isStar = !isStar;
             }
         });
@@ -207,7 +212,6 @@ public class ListFragment extends Fragment {
                 requestListener.onRequestDetailActivity(item);
             }
         });
-
         adapter.setOnItemLongClickListener(new OnNoteItemLongClickListener() {
             @Override
             public void onLongClick(NoteViewHolder holder, View view, int position) {
@@ -218,8 +222,15 @@ public class ListFragment extends Fragment {
                 }
             }
         });
-
         listRecyclerView.setAdapter(adapter);
+    }
+
+    private void backupAdapter() {
+        if(!isAligned) {
+            adapter.setItems(callback.selectAllDB());
+        } else {
+            adapter.setItems(callback.selectPart(selectedYear, selectedMonth));
+        }
     }
 
     private void setShowDiaryStateView() {
@@ -269,6 +280,7 @@ public class ListFragment extends Fragment {
                         adapter.setItems(callback.selectPart(selectedYear, selectedMonth));
                     }
 
+                    checkStar();
                     adapter.notifyDataSetChanged();
                     setShowDiaryStateView();
                     deleteDialog.dismiss();
@@ -305,6 +317,7 @@ public class ListFragment extends Fragment {
                 ArrayList<Note> items = callback.selectPart(selectedYear, selectedMonth);
                 isAligned = true;
                 adapter.setItems(items);
+                checkStar();
                 adapter.notifyDataSetChanged();
                 setShowDiaryStateView();
 
@@ -320,6 +333,11 @@ public class ListFragment extends Fragment {
                 ArrayList<Note> items = callback.selectAllDB();
                 isAligned = false;
                 adapter.setItems(items);
+
+                if(isStar) {
+                    adapter.setStar();
+                }
+
                 adapter.notifyDataSetChanged();
                 setShowDiaryStateView();
 
@@ -400,8 +418,15 @@ public class ListFragment extends Fragment {
             adapter.setItems(callback.selectPart(selectedYear, selectedMonth));
         }
 
+        checkStar();
         adapter.notifyDataSetChanged();
         setShowDiaryStateView();
+    }
+
+    private void checkStar() {
+        if(isStar) {
+            adapter.setStar();
+        }
     }
 
     @Override
@@ -411,20 +436,24 @@ public class ListFragment extends Fragment {
         if(isPhoto) {
             photoButton.setImageDrawable(getResources().getDrawable(R.drawable.photo_clicked_icon));
             adapter.setLayoutType(1);
-            adapter.notifyDataSetChanged();
         } else {
             photoButton.setImageDrawable(getResources().getDrawable(R.drawable.photo_icon));
             adapter.setLayoutType(0);
-            adapter.notifyDataSetChanged();
         }
 
         if(isStar) {
             starButton.setImageDrawable(getResources().getDrawable(R.drawable.star_icon_color));
+            if(adapter != null) {
+                adapter.setStar();
+            }
             titleTextView.setText("즐겨찾기");
         } else {
             starButton.setImageDrawable(getResources().getDrawable(R.drawable.star_icon));
             titleTextView.setText("일기목록");
         }
+
+        adapter.notifyDataSetChanged();
+        setShowDiaryStateView();
     }
 
     class MyArrayAdapter extends ArrayAdapter<String> {

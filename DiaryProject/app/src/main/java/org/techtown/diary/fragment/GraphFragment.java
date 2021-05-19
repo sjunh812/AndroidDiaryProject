@@ -273,7 +273,7 @@ public class GraphFragment extends Fragment {
 
         PieDataSet dataSet = new PieDataSet(entries, "기분별 비율");
         dataSet.setDrawIcons(true);                             // 아이콘 표시 여부
-        dataSet.setSliceSpace(10f);                              // 그래프 간격
+        dataSet.setSliceSpace(10f);                             // 그래프 간격
         dataSet.setIconsOffset(new MPPointF(0, 55));      // 아이콘 offset
         //dataSet.setSelectionShift(5f);                        // 특정부분 선택시 확대효과 크기
         dataSet.setColors(colors);
@@ -285,7 +285,7 @@ public class GraphFragment extends Fragment {
         });
 
         PieData data = new PieData(dataSet);
-        data.setValueTextSize(17f);                         // 그래프 내 text 크기
+        data.setValueTextSize(15f);                         // 그래프 내 text 크기
         data.setValueTextColor(Color.WHITE);                // 그래프 내 text 색상
         if(context != null) {                               // 그래프 내 text 폰트
             data.setValueTypeface(getCurTypeFace());

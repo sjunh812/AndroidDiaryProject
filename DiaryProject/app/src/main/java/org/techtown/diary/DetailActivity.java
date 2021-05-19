@@ -56,7 +56,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        toolbar.setTitle("일기 상세");
+        toolbar.setTitle("일기상세");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -183,7 +183,7 @@ public class DetailActivity extends AppCompatActivity {
                 weatherImageView.setImageResource(R.drawable.weather_icon_7);
                 break;
             default:
-                weatherImageView.setImageResource(R.drawable.weather_icon_1);
+                //weatherImageView.setImageResource(R.drawable.weather_icon_1);
                 break;
         }
     }

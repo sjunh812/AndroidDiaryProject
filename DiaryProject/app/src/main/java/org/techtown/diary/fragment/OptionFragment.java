@@ -19,6 +19,7 @@ import org.techtown.diary.AlarmActivity;
 import org.techtown.diary.DarkModeActivity;
 import org.techtown.diary.FontActivity;
 import org.techtown.diary.R;
+import org.techtown.diary.helper.AppHelper;
 import org.techtown.diary.helper.MyTheme;
 
 public class OptionFragment extends Fragment {
@@ -80,28 +81,56 @@ public class OptionFragment extends Fragment {
             }
         });
 
+        RelativeLayout ideaLayout = (RelativeLayout)rootView.findViewById(R.id.ideaLayout);
+        ideaLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppHelper helper = new AppHelper(getContext());
+                String[] email = {"sjunh812@naver.com"};
+                String appVersion = helper.getVersionName();
+                String osVersion = helper.getOsName();
+                String modelName = helper.getModelName();
+                String contents = "안녕하세요!\n" +
+                        "소중한 의견을 보내주셔서 감사합니다 :)\n" +
+                        "신중하게 검토 후 답변드리겠습니다.\n" +
+                        "----------------------------\n" +
+                        "앱 버전 : " + appVersion +
+                        "\n기기명 : " + modelName +
+                        "\n안드로이드 OS : " + osVersion +
+                        "\n----------------------------\n";
+
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("plain/Text");
+                intent.putExtra(Intent.EXTRA_EMAIL, email);
+                intent.putExtra(Intent.EXTRA_SUBJECT, "[" + getString(R.string.app_name) + "] " + getString(R.string.report));
+                intent.putExtra(Intent.EXTRA_TEXT, contents);
+                intent.setType("message/rfc822");
+                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 
     private void setCurFontText() {
         switch(curFontIndex) {
             case 0:
-                curFontTextView.setText("넥슨배찌체");
+                curFontTextView.setText("교보손글씨체");
                 break;
             case 1:
                 curFontTextView.setText("점꼴체");
                 break;
             case 2:
-                curFontTextView.setText("다시시작해체");
+                curFontTextView.setText("넥슨배찌체");
                 break;
             case 3:
-                curFontTextView.setText("할아버지의나눔체");
+                curFontTextView.setText("미니콩다방체");
                 break;
             case 4:
                 curFontTextView.setText("꼬마나비체");
                 break;
             default:
-                curFontTextView.setText("넥슨배찌체");
+                curFontTextView.setText("교보손글씨체");
                 break;
         }
     }

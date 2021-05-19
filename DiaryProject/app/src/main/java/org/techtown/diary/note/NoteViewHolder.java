@@ -148,6 +148,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         });
 
         setLayoutType(type);        // 내용레이아웃, 사진레이아웃 중 선택
+
     }
 
     public void setItem(Note item) {
@@ -313,8 +314,8 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
                 weatherImageView2.setImageResource(R.drawable.weather_icon_7);
                 break;
             default:
-                weatherImageView.setImageResource(R.drawable.weather_icon_1);
-                weatherImageView2.setImageResource(R.drawable.weather_icon_1);
+/*                weatherImageView.setImageResource(R.drawable.weather_icon_1);
+                weatherImageView2.setImageResource(R.drawable.weather_icon_1);*/
                 break;
         }
     }

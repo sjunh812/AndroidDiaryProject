@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="23dp"
+                android:textSize="23sp"
                 android:text="알림을 받으시고,\n1일 1일기를 실천해보세요!"
                 android:textColor="@color/font"
                 android:layout_marginBottom="10dp"
@@ -49,7 +49,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:text="매일 설정한 시간에 알림이 전송됩니다."
                 android:textColor="@color/pastel_700" />
 
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textColor="@color/font"
                 android:text="알림" />
 
@@ -89,7 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:textColor="@color/font"
                 android:text="시간" />
 
