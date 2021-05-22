@@ -7,10 +7,12 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="toolbarStyle">@style/ToolbarStyle</item>
     </style>
+
     <!--Toolbar 스타일-->
     <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
         <item name="titleTextAppearance">@style/ToolbarTitleStyle</item> <!-- Toolbar의 타이틀 텍스트-->
     </style>
+
     <!-- Toolbar의 타이틀 텍스트-->
     <style name="ToolbarTitleStyle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textStyle">bold</item>

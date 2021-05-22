@@ -95,6 +95,8 @@ public class NoteDatabase {
             + NOTE_CONTENTS + ", " + NOTE_MOOD + ", " + NOTE_PICTURE + ", " + NOTE_CREATE_DATE + ", " + NOTE_YEAR + ", " + NOTE_MONTH + ", " + NOTE_STAR
             + " FROM " + NOTE_TABLE + " ORDER BY " + NOTE_CREATE_DATE + " DESC;";      // 일기 생성일 내림차순 = 최신 일기가 제일 위
     private static final String selectNoteLastYear = "SELECT " + NOTE_YEAR + " FROM " + NOTE_TABLE + " ORDER BY " + NOTE_YEAR + " LIMIT 1;";
+    private static final String selectAllCountSQL = "SELECT " + "COUNT(*) " + "FROM " + NOTE_TABLE + ";";
+    private static final String selectStarCountSQL = "SELECT " + "COUNT(*) " + "FROM " + NOTE_TABLE + " WHERE " + NOTE_STAR + "=1;";
 
     private Context context;
     private DatabaseHelper helper;
@@ -333,7 +335,7 @@ public class NoteDatabase {
                         + " GROUP BY " + NOTE_MOOD + ";";
             } else if(isMonth) {
                 sql = "SELECT " + NOTE_MOOD + ", COUNT(" + NOTE_MOOD + ") FROM " + NOTE_TABLE
-                        + " WHERE " + NOTE_MONTH + "=" + curMonth
+                        + " WHERE " + NOTE_YEAR + "=" + curYear + " AND " + NOTE_MONTH + "=" + curMonth
                         + " GROUP BY " + NOTE_MOOD + ";";
             }
 
@@ -383,7 +385,6 @@ public class NoteDatabase {
         return hashMap;
     }
 
-
     public int selectLastYear() {
         int year = 0;
 
@@ -400,6 +401,42 @@ public class NoteDatabase {
         }
 
         return year;
+    }
+
+    public int selectAllCount() {
+        int count = 0;
+
+        if(db != null) {
+             Cursor cursor = db.rawQuery(selectAllCountSQL, null);
+             cursor.moveToFirst();
+             if(cursor.getCount() != 0) {
+                 count = cursor.getInt(0);
+             }
+
+             cursor.close();
+        } else {
+            Log.d(LOG, "db를 먼저 오픈해주세요");
+        }
+
+        return count;
+    }
+
+    public int selectStarCount() {
+        int count = 0;
+
+        if(db != null) {
+            Cursor cursor = db.rawQuery(selectStarCountSQL, null);
+            cursor.moveToFirst();
+            if(cursor.getCount() != 0) {
+                count = cursor.getInt(0);
+            }
+
+            cursor.close();
+        } else {
+            Log.d(LOG, "db를 먼저 오픈해주세요");
+        }
+
+        return count;
     }
 
     private class DatabaseHelper extends SQLiteOpenHelper {

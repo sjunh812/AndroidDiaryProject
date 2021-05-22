@@ -19,7 +19,7 @@
 
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="54dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="5dp">
 
             <ImageView
@@ -28,7 +28,7 @@
                 android:layout_height="50dp"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="8dp"
+                android:layout_marginRight="5dp"
                 android:padding="7dp"
                 app:srcCompat="@drawable/mood_angry_color" />
 
@@ -40,7 +40,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
@@ -48,6 +48,8 @@
                         android:id="@+id/dateTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
                         android:layout_gravity="center"
                         android:layout_marginRight="6dp"
                         android:text="2021년 04월 20일"
@@ -87,6 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginTop="3dp"
+                        android:paddingLeft="5dp"
                         android:text="AM 5:00"
                         android:textColor="@color/gray"
                         android:textSize="13sp" />
@@ -102,14 +105,14 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <ImageView
+<!--            <ImageView
                 android:id="@+id/deleteButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/uncheck"
-                android:visibility="gone"/>
+                android:visibility="gone"/>-->
 
         </RelativeLayout>
 
@@ -117,8 +120,8 @@
             android:id="@+id/contentsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:lineSpacingExtra="5dp"
@@ -240,7 +243,6 @@
                 android:layout_margin="10dp"
                 android:padding="5dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/no_image_64_color"
                 android:visibility="gone" />
 
         </FrameLayout>

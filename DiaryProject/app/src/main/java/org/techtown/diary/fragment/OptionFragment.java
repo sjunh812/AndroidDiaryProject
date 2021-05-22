@@ -21,6 +21,8 @@ import org.techtown.diary.FontActivity;
 import org.techtown.diary.R;
 import org.techtown.diary.helper.AppHelper;
 import org.techtown.diary.helper.MyTheme;
+import org.techtown.diary.note.NoteDatabase;
+import org.techtown.diary.note.NoteDatabaseCallback;
 
 public class OptionFragment extends Fragment {
     public static final int REQUEST_FONT_CHANGE = 101;
@@ -28,17 +30,30 @@ public class OptionFragment extends Fragment {
     public static final int REQUEST_DARK_MODE = 103;
 
     private TextView curFontTextView;
+    private TextView allCountTextView;
+    private TextView starCountTextView;
 
+    private NoteDatabaseCallback callback;
     private int curFontIndex = 0;
+    private int allCount = 0;
+    private int starCount = 0;
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+
+        if(context instanceof NoteDatabaseCallback) {
+            callback = (NoteDatabaseCallback)context;
+        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+
+        if(callback != null) {
+            callback = null;
+        }
     }
 
     @Nullable
@@ -53,6 +68,8 @@ public class OptionFragment extends Fragment {
 
         curFontTextView = (TextView)rootView.findViewById(R.id.curFontTextView);
         setCurFontText();
+
+        setCountTextView(rootView);
 
         RelativeLayout fontLayout = (RelativeLayout)rootView.findViewById(R.id.fontLayout);
         fontLayout.setOnClickListener(new View.OnClickListener() {
@@ -110,6 +127,16 @@ public class OptionFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void setCountTextView(View rootView) {
+        allCountTextView = (TextView)rootView.findViewById(R.id.allCountTextView);
+        starCountTextView = (TextView)rootView.findViewById(R.id.starCountTextView);
+        allCount = callback.selectAllCount();
+        starCount = callback.selectStarCount();
+
+        allCountTextView.setText(allCount + "개");
+        starCountTextView.setText(starCount + "개");
     }
 
     private void setCurFontText() {

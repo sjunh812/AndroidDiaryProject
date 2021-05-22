@@ -6,19 +6,73 @@
     android:orientation="vertical"
     android:background="@color/background">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="기분통계"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:textColor="@color/font"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <ScrollView
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="기분통계"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/font"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="5dp"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <org.techtown.diary.custom.MyRadioButton
+                android:id="@+id/allButton"
+                android:layout_width="50dp"
+                android:layout_height="22dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/radio_button"
+                android:gravity="center"
+                android:text="전체"
+                android:textStyle="bold"
+                android:textColor="@drawable/radio_button_text"
+                android:textSize="13dp" />
+
+            <org.techtown.diary.custom.MyRadioButton
+                android:id="@+id/yearButton"
+                android:layout_width="50dp"
+                android:layout_height="22dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/radio_button"
+                android:gravity="center"
+                android:text="올해"
+                android:textStyle="bold"
+                android:textColor="@drawable/radio_button_text"
+                android:textSize="13dp" />
+
+            <org.techtown.diary.custom.MyRadioButton
+                android:id="@+id/monthButton"
+                android:layout_width="50dp"
+                android:layout_height="22dp"
+                android:background="@drawable/radio_button"
+                android:gravity="center"
+                android:text="이번달"
+                android:textStyle="bold"
+                android:textColor="@drawable/radio_button_text"
+                android:textSize="13dp" />
+
+        </RadioGroup>
+    </RelativeLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -33,57 +87,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:orientation="vertical"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp">
-
-                <RadioGroup
-                    android:id="@+id/radioGroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <org.techtown.diary.custom.MyRadioButton
-                        android:id="@+id/allButton"
-                        android:layout_width="63dp"
-                        android:layout_height="30dp"
-                        android:layout_marginRight="30dp"
-                        android:background="@drawable/radio_button"
-                        android:gravity="center"
-                        android:text="전체"
-                        android:textStyle="bold"
-                        android:textColor="@drawable/radio_button_text"
-                        android:textSize="15dp" />
-
-                    <org.techtown.diary.custom.MyRadioButton
-                        android:id="@+id/yearButton"
-                        android:layout_width="63dp"
-                        android:layout_height="30dp"
-                        android:layout_marginRight="30dp"
-                        android:background="@drawable/radio_button"
-                        android:gravity="center"
-                        android:text="올해"
-                        android:textStyle="bold"
-                        android:textColor="@drawable/radio_button_text"
-                        android:textSize="15dp" />
-
-                    <org.techtown.diary.custom.MyRadioButton
-                        android:id="@+id/monthButton"
-                        android:layout_width="63dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/radio_button"
-                        android:gravity="center"
-                        android:text="이번달"
-                        android:textStyle="bold"
-                        android:textColor="@drawable/radio_button_text"
-                        android:textSize="15dp" />
-
-                </RadioGroup>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -102,23 +111,68 @@
                         android:orientation="vertical"
                         android:paddingTop="10dp">
 
-                        <TextView
-                            android:id="@+id/moodTitleTextView"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="전체"
-                            android:textColor="@color/font"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:id="@+id/moodTotalCountTextView"
+                            android:layout_marginBottom="5dp"
+                            android:orientation="horizontal"
+                            android:layout_gravity="center">
+
+                            <TextView
+                                android:id="@+id/moodTitleTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginRight="5dp"
+                                android:text="전체"
+                                android:textColor="@color/font"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/moodTotalCountTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="(총 24개 중)"
+                                android:textColor="@color/pastel_700"
+                                android:textSize="15sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/textView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="10dp"
                             android:layout_gravity="center"
-                            android:text="(총 24개 중)"
-                            android:textColor="@color/pastel_700"
-                            android:textSize="15sp" />
+                            android:visibility="gone">
+
+                            <TextView
+                                android:id="@+id/describeTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="전체 기분통계 중 제일 많은 기분은 "
+                                android:textColor="@color/gray"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/moodTextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="'화남'"
+                                android:textSize="13sp"
+                                android:textColor="@color/red" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" 입니다"
+                                android:textSize="13sp"
+                                android:textColor="@color/gray" />
+
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -224,7 +278,6 @@
                                     android:textStyle="bold" />
 
                             </LinearLayout>
-
                         </LinearLayout>
 
                         <LinearLayout
@@ -331,7 +384,6 @@
                                     android:textStyle="bold" />
 
                             </LinearLayout>
-
                         </LinearLayout>
 
                         <LinearLayout
@@ -439,9 +491,7 @@
                                     android:textStyle="bold" />
 
                             </LinearLayout>
-
                         </LinearLayout>
-
                     </LinearLayout>
 
                     <com.github.mikephil.charting.charts.PieChart
@@ -449,90 +499,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="275dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="40dp"
                         android:layout_marginBottom="15dp" />
 
                 </LinearLayout>
-
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
-<!--
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="5dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="2dp"
-                app:cardUseCompatPadding="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="요일별 기분"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-
-                    <com.github.mikephil.charting.charts.BarChart
-                        android:id="@+id/chart2"
-                        android:layout_width="250dp"
-                        android:layout_height="250dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="5dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="10dp"
-                app:cardElevation="2dp"
-                app:cardUseCompatPadding="true">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="기분 변화"
-                        android:textColor="@color/black"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-
-                    <com.github.mikephil.charting.charts.LineChart
-                        android:id="@+id/chart3"
-                        android:layout_width="250dp"
-                        android:layout_height="250dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="10dp" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>-->
-
-
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

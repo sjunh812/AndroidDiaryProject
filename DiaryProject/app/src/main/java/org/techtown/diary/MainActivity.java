@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
         try {
             if(checkLocationPermission()) {
-                curLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);   // 제일 최근 위치 정보를 저장
+                //curLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);   // 제일 최근 위치 정보를 저장
 
                 gpsListener = new GPSListener();                               // 위치정보를 가져오기 위해 리스너 설정
                 long minTime = 10000;                                          // 업데이트 주기 10초
@@ -469,6 +469,24 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     }
 
     @Override
+    public int selectAllCount() {
+        if(db != null) {
+            return db.selectAllCount();
+        }
+
+        return 0;
+    }
+
+    @Override
+    public int selectStarCount() {
+        if(db != null) {
+            return db.selectStarCount();
+        }
+
+        return 0;
+    }
+
+    @Override
     public void deleteDB(int id) {
         if(db != null) {
             db.delete(NoteDatabase.NOTE_TABLE, id);
@@ -587,9 +605,14 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
 
                     if(locationCount > 0) {     // 위치정보를 얻었기 때문에 LocationManager 에서 update 중지
                         stopLocationService();
+                        locationCount = 0;
                     }
                 } catch(Exception e) {
                     e.printStackTrace();
+                }
+
+                if(writeFragment != null) {
+                    writeFragment.setSwipeRefresh(false);
                 }
             }
         } else {

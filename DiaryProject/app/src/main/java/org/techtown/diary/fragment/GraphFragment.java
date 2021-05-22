@@ -4,61 +4,42 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 
 import org.techtown.diary.MainActivity;
 import org.techtown.diary.R;
 import org.techtown.diary.custom.MyRadioButton;
-import org.techtown.diary.helper.MyApplication;
 import org.techtown.diary.helper.MyTheme;
-import org.techtown.diary.note.NoteDatabase;
 import org.techtown.diary.note.NoteDatabaseCallback;
 
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 public class GraphFragment extends Fragment {
     /* 상수 */
@@ -100,6 +81,9 @@ public class GraphFragment extends Fragment {
     private ImageView crown7;
     private ImageView crown8;
     private ImageView crown9;
+    private LinearLayout textView;
+    private TextView describeTextView;
+    private TextView moodTextView;
 
     /* 차트 라이브러리 객체 */
     private PieChart chart1;              // 원형 그래프
@@ -165,18 +149,21 @@ public class GraphFragment extends Fragment {
                     moodTitleTextView.setText("전체");
                     selectRadioIndex = 0;
                     hashMap = callback.selectMoodCount(true, false, false);
+                    describeTextView.setText("전체 통계 중 제일 많은 기분은 ");
                     //chart1.setCenterText("전체");     // 원형 그래프 가운데 text 표기
 
                 } else if(checkedId == R.id.yearButton) {
                     moodTitleTextView.setText(MainActivity.yearFormat.format(new Date()) + "년");
                     selectRadioIndex = 1;
                     hashMap = callback.selectMoodCount(false, true, false);
+                    describeTextView.setText("올해 통계 중 제일 많은 기분은 ");
                     //chart1.setCenterText(MainActivity.yearFormat.format(new Date()) + "년");     // 원형 그래프 가운데 text 표기
 
                 } else if(checkedId == R.id.monthButton) {
                     moodTitleTextView.setText(Integer.parseInt(MainActivity.monthFormat.format(new Date())) + "월");
                     selectRadioIndex = 2;
                     hashMap = callback.selectMoodCount(false, false, true);
+                    describeTextView.setText("이번달 통계 중 제일 많은 기분은 ");
                    // chart1.setCenterText(Integer.parseInt(MainActivity.monthFormat.format(new Date())) + "월");      // 원형 그래프 가운데 text 표기
                 }
 
@@ -222,6 +209,9 @@ public class GraphFragment extends Fragment {
         sadImageView = (ImageView)rootView.findViewById(R.id.sadImageView);
         smileImageView = (ImageView)rootView.findViewById(R.id.smileImageView);
         yawnImageView = (ImageView)rootView.findViewById(R.id.yawnImageView);
+        textView = (LinearLayout)rootView.findViewById(R.id.textView);
+        describeTextView = (TextView)rootView.findViewById(R.id.describeTextView);
+        moodTextView = (TextView)rootView.findViewById(R.id.moodTextView);
     }
 
     private void initChartUI(View rootView) {
@@ -382,51 +372,84 @@ public class GraphFragment extends Fragment {
         smileImageView.clearAnimation();
         yawnImageView.clearAnimation();
 
+        if(maxMoodIndex == -1) {
+            textView.setVisibility(View.GONE);
+        } else {
+            textView.setVisibility(View.VISIBLE);
+        }
+
         switch(maxMoodIndex) {
             case 0:
                 crown.setVisibility(View.VISIBLE);
                 angryImageView.startAnimation(moodAnimation);
                 crown.startAnimation(crownAnimation);
+
+                moodTextView.setText("'화남'");
+                moodTextView.setTextColor(getResources().getColor(R.color.red));
                 break;
             case 1:
                 crown2.setVisibility(View.VISIBLE);
                 coolImageView.startAnimation(moodAnimation);
                 crown2.startAnimation(crownAnimation);
+
+                moodTextView.setText("'쿨'");
+                moodTextView.setTextColor(getResources().getColor(R.color.blue));
                 break;
             case 2:
                 crown3.setVisibility(View.VISIBLE);
                 cryingImageView.startAnimation(moodAnimation);
                 crown3.startAnimation(crownAnimation);
+
+                moodTextView.setText("'슬픔'");
+                moodTextView.setTextColor(getResources().getColor(R.color.skyblue));
                 break;
             case 3:
                 crown4.setVisibility(View.VISIBLE);
                 illImageView.startAnimation(moodAnimation);
                 crown4.startAnimation(crownAnimation);
+
+                moodTextView.setText("'아픔'");
+                moodTextView.setTextColor(getResources().getColor(R.color.lightgreen));
                 break;
             case 4:
                 crown5.setVisibility(View.VISIBLE);
                 laughImageView.startAnimation(moodAnimation);
                 crown5.startAnimation(crownAnimation);
+
+                moodTextView.setText("'웃음'");
+                moodTextView.setTextColor(getResources().getColor(R.color.yellow));
                 break;
             case 5:
                 crown6.setVisibility(View.VISIBLE);
                 mehImageView.startAnimation(moodAnimation);
                 crown6.startAnimation(crownAnimation);
+
+                moodTextView.setText("'보통'");
+                moodTextView.setTextColor(getResources().getColor(R.color.gray));
                 break;
             case 6:
                 crown7.setVisibility(View.VISIBLE);
                 sadImageView.startAnimation(moodAnimation);
                 crown7.startAnimation(crownAnimation);
+
+                moodTextView.setText("'나쁨'");
+                moodTextView.setTextColor(getResources().getColor(R.color.black));
                 break;
             case 7:
                 crown8.setVisibility(View.VISIBLE);
                 smileImageView.startAnimation(moodAnimation);
                 crown8.startAnimation(crownAnimation);
+
+                moodTextView.setText("'좋음'");
+                moodTextView.setTextColor(getResources().getColor(R.color.orange));
                 break;
             case 8:
                 crown9.setVisibility(View.VISIBLE);
                 yawnImageView.startAnimation(moodAnimation);
                 crown9.startAnimation(crownAnimation);
+
+                moodTextView.setText("'피곤'");
+                moodTextView.setTextColor(getResources().getColor(R.color.pink));
                 break;
         }
     }

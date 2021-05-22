@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -67,7 +68,6 @@ public class WriteFragment extends Fragment {
     private ImageView addPictureImageView;
     private EditText contentsEditText;
     private ImageButton saveButton;
-    //private Button closeButton;
     private Button button1;
     private Button button2;
     private Button button3;
@@ -83,6 +83,7 @@ public class WriteFragment extends Fragment {
     private CustomDeleteDialog deleteNoteDialog;        // 일기 삭제시 띄워지는 커스텀 다이얼로그
     private CustomDatePickerDialog pickerDialog;
     private ImageButton starButton;                     // 즐겨찾기 버튼
+    private SwipeRefreshLayout swipeRefreshLayout;      // 새로고침 뷰
 
     /* Helper */
     private OnTabItemSelectedListener tabListener;      // 메인 액티비티에서 관리하는 하단 탭 선택 리스터
@@ -295,6 +296,28 @@ public class WriteFragment extends Fragment {
                 setDialog();
             }
         });
+
+        /* 새로고침 뷰 */
+        swipeRefreshLayout = (SwipeRefreshLayout)rootView.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.pastel_700));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(requestListener != null && updateItem == null) {
+                    if(calDate == null) {
+                        requestListener.onRequest("getCurrentLocation");            // 메인 액티비티로부터 현재 위치 정보 가져오기
+                    } else {
+                        requestListener.onRequest("getCurrentLocation", calDate);   // 메인 액티비티로부터 현재 위치 정보 가져오기 (단, 달력에서 넘어온 Date 사용)
+                    }
+
+                    //swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+    }
+
+    public void setSwipeRefresh(boolean isRefresh) {
+        swipeRefreshLayout.setRefreshing(isRefresh);
     }
 
     private void initWeatherViewUI(View rootView) {

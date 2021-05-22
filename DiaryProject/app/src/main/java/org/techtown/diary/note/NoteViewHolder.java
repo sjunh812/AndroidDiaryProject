@@ -2,6 +2,9 @@ package org.techtown.diary.note;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.view.MotionEvent;
@@ -216,6 +219,15 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         // 즐겨찾기 설정
         int starIndex = item.getStarIndex();
         setStarImage(starIndex);
+/*        if(starIndex == 1) {
+            dateTextView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            dateTextView.setBackground(resizeDrawable(R.drawable.highlight));
+            dateTextView2.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            dateTextView2.setBackground(resizeDrawable(R.drawable.highlight));
+        } else {
+            dateTextView.setBackground(null);
+            dateTextView2.setBackground(null);
+        }*/
     }
 
     private void setMoodImage(int index) {
@@ -350,5 +362,14 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
 
     public void setOnItemLongClickListener(OnNoteItemLongClickListener listener) {
         longClickListener = listener;
+    }
+
+    private Drawable resizeDrawable(int res) {
+        BitmapDrawable drawable = (BitmapDrawable)context.getResources().getDrawable(res);
+        Bitmap bitamp = drawable.getBitmap();
+        Bitmap newBitmap = Bitmap.createScaledBitmap(bitamp, dateTextView.getMeasuredWidth(), dateTextView.getMeasuredHeight(), true);
+        Drawable newDrawable = new BitmapDrawable(newBitmap);
+
+        return newDrawable;
     }
 }
