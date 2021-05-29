@@ -16,8 +16,8 @@
         
         <ImageView
             android:id="@+id/moodImageView"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_alignParentLeft="true"
             android:src="@drawable/mood_angry_color" />
 
@@ -29,15 +29,6 @@
             android:layout_toRightOf="@+id/moodImageView"
             android:layout_marginLeft="20dp"
             android:src="@drawable/weather_icon_1" />
-
-        <ImageView
-            android:id="@+id/starImageView"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/weatherImageView"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/star" />
 
         <TextView
             android:id="@+id/timeTextView"
@@ -72,5 +63,13 @@
         android:text="내용입니다\n띄어쓰기"
         android:textSize="14dp"
         android:textColor="@color/font_contents" />
+
+    <ImageView
+        android:id="@+id/starImageView"
+        android:layout_width="13dp"
+        android:layout_height="13dp"
+        android:layout_gravity="right"
+        android:layout_marginBottom="3dp"
+        android:src="@drawable/star" />
 
 </LinearLayout>

@@ -7,6 +7,7 @@
     android:background="@color/background">
 
     <TextView
+        android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -36,15 +37,33 @@
             app:mcv_selectionColor="@color/background_button"
             app:mcv_selectionMode="single" />
 
-        <TextView
-            android:id="@+id/dateTextView"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:text="2021년 4월 28일"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/font" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="2021년 4월 28일은, "
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:textColor="@color/font" />
+
+            <TextView
+                android:id="@+id/moodTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:text="화남"
+                android:textColor="@color/red"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -59,16 +78,16 @@
                 android:visibility="visible">
 
                 <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="15dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginBottom="5dp"
                     android:src="@drawable/mood_crying_color" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:textSize="17sp"
+                    android:layout_marginBottom="5dp"
+                    android:textSize="14sp"
                     android:textColor="@color/gray"
                     android:text="일기가 없습니다.." />
 
@@ -80,7 +99,7 @@
                     android:text="@string/write"
                     android:textColor="@color/pastel_700"
                     android:textStyle="bold"
-                    android:textSize="20dp" />
+                    android:textSize="17sp" />
 
             </LinearLayout>
 
@@ -92,7 +111,5 @@
                 android:layout_height="wrap_content" />
 
         </FrameLayout>
-
     </LinearLayout>
-
 </LinearLayout>

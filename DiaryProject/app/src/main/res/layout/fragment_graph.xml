@@ -11,6 +11,7 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/titleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="기분통계"
@@ -34,7 +35,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <org.techtown.diary.custom.MyRadioButton
+            <org.sjhstudio.diary.custom.MyRadioButton
                 android:id="@+id/allButton"
                 android:layout_width="50dp"
                 android:layout_height="22dp"
@@ -46,7 +47,7 @@
                 android:textColor="@drawable/radio_button_text"
                 android:textSize="13dp" />
 
-            <org.techtown.diary.custom.MyRadioButton
+            <org.sjhstudio.diary.custom.MyRadioButton
                 android:id="@+id/yearButton"
                 android:layout_width="50dp"
                 android:layout_height="22dp"
@@ -58,7 +59,7 @@
                 android:textColor="@drawable/radio_button_text"
                 android:textSize="13dp" />
 
-            <org.techtown.diary.custom.MyRadioButton
+            <org.sjhstudio.diary.custom.MyRadioButton
                 android:id="@+id/monthButton"
                 android:layout_width="50dp"
                 android:layout_height="22dp"
@@ -86,7 +87,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
                 android:layout_marginBottom="20dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -107,14 +107,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="3dp"
                         android:orientation="vertical"
                         android:paddingTop="10dp">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
+                            android:layout_marginBottom="15dp"
                             android:orientation="horizontal"
                             android:layout_gravity="center">
 
@@ -144,7 +143,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginTop="15dp"
+                            android:layout_marginTop="2dp"
                             android:layout_marginBottom="10dp"
                             android:layout_gravity="center"
                             android:visibility="gone">
@@ -162,6 +161,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="'화남'"
+                                android:textStyle="bold"
                                 android:textSize="13sp"
                                 android:textColor="@color/red" />
 
@@ -497,10 +497,10 @@
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/chart1"
                         android:layout_width="match_parent"
-                        android:layout_height="275dp"
+                        android:layout_height="290dp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="40dp"
-                        android:layout_marginBottom="15dp" />
+                        android:layout_marginTop="28dp"
+                        android:layout_marginBottom="5dp" />
 
                 </LinearLayout>
             </LinearLayout>

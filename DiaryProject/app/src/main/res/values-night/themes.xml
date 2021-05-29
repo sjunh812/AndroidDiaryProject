@@ -29,6 +29,7 @@
     <!-- -->
     <style name="Theme.DiaryProject" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
+        <item name="colorAccent">@color/pastel_700</item>
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -93,6 +94,7 @@
     <!-- -->
     <style name="Theme.DiaryProject2" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
+        <item name="colorAccent">@color/pastel_700</item>
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -156,6 +158,7 @@
     <!-- -->
     <style name="Theme.DiaryProject3" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
+        <item name="colorAccent">@color/pastel_700</item>
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -219,6 +222,7 @@
     <!-- -->
     <style name="Theme.DiaryProject4" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
+        <item name="colorAccent">@color/pastel_700</item>
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -283,6 +287,7 @@
     <!-- -->
     <style name="Theme.DiaryProject5" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
+        <item name="colorAccent">@color/pastel_700</item>
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/background</item>
         <item name="colorOnPrimary">@color/white</item>

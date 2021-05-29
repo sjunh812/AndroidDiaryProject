@@ -19,7 +19,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
@@ -28,10 +28,12 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/container"
             android:orientation="vertical"
-            android:layout_marginTop="20dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
+            android:layout_marginBottom="30dp"
             android:background="@color/background">
 
             <ImageView
@@ -39,7 +41,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="15dp"
                 android:src="@drawable/mood_angry_color" />
 
             <LinearLayout
@@ -99,38 +101,51 @@
                 android:visibility="gone"
                 android:src="@drawable/app_icon" />
 
-            <TextView
-                android:id="@+id/contentsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
-                android:lineSpacingExtra="7dp"
-                android:textColor="@color/font_contents"
-                android:text="내용입니다.\n줄바꿈입니다."
-                android:textSize="16sp" />
-
-            <RelativeLayout
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp">
+                android:background="@color/background">
 
                 <TextView
-                    android:id="@+id/locationTextView"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/contentsTextView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="7dp"
-                    android:textSize="15sp"
-                    android:textColor="@color/pastel_700"
-                    android:text="고양시 일산서구" />
-
-                <ImageView
-                    android:id="@+id/weatherImageView"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_toLeftOf="@+id/locationTextView" />
-
-            </RelativeLayout>
+                    android:layout_marginBottom="50dp"
+                    android:layout_marginTop="5dp"
+                    android:lineSpacingExtra="7dp"
+                    android:textColor="@color/font_contents"
+                    android:text="내용입니다.\n줄바꿈입니다."
+                    android:textSize="16sp" />
+            </ScrollView>
         </LinearLayout>
-    </ScrollView>
+
+        <RelativeLayout
+            android:id="@+id/container"
+            android:background="@color/background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="50dp"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:id="@+id/locationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="7dp"
+                android:textSize="15sp"
+                android:textColor="@color/pastel_700"
+                android:text="고양시 일산서구" />
+
+            <ImageView
+                android:id="@+id/weatherImageView"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_toLeftOf="@+id/locationTextView" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

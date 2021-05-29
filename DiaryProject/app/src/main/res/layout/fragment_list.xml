@@ -36,11 +36,11 @@
             android:layout_marginRight="7dp"
             android:clickable="true"
             android:background="@drawable/border_button_view"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="전체"
+            android:text="전체보기"
             android:textSize="13sp"
             android:textColor="@color/font" />
 
@@ -101,10 +101,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/background"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:paddingTop="10dp"
-            android:paddingLeft="18dp"
-            android:paddingRight="18dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:visibility="visible" />
 
     </FrameLayout>

@@ -28,10 +28,10 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:background="@drawable/circle_view"
-            android:paddingLeft="5dp"
-            android:paddingTop="3dp"
-            android:paddingRight="3dp"
-            android:paddingBottom="5dp"
+            android:paddingLeft="7dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="7dp"
             android:scaleType="centerInside"
             android:src="@drawable/x_icon" />
 
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="사진 촬영"
-                android:textColor="@color/black"
+                android:textColor="@color/font"
                 android:textSize="15dp" />
 
         </LinearLayout>
@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="사진 앨범에서 선택"
-                android:textColor="@color/black"
+                android:textColor="@color/font"
                 android:textSize="15dp" />
 
         </LinearLayout>
