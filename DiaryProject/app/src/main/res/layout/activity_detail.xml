@@ -104,14 +104,14 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/background">
+                android:layout_marginTop="5dp"
+                android:background="@color/background"
+                android:scrollbarThumbVertical="@color/transparentGray">
 
                 <TextView
                     android:id="@+id/contentsTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="50dp"
-                    android:layout_marginTop="5dp"
                     android:lineSpacingExtra="7dp"
                     android:textColor="@color/font_contents"
                     android:text="내용입니다.\n줄바꿈입니다."

@@ -315,6 +315,8 @@ public class WriteFragment extends Fragment {
                     }
 
                     //swipeRefreshLayout.setRefreshing(false);
+                } else {
+                    setSwipeRefresh(false);
                 }
             }
         });
@@ -765,7 +767,7 @@ public class WriteFragment extends Fragment {
 
     public void showCameraActivity() {
         File file = createFile();
-        Uri uri = FileProvider.getUriForFile(getContext(), "org.techtown.diary.fileprovider", file);
+        Uri uri = FileProvider.getUriForFile(getContext(), "org.sjhstudio.diary.fileprovider", file);
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
@@ -934,7 +936,7 @@ public class WriteFragment extends Fragment {
         return fileUri;
     }
 
-    class SaveButtonClickListener implements  View.OnClickListener {
+    class SaveButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             if(tabListener != null) {
@@ -947,6 +949,7 @@ public class WriteFragment extends Fragment {
                 setMoodIndex();                             // 현재 눌린 기분버튼 종류에 따라 moodIndex 설정
                 setContents();                              // contentsEditText 에 사용자가 입력한 내용을 contents 에 저장
                 address = locationTextView.getText().toString();    // GPS 로 받아온 위치 or 사용자가 직접 입력한 위치정보를 address(String)에 저장
+
                 if(updateItem == null) {                    // 새로 일기를 작성하는 경우
                     if(dateText != null) {                  // 사용자가 날짜를 바꾼 경우
                         String date = dateText + " " + MainActivity.timeFormat2.format(new Date());
