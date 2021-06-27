@@ -23,7 +23,7 @@ public class CustomDatePickerDialog extends Dialog {
 
     public CustomDatePickerDialog(@NonNull Context context, int year, int month, int day) {
         super(context);
-
+        
         curYear = year;
         curMonth = month;
         curDay = day;

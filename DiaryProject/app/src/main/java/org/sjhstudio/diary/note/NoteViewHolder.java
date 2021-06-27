@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
     private TextView timeTextView;
     private TextView weekTextView;
     private ImageView starImageView;
+    private RelativeLayout weatherAndLocationLayout;
 
     // 사진버튼 선택시 보일 뷰 UI
     private LinearLayout photoLayout;
@@ -76,6 +78,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
         timeTextView = (TextView)itemView.findViewById(R.id.timeTextView);
         weekTextView = (TextView)itemView.findViewById(R.id.weekTextView);
         starImageView = (ImageView)itemView.findViewById(R.id.starImageView);
+        weatherAndLocationLayout = (RelativeLayout)itemView.findViewById(R.id.weatherAndLocationLayout);
 
         photoLayout = (LinearLayout)itemView.findViewById(R.id.photoLayout);
         moodImageView2 = (ImageView)itemView.findViewById(R.id.moodImageView2);
@@ -225,6 +228,20 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
             dateTextView.setBackground(null);
             dateTextView2.setBackground(null);
         }*/
+
+        if(contents == null || contents.equals("")) {
+            contentsTextView.setVisibility(View.GONE);
+            contentsTextView2.setVisibility(View.GONE);
+        } else {
+            contentsTextView.setVisibility(View.VISIBLE);
+            contentsTextView2.setVisibility(View.VISIBLE);
+        }
+
+        if((location == null || location.equals("")) && (weatherIndex == -1)) {
+            weatherAndLocationLayout.setVisibility(View.GONE);
+        } else {
+            weatherAndLocationLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setMoodImage(int index) {

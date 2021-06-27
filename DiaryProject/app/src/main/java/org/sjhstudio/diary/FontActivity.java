@@ -25,6 +25,8 @@ public class FontActivity extends AppCompatActivity {
 
     // UI
     private TextView exampleTextView;
+    private RadioButton systemFontButton;
+    private RadioButton basicFontButton;
     private RadioButton fontButton;
     private RadioButton fontButton2;
     private RadioButton fontButton3;
@@ -54,6 +56,8 @@ public class FontActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);          // 툴바의 왼쪽 돌아가기버튼 사용을 위한 코드
 
         exampleTextView = (TextView)findViewById(R.id.exampleTextView); // 폰트 적용 예시를 보여주는 텍스트 (폰트 적용에 따라 폰트가 바뀌어야함)
+        systemFontButton = (RadioButton)findViewById(R.id.systemFontButton);
+        basicFontButton = (RadioButton)findViewById(R.id.basicFontButton);
         fontButton = (RadioButton)findViewById(R.id.fontButton);
         fontButton2 = (RadioButton)findViewById(R.id.fontButton2);
         fontButton3 = (RadioButton)findViewById(R.id.fontButton3);
@@ -67,6 +71,14 @@ public class FontActivity extends AppCompatActivity {
                 Typeface font = null;
 
                 switch(checkedId) {
+                    case R.id.systemFontButton:
+                        font = Typeface.SANS_SERIF;
+                        selectedFontIndex = 100;
+                        break;
+                    case R.id.basicFontButton:
+                        font = Typeface.createFromAsset(getAssets(), "font.ttf");
+                        selectedFontIndex = -1;
+                        break;
                     case R.id.fontButton:
                         font = Typeface.createFromAsset(getAssets(), "font1.ttf");
                         selectedFontIndex = 0;
@@ -120,6 +132,12 @@ public class FontActivity extends AppCompatActivity {
 
     private void setExampleTextViewFont() {
         switch(curFontIndex) {
+            case 100:
+                systemFontButton.setChecked(true);
+                break;
+            case -1:
+                basicFontButton.setChecked(true);
+                break;
             case 0:
                 fontButton.setChecked(true);
                 break;

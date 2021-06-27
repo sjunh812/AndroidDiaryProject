@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import org.sjhstudio.diary.AlarmActivity;
+import org.sjhstudio.diary.BackupActivity;
 import org.sjhstudio.diary.DarkModeActivity;
 import org.sjhstudio.diary.FontActivity;
 import org.sjhstudio.diary.R;
@@ -79,6 +80,7 @@ public class OptionFragment extends Fragment {
 
         setCountTextView(rootView);
 
+        /* 폰트 설정 */
         RelativeLayout fontLayout = (RelativeLayout)rootView.findViewById(R.id.fontLayout);
         fontLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +90,7 @@ public class OptionFragment extends Fragment {
             }
         });
 
+        /* 알림 설정 */
         RelativeLayout noticeLayout = (RelativeLayout)rootView.findViewById(R.id.noticeLayout);
         noticeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +100,7 @@ public class OptionFragment extends Fragment {
             }
         });
 
+        /* 다크모드 설정 */
         RelativeLayout darkmodLayout = (RelativeLayout)rootView.findViewById(R.id.darkmodeLayout);
         darkmodLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +110,18 @@ public class OptionFragment extends Fragment {
             }
         });
 
+
+        /* 백업 및 복원하기 */
+        RelativeLayout backupLayout = (RelativeLayout)rootView.findViewById(R.id.backupLayout);
+        backupLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), BackupActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        /* 스토어 리뷰 */
         RelativeLayout reviewLayout = (RelativeLayout)rootView.findViewById(R.id.reviewLayout);
         reviewLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +132,7 @@ public class OptionFragment extends Fragment {
             }
         });
 
+        /* 피드백 보내기 */
         RelativeLayout ideaLayout = (RelativeLayout)rootView.findViewById(R.id.ideaLayout);
         ideaLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,14 +176,20 @@ public class OptionFragment extends Fragment {
 
     private void setCurFontText() {
         switch(curFontIndex) {
+            case 100:
+                curFontTextView.setText("시스템 서체");
+                break;
+            case -1:
+                curFontTextView.setText("THE얌전해진언니체");
+                break;
             case 0:
-                curFontTextView.setText("교보손글씨체");
+                curFontTextView.setText("교보 손글씨체");
                 break;
             case 1:
                 curFontTextView.setText("점꼴체");
                 break;
             case 2:
-                curFontTextView.setText("넥슨배찌체");
+                curFontTextView.setText("넥슨 배찌체");
                 break;
             case 3:
                 curFontTextView.setText("미니콩다방체");
@@ -175,7 +198,7 @@ public class OptionFragment extends Fragment {
                 curFontTextView.setText("꼬마나비체");
                 break;
             default:
-                curFontTextView.setText("교보손글씨체");
+                curFontTextView.setText("THE얌전해진언니체");
                 break;
         }
     }

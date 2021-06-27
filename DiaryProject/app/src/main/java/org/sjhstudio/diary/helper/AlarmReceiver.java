@@ -33,12 +33,13 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {     // 부팅 : 알람매니저 재등록 (SharedPreference 에 저장된 데이터 활용)
             setBootData(context);
-        } else if((Intent.ACTION_MY_PACKAGE_REPLACED).equals(intent.getAction())) { // 앱 업데이트 이후 : 알람매니저 재등록
-            Log.d("LOG", "앱 업데이트 실행됨");
+        } else if(Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction()) ||
+        Intent.ACTION_PACKAGE_REPLACED.equals(intent.getAction())) {                // 앱 업데이트 이후 : 알람매니저 재등록
             setBootData(context);
-        }
-        else {                                                                      // 일반적인 경우 : Notification 등록 및 알람 반복을 위해 알람매니저 재등록
+            Log.d("LOG", "앱 업데이트 실행됨");
+        } else {                                                                    // 일반적인 경우 : Notification 등록 및 알람 반복을 위해 알람매니저 재등록
             startNotification(context);
+            Log.d("LOG", "AlarmRecevier 실행됨");
         }
     }
 

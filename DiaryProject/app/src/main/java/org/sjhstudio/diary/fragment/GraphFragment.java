@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -85,6 +86,7 @@ public class GraphFragment extends Fragment {
     private LinearLayout textView;
     private TextView describeTextView;
     private TextView moodTextView;
+    private FrameLayout backgroundGraphLayout;
 
     /* 차트 라이브러리 객체 */
     private PieChart chart1;              // 원형 그래프
@@ -220,6 +222,7 @@ public class GraphFragment extends Fragment {
         textView = (LinearLayout)rootView.findViewById(R.id.textView);
         describeTextView = (TextView)rootView.findViewById(R.id.describeTextView);
         moodTextView = (TextView)rootView.findViewById(R.id.moodTextView);
+        backgroundGraphLayout = (FrameLayout)rootView.findViewById(R.id.background_graph);
     }
 
     private void initChartUI(View rootView) {
@@ -291,6 +294,12 @@ public class GraphFragment extends Fragment {
 
         chart1.setData(data);
         chart1.invalidate();
+
+        if(totalCount == 0) {
+            backgroundGraphLayout.setVisibility(View.GONE);
+        } else {
+            backgroundGraphLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setSelectedRadioButton() {
@@ -498,6 +507,12 @@ public class GraphFragment extends Fragment {
         Typeface typeface = null;
 
         switch(curFontIndex) {
+            case 100:
+                typeface = Typeface.SANS_SERIF;
+                break;
+            case -1:
+                typeface = Typeface.createFromAsset(context.getAssets(), "font.ttf");
+                break;
             case 0:
                 typeface = Typeface.createFromAsset(context.getAssets(), "font1.ttf");
                 break;

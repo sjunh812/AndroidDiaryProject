@@ -18,12 +18,12 @@ public class MyTheme {
     public static final String MODE_KEY = "mode_key";
 
     public static void applyTheme(@NonNull Context context) {
-        int fontIndex = 0;      // default
+        int fontIndex = -1;     // default (THE얌전해진언니체)
         int modeIndex = 0;      // default
 
         SharedPreferences pref = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Activity.MODE_PRIVATE);
         if(pref != null) {
-            fontIndex = pref.getInt(FONT_KEY, 0);
+            fontIndex = pref.getInt(FONT_KEY, -1);
             modeIndex = pref.getInt(MODE_KEY, 0);
         }
 
@@ -56,8 +56,18 @@ public class MyTheme {
         editor.putInt(FONT_KEY, fontIndex);
         editor.commit();
 
-        if (fontIndex == 0) {
+        if(fontIndex == 100) {
+            context.setTheme(R.style.Theme_BasicDiaryProject);
+            return;
+        }
+
+        if (fontIndex == -1) {
             context.setTheme(R.style.Theme_DiaryProject);
+            return;
+        }
+
+        if (fontIndex == 0) {
+            context.setTheme(R.style.Theme_DiaryProject1);
             return;
         }
 

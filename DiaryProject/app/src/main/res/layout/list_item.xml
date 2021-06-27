@@ -20,7 +20,8 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="3dp">
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
             <ImageView
                 android:id="@+id/moodImageView"
@@ -50,7 +51,7 @@
                         android:paddingRight="2dp"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="6dp"
+                        android:layout_marginRight="3dp"
                         android:text="2021년 04월 20일"
                         android:textColor="@color/font"
                         android:textStyle="bold"
@@ -62,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/dateTextView"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="7dp"
+                        android:layout_marginRight="1dp"
                         android:text="화"
                         android:textColor="@color/pastel_700"
                         android:textSize="16sp"
@@ -70,8 +71,8 @@
 
                     <ImageView
                         android:id="@+id/starImageView"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
+                        android:layout_width="17dp"
+                        android:layout_height="17dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="8dp"
@@ -82,14 +83,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginTop="2dp">
 
                     <TextView
                         android:id="@+id/timeTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="3dp"
                         android:paddingLeft="5dp"
                         android:text="AM 5:00"
                         android:textColor="@color/gray"
@@ -100,7 +101,6 @@
                         android:layout_width="12dp"
                         android:layout_height="12dp"
                         android:layout_marginLeft="7dp"
-                        android:layout_marginTop="6dp"
                         android:src="@drawable/exist_picture" />
 
                 </LinearLayout>
@@ -111,7 +111,7 @@
             android:id="@+id/contentsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -123,6 +123,7 @@
             android:textSize="15sp" />
 
         <RelativeLayout
+            android:id="@+id/weatherAndLocationLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"

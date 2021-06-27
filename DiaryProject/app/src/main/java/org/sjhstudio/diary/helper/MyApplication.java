@@ -2,6 +2,8 @@ package org.sjhstudio.diary.helper;
 
 import android.app.Application;
 
+import androidx.multidex.MultiDexApplication;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
@@ -16,7 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-public class MyApplication extends Application {
+public class MyApplication extends MultiDexApplication {
     /* 상수 */
     private static final String LOG = "MyApplication";
     public static final int RESPONSE_OK = 200;

@@ -12,6 +12,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -19,6 +20,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -45,6 +47,7 @@ import org.sjhstudio.diary.fragment.GraphFragment;
 import org.sjhstudio.diary.fragment.ListFragment;
 import org.sjhstudio.diary.fragment.OptionFragment;
 import org.sjhstudio.diary.fragment.WriteFragment;
+import org.sjhstudio.diary.helper.AlarmReceiver;
 import org.sjhstudio.diary.helper.KMAGrid;
 import org.sjhstudio.diary.helper.MyApplication;
 import org.sjhstudio.diary.helper.MyTheme;
@@ -110,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
     public static MultiTransformation option = new MultiTransformation(new FitCenter(), new RoundedCorners(10));    // Glide 둥근 이미지 뷰
     private Date calDate = null;
     private long backPressTime = 0;
+    public static boolean isGPS = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         AutoPermissions.Companion.loadAllPermissions(this, REQUEST_ALL_PERMISSIONS);    // 위험권한 체크
 
         /* DB 초기화 */
-        db = new NoteDatabase(this);        // DB 객체 생성
+        db = new NoteDatabase(this);         // DB 객체 생성
         db.dbInit(NoteDatabase.DB_NAME);            // 지정된 이름의 일기 DB 생성
         db.createTable(NoteDatabase.NOTE_TABLE);    // Note 테이블 생성 (중복 제외)
 
@@ -186,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         });
 
         if(savedInstanceState == null) {     // onSaveInstanceState() 호출 x
-            onTabSelected(0);       // 일기목록 프래그먼트를 첫 화면으로 지정
+            onTabSelected(0);        // 일기목록 프래그먼트를 첫 화면으로 지정
         } else {
             /* 폰트설정 or 다크모드 설정 후 recreate() 호출, 기존 프래그먼트로 돌아와야하는 상황 */
             /* onSaveInstanceState() 호출 o */
@@ -218,10 +222,9 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         /* 위치 정보를 가져오기 위해 필요한 LocationManager 시스템 서비스 객체 정의 */
         /* LocationManager 에서 위치 정보를 얻기 위해 LocationListener 이용 */
         /* GPSListener 라는 이름으로 LocationListener 를 재정의 */
-        LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-
         try {
             if(checkLocationPermission()) {
+                LocationManager locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
                 //curLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);   // 제일 최근 위치 정보를 저장
 
                 gpsListener = new GPSListener();                               // 위치정보를 가져오기 위해 리스너 설정
@@ -303,10 +306,35 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         }
     }
 
-    public boolean checkLocationPermission() {      // 위치 위험권한 허용 여부 판단
-        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+    @Override
+    public void getDateOnly(Date date) {
+        if(date == null) {
+            curDate = new Date();                               // 현재 날짜정보
+        } else {
+            curDate = date;
+        }
+        String curYear = yearFormat.format(curDate);            // yyyy
+        String curMonth = monthFormat.format(curDate);          // MM
+        String curDay = dayFormat.format(curDate);              // dd
+        String _date = dateFormat.format(curDate);              // yyyy년 MM월 dd일
 
-        if(permission == PackageManager.PERMISSION_GRANTED) {
+        if(writeFragment != null && _date != null) {
+            writeFragment.setDateTextView(_date);
+            try {
+                writeFragment.setCurDate(Integer.parseInt(curYear), Integer.parseInt(curMonth), Integer.parseInt(curDay));
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public boolean checkLocationPermission() {      // 위치 위험권한 허용 여부 판단
+        int locationPermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+        int locationPermission2 = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if((locationPermission == PackageManager.PERMISSION_GRANTED) &&
+                (locationPermission2 == PackageManager.PERMISSION_GRANTED)) {
             return true;
         }
         return false;
@@ -316,8 +344,11 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
         LocationManager locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 
         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            isGPS = false;
             return false;
         }
+
+        isGPS = true;
         return true;
     }
 
@@ -337,7 +368,8 @@ public class MainActivity extends AppCompatActivity implements OnTabItemSelected
                             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                             startActivity(intent);
                         }
-                    });
+                    })
+                    ;
             GPSDialog = builder.create();
         }
 

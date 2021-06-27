@@ -52,6 +52,12 @@ public class CalendarViewHolder extends RecyclerView.ViewHolder {
         locationTextView.setText(item.getAddress());    // 위치 설정
         timeTextView.setText(item.getTime());           // 시간 설정
         contentsTextView.setText(item.getContents());   // 내용 설정
+
+        if(item.getContents() == null || item.getContents().equals("")) {
+            contentsTextView.setVisibility(View.GONE);
+        } else {
+            contentsTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setMoodImage(int index) {
