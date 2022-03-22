@@ -4,4 +4,4 @@
 Play 스토어 : https://play.google.com/store/apps/details?id=org.sjhstudio.diary  
 
 ## 설명
-1일 1일기 앱 베타버전입니다.
+1일 1일기 앱 베타버전입니다🙂
